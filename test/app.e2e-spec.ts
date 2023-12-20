@@ -15,16 +15,21 @@ describe('Users e2e test', () => {
     await app.init();
   });
 
-  it('/users/register (POST)', async () => {
+
+  it('/users/login (POST)', async () => {
     return request(app.getHttpServer())
-      .post('/users/register')
+      .post('/users/login')
       .send({
-        user_name: 'TestUser',
         user_email: 'test@example.com',
         user_password: 'password123',
       })
-      .expect(201);
+      .expect(201) // 假设登录成功返回状态码是 200
+      .then(response => {
+        expect(response.body).toHaveProperty('access_token'); // 假设成功登录会返回 access_token
+        console.log('JWT Token:', response.body.access_token);
+      });
   });
+
 
   // 添加更多测试用例：登录、更新、删除
 

@@ -33,7 +33,9 @@ async deleteUser(userId: number): Promise<any> {
         },
     });
 }
-
+getHello(): string {
+  return 'Hello World!';
+}
   async updateUser(userId: number, updateData: any): Promise<any> {
     if (updateData.user_password) {
       updateData.user_password = await bcrypt.hash(updateData.user_password, 10);

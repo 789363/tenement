@@ -10,6 +10,12 @@ export class UsersController {
     private authService: AuthService,
   ) {}
 
+  @Get()
+  getAllUsers() {
+    return this.usersService.getHello();
+  }
+
+
   @Post('register')
   async register(@Body() createUserDto: any) {
     return this.usersService.createUser(createUserDto);
@@ -19,7 +25,7 @@ export class UsersController {
   async login(@Body() loginDto: any) {
     const user = await this.authService.validateUser(loginDto.user_email, loginDto.user_password);
     if (!user) {
-      throw new Error('Invalid credentials');
+      throw new Error('Invalid credentials456');
     }
     return this.authService.login(user);
   }
