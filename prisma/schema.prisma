@@ -15,4 +15,5 @@ model User {
   user_email  String  @unique
   user_password String
   status      Boolean
+  isadmin Boolean
 }

@@ -8,7 +8,7 @@ import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
-    forwardRef(() => UsersModule), // 使用 forwardRef 解决循环依赖
+    forwardRef(() => UsersModule),
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'your-secret-key',

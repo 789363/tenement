@@ -2,7 +2,7 @@ import { Controller, Post, Get, Delete, Put, Body, Param, UseGuards } from '@nes
 import { UsersService } from './users.service';
 import { AuthService } from '../auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
-
+import { AdminGuard } from '../auth/admin.guard'
 @Controller('users')
 export class UsersController {
   constructor(
@@ -30,13 +30,13 @@ export class UsersController {
     return this.authService.login(user);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Delete(':id')
   async deleteUser(@Param('id') userId: number) {
     return this.usersService.deleteUser(userId);
   }
-
-  @UseGuards(AuthGuard('jwt'))
+  
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Put(':id')
   async updateUser(@Param('id') userId: number, @Body() updateData: any) {
     return this.usersService.updateUser(userId, updateData);

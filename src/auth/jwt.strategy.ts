@@ -13,7 +13,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    return { userId: payload.sub, username: payload.username };
+    console.log(payload)
+    return {
+      userId: payload.sub,
+      username: payload.username,
+      isadmin: payload.isadmin // 确保 JWT payload 中包含此字段
+    };
   }
 }
 
