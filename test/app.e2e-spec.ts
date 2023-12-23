@@ -46,7 +46,7 @@ describe('Users e2e test', () => {
 
   it('/users/:id (PUT)', async () => {
     return request(app.getHttpServer())
-      .put('/users/'+16) // 假设要更新的用户 ID 是 1
+      .put('/users/16') // 假设要更新的用户 ID 是 1
       .set('Authorization', `Bearer ${jwtToken}`)
       .send({
         user_name: 'updatedName',
@@ -56,7 +56,7 @@ describe('Users e2e test', () => {
 
   it('/users/:id (DELETE)', async () => {
     return request(app.getHttpServer())
-      .delete('/users/'+16) // 假设要删除的用户 ID 是 1
+      .delete('/users/16') // 假设要删除的用户 ID 是 1
       .set('Authorization', `Bearer ${jwtToken}`)
       .expect(200); // 假设删除成功返回状态码是 200
   });

@@ -32,13 +32,13 @@ export class UsersController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Delete(':id')
-  async deleteUser(@Param('id') userId: number) {
-    return this.usersService.deleteUser(userId);
+  async deleteUser(@Param('id') userId: string) {
+    return this.usersService.deleteUser(parseInt(userId, 10));
   }
   
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Put(':id')
-  async updateUser(@Param('id') userId: number, @Body() updateData: any) {
-    return this.usersService.updateUser(userId, updateData);
+  async updateUser(@Param('id') userId: string, @Body() updateData: any) {
+    return this.usersService.updateUser(parseInt(userId, 10), updateData);
   }
 }
