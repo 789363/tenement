@@ -22,7 +22,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Register a new user' })
   @ApiBody({ description: 'User Registration Data', type: CreateUserDto })
   @ApiResponse({ status: 201, description: 'User successfully registered.' })
-  @ApiResponse({ status: 404, description: 'User already register' })
+  @ApiResponse({ status: 403, description: 'User already register' })
   async register(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createUser(createUserDto);
   }
