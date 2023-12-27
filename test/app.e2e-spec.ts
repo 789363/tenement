@@ -2,10 +2,12 @@ import * as request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
 import { INestApplication } from '@nestjs/common';
+import { user } from '@prisma/client';
 
 describe('Users e2e test', () => {
   let app: INestApplication;
   let jwtToken: string;
+  let testUser: user; // 修改变量名以避免与类型名称冲突
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -17,7 +19,7 @@ describe('Users e2e test', () => {
   });
 
   it('/users/register (POST)', async () => {
-    return request(app.getHttpServer())
+    const response = await request(app.getHttpServer())
       .post('/users/register')
       .send({
         user_name: 'testuser',
@@ -27,15 +29,21 @@ describe('Users e2e test', () => {
         isadmin: true,
       })
       .expect(201); // 假设注册成功返回状态码是 201
+
+    testUser = response.body; // 使用 testUser 代替 user
+    return response;
   });
 
   it('/users/login (POST)', async () => {
+
+    console.log(testUser); // 使用 testUser
     return request(app.getHttpServer())
       .post('/users/login')
       .send({
-        user_email: 'test@example.com',
+        user_email: testUser.user_email,
         user_password: 'password123',
       })
+
       .expect(201) // 假设登录成功返回状态码是 201
       .then(response => {
         expect(response.body).toHaveProperty('access_token');
@@ -46,7 +54,7 @@ describe('Users e2e test', () => {
 
   it('/users/:id (PUT)', async () => {
     return request(app.getHttpServer())
-      .put('/users/16') // 假设要更新的用户 ID 是 1
+      .put(`/users/${testUser.user_id}`) // 使用 testUser
       .set('Authorization', `Bearer ${jwtToken}`)
       .send({
         user_name: 'updatedName',
@@ -56,7 +64,7 @@ describe('Users e2e test', () => {
 
   it('/users/:id (DELETE)', async () => {
     return request(app.getHttpServer())
-      .delete('/users/16') // 假设要删除的用户 ID 是 1
+      .delete(`/users/${testUser.user_id}`) // 使用 testUser
       .set('Authorization', `Bearer ${jwtToken}`)
       .expect(200); // 假设删除成功返回状态码是 200
   });
