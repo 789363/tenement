@@ -18,6 +18,9 @@ export class ResponseInterceptor implements NestInterceptor {
             case 'DELETE':
                 message = 'Successfully delete data';
                 break;
+            case 'DELETE':
+                message = 'Successfully get data';
+                break;
         }
 
         return next.handle().pipe(map(data => ({

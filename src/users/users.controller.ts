@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Delete, Put, Body, Param, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Put, Body, Param, UseGuards, UseInterceptors, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { AuthService } from '../auth/auth.service';
@@ -8,7 +8,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ResponseInterceptor } from './response.interceptor';
-
+import { GetUserListDto } from './dto/getUserListDto';
 @ApiTags('users')
 @Controller('users')
 @UseInterceptors(ResponseInterceptor)
@@ -17,8 +17,6 @@ export class UsersController {
     private usersService: UsersService,
     private authService: AuthService,
   ) { }
-
-
 
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
@@ -57,5 +55,13 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'User successfully updated.' })
   async updateUser(@Param('id') userId: string, @Body() updateData: UpdateUserDto) {
     return this.usersService.updateUser(parseInt(userId, 10), updateData);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get()
+  @ApiOperation({ summary: 'Get user list' })
+  @ApiResponse({ status: 200, description: 'Successfully get data' })
+  async getUsers(@Query() query: GetUserListDto) {
+    return this.usersService.getUsers(query);
   }
 }

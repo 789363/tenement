@@ -62,6 +62,21 @@ describe('Users e2e test', () => {
       .expect(200); // 假设更新成功返回状态码是 200
   });
 
+  it('/users (GET)- Get users list with conditions', async () => {
+    return request(app.getHttpServer())
+      .get('/users')
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .query({
+        name: 'testuser', // 根据需要调整查询条件
+        status: true,
+        offset: 0,
+        page: 1
+      })
+      .expect(200) // 假设成功返回状态码是 200
+      .then(response => {
+        console.log(response)
+      });
+  });
   it('/users/:id (DELETE)', async () => {
     return request(app.getHttpServer())
       .put(`/users/${testUser.user_id}`) // 使用 testUser
