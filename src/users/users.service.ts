@@ -65,13 +65,16 @@ export class UsersService {
   }
 
   async getUsers(query: GetUserListDto): Promise<any[]> {
-    const { name, status, offset, page } = query;
+    const { name, email, status, offset, page } = query;
     const pageSize = 10;
 
     let whereClause = {};
 
     if (name) {
       whereClause = { ...whereClause, user_name: { contains: name } };
+    }
+    if (email) {
+      whereClause = { ...whereClause, user_email: { contains: email } };
     }
 
     if (status !== undefined && status !== null) {
