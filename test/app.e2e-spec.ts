@@ -62,19 +62,29 @@ describe('Users e2e test', () => {
       .expect(200); // 假设更新成功返回状态码是 200
   });
 
+  it('/users/:id (GET) - Get user details by ID', async () => {
+    return request(app.getHttpServer())
+      .get(`/users/${testUser.user_id}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(200) // 假设成功返回状态码是 200
+      .then(response => {
+        expect(response.body).toHaveProperty('data');
+        console.log(response.body.data)
+      });
+  });
   it('/users (GET)- Get users list with conditions', async () => {
     return request(app.getHttpServer())
       .get('/users')
       .set('Authorization', `Bearer ${jwtToken}`)
       .query({
-        name: 'testuser', // 根据需要调整查询条件
+        name: 'updatedName', // 根据需要调整查询条件
         status: true,
         offset: 0,
         page: 1
       })
       .expect(200) // 假设成功返回状态码是 200
       .then(response => {
-        console.log(response)
+        console.log(response.body)
       });
   });
   it('/users/:id (DELETE)', async () => {

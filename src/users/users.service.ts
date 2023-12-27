@@ -91,7 +91,7 @@ export class UsersService {
       }
     }
     const skipAmount = typeof offset === 'number' ? offset : (typeof page === 'number' ? (page - 1) * pageSize : 0);
-    const users = await this.prisma.user.findMany({
+    return this.prisma.user.findMany({
       where: whereClause,
       skip: skipAmount,
       take: pageSize,
@@ -105,7 +105,22 @@ export class UsersService {
       }
     });
 
-    return users;
   }
+  async getUserById(userId: number): Promise<any> {
+    return this.prisma.user.findUnique({
+      where: {
+        user_id: userId,
+      },
+      select: {
+        user_id: true,
+        user_name: true,
+        user_email: true,
+        status: true,
+        isadmin: true,
+        isDelete: false
+      }
+    });
+  }
+
 
 }

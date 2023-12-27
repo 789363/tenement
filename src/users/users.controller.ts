@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Delete, Put, Body, Param, UseGuards, UseInterceptors, Query } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Put, Body, Param, UseGuards, UseInterceptors, Query, ParseIntPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { AuthService } from '../auth/auth.service';
@@ -57,11 +57,19 @@ export class UsersController {
     return this.usersService.updateUser(parseInt(userId, 10), updateData);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Get()
   @ApiOperation({ summary: 'Get user list' })
   @ApiResponse({ status: 200, description: 'Successfully get data' })
   async getUsers(@Query() query: GetUserListDto) {
     return this.usersService.getUsers(query);
+  }
+
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @Get(':id')
+  @ApiOperation({ summary: 'Get user details' })
+  @ApiResponse({ status: 200, description: 'Successfully retrieved user details' })
+  async getUserById(@Param('id', ParseIntPipe) userId: number) {
+    return this.usersService.getUserById(userId);
   }
 }
