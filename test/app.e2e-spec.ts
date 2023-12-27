@@ -7,7 +7,7 @@ import { user } from '@prisma/client';
 describe('Users e2e test', () => {
   let app: INestApplication;
   let jwtToken: string;
-  let testUser: user; // 修改变量名以避免与类型名称冲突
+  let testUser: user
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -30,13 +30,12 @@ describe('Users e2e test', () => {
       })
       .expect(201); // 假设注册成功返回状态码是 201
 
-    testUser = response.body; // 使用 testUser 代替 user
+    testUser = response.body.data; // 使用 testUser 代替 user
     return response;
   });
 
   it('/users/login (POST)', async () => {
 
-    console.log(testUser); // 使用 testUser
     return request(app.getHttpServer())
       .post('/users/login')
       .send({
@@ -46,9 +45,9 @@ describe('Users e2e test', () => {
 
       .expect(201) // 假设登录成功返回状态码是 201
       .then(response => {
-        expect(response.body).toHaveProperty('access_token');
-        jwtToken = response.body.access_token;
-        console.log('JWT Token:', jwtToken);
+        expect(response.body.data).toHaveProperty('access_token');
+        jwtToken = response.body.data.access_token;
+
       });
   });
 

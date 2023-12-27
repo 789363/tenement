@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Delete, Put, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Put, Body, Param, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { AuthService } from '../auth/auth.service';
@@ -7,20 +7,18 @@ import { AdminGuard } from '../auth/admin.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ResponseInterceptor } from './response.interceptor';
+
 @ApiTags('users')
 @Controller('users')
+@UseInterceptors(ResponseInterceptor)
 export class UsersController {
   constructor(
     private usersService: UsersService,
     private authService: AuthService,
   ) { }
 
-  @Get()
-  @ApiOperation({ summary: 'Get all users' })
-  @ApiResponse({ status: 200, description: 'Return all users.' })
-  getAllUsers() {
-    return this.usersService.getHello();
-  }
+
 
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })

@@ -7,4 +7,10 @@ export class UpdateUserDto {
     @ApiProperty({ example: 'john@example.com', description: 'User\'s email', required: false })
     user_email?: string;
 
+    @ApiProperty({ example: 'password123', description: 'User\'s password' })
+    user_password: string;
+
+    @ApiProperty({ example: true, description: 'User\'s status' })
+    status: boolean;
+
 }
