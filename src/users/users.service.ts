@@ -10,6 +10,16 @@ export class UsersService {
   constructor(private prisma: PrismaService) { }
 
   async createUser(createUserDto: { user_name: string; user_email: string; user_password: string; isadmin: boolean, isDelete: boolean }): Promise<any> {
+    const existingUser = await this.prisma.user.findUnique({
+      where: {
+        user_email: createUserDto.user_email,
+      },
+    });
+
+    if (existingUser) {
+      throw new Error('User with this email already exists');
+    }
+
     const hashedPassword = await bcrypt.hash(createUserDto.user_password, 10);
     const user = await this.prisma.user.create({
       data: {
@@ -35,23 +45,29 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string): Promise<any> {
-    return this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: {
         user_email: email,
-      }
-    });
-  }
-
-  async deleteUser(userId: number, isDeleted: boolean): Promise<any> {
-    return this.prisma.user.update({
-      where: {
-        user_id: userId
       },
-      data: isDeleted,
     });
+
+    if (!user) {
+      throw new Error('User with this email does not exist');
+    }
+
+    return user;
   }
 
   async updateUser(userId: number, updateData: any): Promise<any> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        user_id: userId,
+      },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
     if (updateData.user_password) {
       updateData.user_password = await bcrypt.hash(updateData.user_password, 10);
     }
@@ -61,6 +77,24 @@ export class UsersService {
         user_id: userId,
       },
       data: updateData,
+    });
+  }
+
+  async deleteUser(userId: number, isDeleted: boolean): Promise<any> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        user_id: userId,
+      },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return this.prisma.user.update({
+      where: {
+        user_id: userId
+      },
+      data: isDeleted,
     });
   }
 
@@ -106,8 +140,9 @@ export class UsersService {
     });
 
   }
+
   async getUserById(userId: number): Promise<any> {
-    return this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: {
         user_id: userId,
       },
@@ -120,7 +155,11 @@ export class UsersService {
         isDelete: false
       }
     });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user;
   }
-
-
 }
