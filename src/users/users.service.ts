@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
   constructor(private prisma: PrismaService) { }
 
-  async createUser(createUserDto: { user_name: string; user_email: string; user_password: string; isadmin: boolean }): Promise<any> {
+  async createUser(createUserDto: { user_name: string; user_email: string; user_password: string; isadmin: boolean, isDelete: boolean }): Promise<any> {
     const hashedPassword = await bcrypt.hash(createUserDto.user_password, 10);
     const user = await this.prisma.user.create({
       data: {
@@ -15,6 +15,7 @@ export class UsersService {
         user_password: hashedPassword,
         status: true, // 根据业务逻辑设置默认状态
         isadmin: createUserDto.isadmin, // 使用传入的值
+        isDelete: createUserDto.isDelete
       },
       select: {
         user_id: true,
@@ -22,6 +23,7 @@ export class UsersService {
         user_email: true,
         status: true,
         isadmin: true,
+        isDelete: false
         // 注意：不返回 user_password 字段
       }
     });
@@ -37,11 +39,12 @@ export class UsersService {
     });
   }
 
-  async deleteUser(userId: number): Promise<any> {
-    return this.prisma.user.delete({
+  async deleteUser(userId: number, isDeleted: boolean): Promise<any> {
+    return this.prisma.user.update({
       where: {
-        user_id: userId // 使用传入的整数类型参数
-      }
+        user_id: userId
+      },
+      data: isDeleted,
     });
   }
 

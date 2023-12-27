@@ -27,6 +27,7 @@ describe('Users e2e test', () => {
         user_password: 'password123',
         status: true,
         isadmin: true,
+        isDelete: false
       })
       .expect(201); // 假设注册成功返回状态码是 201
 
@@ -63,8 +64,11 @@ describe('Users e2e test', () => {
 
   it('/users/:id (DELETE)', async () => {
     return request(app.getHttpServer())
-      .delete(`/users/${testUser.user_id}`) // 使用 testUser
+      .put(`/users/${testUser.user_id}`) // 使用 testUser
       .set('Authorization', `Bearer ${jwtToken}`)
+      .send({
+        isDelete: true,
+      })
       .expect(200); // 假设删除成功返回状态码是 200
   });
 

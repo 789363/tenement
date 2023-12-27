@@ -189,5 +189,6 @@ model user {
   user_password String
   status        Boolean
   isadmin       Boolean
+  isDelete      Boolean
   tenement_info tenement_info[]
 }

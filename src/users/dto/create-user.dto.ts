@@ -15,4 +15,7 @@ export class CreateUserDto {
 
     @ApiProperty({ example: true, description: 'User\'s admin' })
     isadmin: boolean;
+
+    @ApiProperty({ example: true, description: 'User\'s delete' })
+    isDelete: boolean;
 }

@@ -45,8 +45,8 @@ export class UsersController {
   @ApiOperation({ summary: 'Delete a user' })
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({ status: 200, description: 'User successfully deleted.' })
-  async deleteUser(@Param('id') userId: string) {
-    return this.usersService.deleteUser(parseInt(userId, 10));
+  async deleteUser(@Param('id') userId: string, isDeleted: boolean) {
+    return this.usersService.deleteUser(parseInt(userId, 10), isDeleted);
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
