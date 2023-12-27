@@ -24,6 +24,7 @@ model tenement_info {
   tenement_photo      Json
   tenement_floor      Int
   tenement_style      String
+  isDelete            Boolean
   rent_info           rent_info[]
   sell_info           sell_info[]
   market_info         market_info[]
@@ -45,6 +46,7 @@ model rent_notice {
   visit_date  DateTime
   notice_date DateTime
   tenement_id Int
+  isDelete    Boolean
   tenement    tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
 
@@ -55,6 +57,7 @@ model sell_notice {
   visit_date  DateTime
   notice_date DateTime
   tenement_id Int
+  isDelete    Boolean
   tenement    tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
 
@@ -65,6 +68,7 @@ model develop_notice {
   visit_date       DateTime
   notice_date      DateTime
   tenement_id      Int
+  isDelete         Boolean
   tenement         tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
 
@@ -76,6 +80,7 @@ model market_notice {
   market_responses String
   market_date      DateTime
   tenement_id      Int
+  isDelete         Boolean
   tenement         tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
 
@@ -89,6 +94,7 @@ model rent_info {
   rental           Int
   deposit          Int
   tenement_id      Int
+  isDelete         Boolean
   tenement         tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
 
@@ -101,6 +107,7 @@ model sell_info {
   owner_remittance String
   price            Int
   tenement_id      Int
+  isDelete         Boolean
   tenement         tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
 
@@ -115,6 +122,7 @@ model develop_info {
   deposit          Int
   price            Int
   tenement_id      Int
+  isDelete         Boolean
   tenement         tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
 
@@ -129,6 +137,7 @@ model market_info {
   min_budget      Int
   max_budget      Int
   tenement_id     Int
+  isDelete        Boolean
   tenement        tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
 
@@ -141,6 +150,7 @@ model buyer_info {
   buyer_jobtitle     String
   buyer_idcard_image Json
   tenement_id        Int
+  isDelete           Boolean
   tenement           tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
 
@@ -156,18 +166,20 @@ model renter_info {
   renter_idcard_image Json
   renter_agreement    String
   tenement_id         Int
+  isDelete            Boolean
   tenement            tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
 
 model collection_info {
-  collection_id      Int                 @id
+  collection_id      Int                 @id @default(autoincrement())
   tenement_id        Int
   collection_name    String
   price              Int
-  payment            Int
+  payment            String
   collection_remark  String
   remittance_bank    String
   remittance_account String
+  isDelete           Boolean
   tenement           tenement_info       @relation(fields: [tenement_id], references: [tenement_id])
   collection_notice  collection_notice[]
 }
@@ -179,6 +191,7 @@ model collection_notice {
   collection_notice String
   visit_date        DateTime
   notice_date       DateTime
+  isDelete          Boolean
   collection        collection_info @relation(fields: [collection_id], references: [collection_id])
 }
 

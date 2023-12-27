@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { CollectionService } from './collection.service';
-import { CollectionsController } from './collection.controller';
-
+import { CollectionController } from './collection.controller';
+import { PrismaService } from '../../prisma/prisma.service'; // 导入 PrismaService
 @Module({
-    controllers: [CollectionsController],
-    providers: [CollectionService],
+    controllers: [CollectionController],
+    providers: [CollectionService, PrismaService],
 })
 export class CollectionModule { }

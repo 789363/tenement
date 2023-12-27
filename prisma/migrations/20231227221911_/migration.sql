@@ -14,6 +14,7 @@ CREATE TABLE `tenement_info` (
     `tenement_photo` JSON NOT NULL,
     `tenement_floor` INTEGER NOT NULL,
     `tenement_style` VARCHAR(191) NOT NULL,
+    `isDelete` BOOLEAN NOT NULL,
 
     PRIMARY KEY (`tenement_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -26,6 +27,7 @@ CREATE TABLE `rent_notice` (
     `visit_date` DATETIME(3) NOT NULL,
     `notice_date` DATETIME(3) NOT NULL,
     `tenement_id` INTEGER NOT NULL,
+    `isDelete` BOOLEAN NOT NULL,
 
     PRIMARY KEY (`rent_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -38,6 +40,7 @@ CREATE TABLE `sell_notice` (
     `visit_date` DATETIME(3) NOT NULL,
     `notice_date` DATETIME(3) NOT NULL,
     `tenement_id` INTEGER NOT NULL,
+    `isDelete` BOOLEAN NOT NULL,
 
     PRIMARY KEY (`sell_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -50,6 +53,7 @@ CREATE TABLE `develop_notice` (
     `visit_date` DATETIME(3) NOT NULL,
     `notice_date` DATETIME(3) NOT NULL,
     `tenement_id` INTEGER NOT NULL,
+    `isDelete` BOOLEAN NOT NULL,
 
     PRIMARY KEY (`develop_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -63,6 +67,7 @@ CREATE TABLE `market_notice` (
     `market_responses` VARCHAR(191) NOT NULL,
     `market_date` DATETIME(3) NOT NULL,
     `tenement_id` INTEGER NOT NULL,
+    `isDelete` BOOLEAN NOT NULL,
 
     PRIMARY KEY (`market_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -78,6 +83,7 @@ CREATE TABLE `rent_info` (
     `rental` INTEGER NOT NULL,
     `deposit` INTEGER NOT NULL,
     `tenement_id` INTEGER NOT NULL,
+    `isDelete` BOOLEAN NOT NULL,
 
     PRIMARY KEY (`rent_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -92,6 +98,7 @@ CREATE TABLE `sell_info` (
     `owner_remittance` VARCHAR(191) NOT NULL,
     `price` INTEGER NOT NULL,
     `tenement_id` INTEGER NOT NULL,
+    `isDelete` BOOLEAN NOT NULL,
 
     PRIMARY KEY (`sell_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -108,6 +115,7 @@ CREATE TABLE `develop_info` (
     `deposit` INTEGER NOT NULL,
     `price` INTEGER NOT NULL,
     `tenement_id` INTEGER NOT NULL,
+    `isDelete` BOOLEAN NOT NULL,
 
     PRIMARY KEY (`develop_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -124,6 +132,7 @@ CREATE TABLE `market_info` (
     `min_budget` INTEGER NOT NULL,
     `max_budget` INTEGER NOT NULL,
     `tenement_id` INTEGER NOT NULL,
+    `isDelete` BOOLEAN NOT NULL,
 
     PRIMARY KEY (`market_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -138,6 +147,7 @@ CREATE TABLE `buyer_info` (
     `buyer_jobtitle` VARCHAR(191) NOT NULL,
     `buyer_idcard_image` JSON NOT NULL,
     `tenement_id` INTEGER NOT NULL,
+    `isDelete` BOOLEAN NOT NULL,
 
     PRIMARY KEY (`buyer_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -155,20 +165,22 @@ CREATE TABLE `renter_info` (
     `renter_idcard_image` JSON NOT NULL,
     `renter_agreement` VARCHAR(191) NOT NULL,
     `tenement_id` INTEGER NOT NULL,
+    `isDelete` BOOLEAN NOT NULL,
 
     PRIMARY KEY (`renter_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `collection_info` (
-    `collection_id` INTEGER NOT NULL,
+    `collection_id` INTEGER NOT NULL AUTO_INCREMENT,
     `tenement_id` INTEGER NOT NULL,
     `collection_name` VARCHAR(191) NOT NULL,
     `price` INTEGER NOT NULL,
-    `payment` INTEGER NOT NULL,
+    `payment` VARCHAR(191) NOT NULL,
     `collection_remark` VARCHAR(191) NOT NULL,
     `remittance_bank` VARCHAR(191) NOT NULL,
     `remittance_account` VARCHAR(191) NOT NULL,
+    `isDelete` BOOLEAN NOT NULL,
 
     PRIMARY KEY (`collection_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -181,6 +193,7 @@ CREATE TABLE `collection_notice` (
     `collection_notice` VARCHAR(191) NOT NULL,
     `visit_date` DATETIME(3) NOT NULL,
     `notice_date` DATETIME(3) NOT NULL,
+    `isDelete` BOOLEAN NOT NULL,
 
     PRIMARY KEY (`notice_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -193,6 +206,7 @@ CREATE TABLE `user` (
     `user_password` VARCHAR(191) NOT NULL,
     `status` BOOLEAN NOT NULL,
     `isadmin` BOOLEAN NOT NULL,
+    `isDelete` BOOLEAN NOT NULL,
 
     UNIQUE INDEX `user_user_email_key`(`user_email`),
     PRIMARY KEY (`user_id`)
