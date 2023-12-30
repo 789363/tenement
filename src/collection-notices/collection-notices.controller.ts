@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Delete, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CollectionNoticeService } from './collection-notices.service';
 import { CreateCollectionNoticeDto } from './dto/create-collection-notice.dto';
@@ -18,6 +18,17 @@ export class CollectionNoticeController {
             data: newNotice,
         };
     }
+    @Delete(':noticeId')
+    @ApiOperation({ summary: 'Delete a collection notice' })
+    @ApiResponse({ status: 200, description: 'Successfully delete the notice data' })
+    async deleteCollectionNotice(@Param('noticeId') noticeId: number) {
+        await this.collectionNoticeService.deleteCollectionNotice(noticeId);
+        return {
+            message: 'Successfully delete the notice data',
+        };
+    }
+
+
 
     // 這裡可以添加更多方法，如更新、刪除、獲取特定通知等
 }

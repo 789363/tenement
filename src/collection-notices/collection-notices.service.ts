@@ -18,6 +18,10 @@ export class CollectionNoticeService {
             },
         });
     }
-
+    async deleteCollectionNotice(noticeId: number): Promise<void> {
+        await this.prisma.collection_notice.delete({
+            where: { notice_id: noticeId },
+        });
+    }
 
 }
