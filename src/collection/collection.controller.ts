@@ -1,4 +1,4 @@
-import { Controller, Post, Put, Body, Delete, Query, Get } from '@nestjs/common';
+import { Controller, Post, Put, Body, Delete, Query, Get, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateCollectionDto } from './dto/create-collection.dto';
 import { CollectionService } from './collection.service'
@@ -50,6 +50,17 @@ export class CollectionController {
         return {
             message: '成功獲取資料',
             data: collections,
+        };
+    }
+
+    @Get(':collectionId')
+    @ApiOperation({ summary: 'Get collection by ID' })
+    @ApiResponse({ status: 200, description: 'Successfully retrieved collection' })
+    getCollectionById(@Param('collectionId') collectionId: number) {
+        const collection = this.collectionsService.getCollectionById(collectionId);
+        return {
+            message: '成功獲取資料',
+            data: collection,
         };
     }
 

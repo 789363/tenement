@@ -70,4 +70,9 @@ export class CollectionService {
 
         return filteredCollections;
     }
+
+    getCollectionById(collectionId: number) {
+        const collection = this.collections.find(c => c.collection_id === collectionId);
+        return collection || null; // 如果找不到，返回 null 或拋出異常
+    }
 }
