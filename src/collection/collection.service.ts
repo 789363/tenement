@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { CreateCollectionDto } from './dto/create-collection.dto';
 import { UpdateCollectionDto } from './dto/update-collection.dto';
 import { PrismaService } from '../../prisma/prisma.service';
-
+import { GetCollectionsDto } from './dto/get-colletions.dto';
 @Injectable()
 export class CollectionService {
     constructor(private prisma: PrismaService) { }
-
+    private collections = [];
     async createCollection(collectionData: CreateCollectionDto): Promise<any> {
 
-        // 将字符串 "true" 和 "false" 转换为布尔值
+
         let isDelete: boolean | string;
         if (isDelete === 'true') {
             isDelete = true;
@@ -52,5 +52,22 @@ export class CollectionService {
             where: { collection_id: collectionId, tenement_id: tenement_id },
             data: { isDelete: true },
         });
+    }
+
+    getCollections(collectionData: GetCollectionsDto) {
+        let filteredCollections = this.collections.filter(collection =>
+            (!collectionData.tenement_id || collection.tenement_id === collectionData.tenement_id) &&
+            (!collectionData.collection_name || collectionData.collection_name.includes(collection.collection_name)) &&
+            (!collectionData.payment || collectionData.payment.includes(collection.payment))
+        );
+
+        // 分頁邏輯
+        const offset = collectionData.offset || 10;
+        const page = collectionData.page || 1;
+        const startIndex = (page - 1) * offset;
+        const endIndex = page * offset;
+        filteredCollections = filteredCollections.slice(startIndex, endIndex);
+
+        return filteredCollections;
     }
 }

@@ -1,9 +1,10 @@
-import { Controller, Post, Put, Body, Delete } from '@nestjs/common';
+import { Controller, Post, Put, Body, Delete, Query, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateCollectionDto } from './dto/create-collection.dto';
 import { CollectionService } from './collection.service'
 import { UpdateCollectionDto } from './dto/update-collection.dto';
 import { DeleteCollectionDto } from './dto/delete-collection.dto';
+import { GetCollectionsDto } from './dto/get-colletions.dto'
 @ApiTags('collections')
 @Controller('collections')
 export class CollectionController {
@@ -39,6 +40,16 @@ export class CollectionController {
         return {
             message: 'Successfully Deleted the collection',
             data: deleteCollection,
+        };
+    }
+    @Get()
+    @ApiOperation({ summary: 'Get collections' })
+    @ApiResponse({ status: 200, description: 'Successfully retrieved collections' })
+    getCollections(@Query() queryCollectionDto: GetCollectionsDto) {
+        const collections = this.collectionsService.getCollections(queryCollectionDto);
+        return {
+            message: '成功獲取資料',
+            data: collections,
         };
     }
 
