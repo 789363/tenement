@@ -11,12 +11,14 @@ import { CollectionModule } from './collection/collection.module';
 import { PrismaService } from '../prisma/prisma.service';
 import { CollectionNoticeService } from './collection-notices/collection-notices.service';
 import { CollectionNoticeModule } from './collection-notices/collection-notices.module';
+import { NoticeModule } from './notice/notice.module';
 @Module({
   imports: [
     UsersModule,
     AuthModule,
     CollectionModule,
-    CollectionNoticeModule, // 添加 AuthModule
+    CollectionNoticeModule,
+    NoticeModule, // 添加 AuthModule
   ],
   controllers: [
     AppController,
