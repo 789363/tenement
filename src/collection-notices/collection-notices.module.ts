@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { CollectionNoticesController } from './collection-notices.controller';
+import { CollectionNoticeController } from './collection-notices.controller';
 
 @Module({
-  controllers: [CollectionNoticesController]
+  controllers: [CollectionNoticeController]
 })
-export class CollectionNoticesModule {}
+export class CollectionNoticeModule { }

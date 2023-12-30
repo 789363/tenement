@@ -187,7 +187,7 @@ CREATE TABLE `collection_info` (
 
 -- CreateTable
 CREATE TABLE `collection_notice` (
-    `notice_id` INTEGER NOT NULL,
+    `notice_id` INTEGER NOT NULL AUTO_INCREMENT,
     `collection_id` INTEGER NOT NULL,
     `collection_record` VARCHAR(191) NOT NULL,
     `collection_notice` VARCHAR(191) NOT NULL,

@@ -185,7 +185,7 @@ model collection_info {
 }
 
 model collection_notice {
-  notice_id         Int             @id
+  notice_id         Int             @id @default(autoincrement())
   collection_id     Int
   collection_record String
   collection_notice String
