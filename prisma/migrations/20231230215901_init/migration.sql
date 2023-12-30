@@ -21,7 +21,7 @@ CREATE TABLE `tenement_info` (
 
 -- CreateTable
 CREATE TABLE `rent_notice` (
-    `rent_id` INTEGER NOT NULL,
+    `notice_id` INTEGER NOT NULL AUTO_INCREMENT,
     `rent_record` VARCHAR(191) NOT NULL,
     `rent_notice` VARCHAR(191) NOT NULL,
     `visit_date` DATETIME(3) NOT NULL,
@@ -29,12 +29,12 @@ CREATE TABLE `rent_notice` (
     `tenement_id` INTEGER NOT NULL,
     `isDelete` BOOLEAN NOT NULL,
 
-    PRIMARY KEY (`rent_id`)
+    PRIMARY KEY (`notice_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `sell_notice` (
-    `sell_id` INTEGER NOT NULL,
+    `notice_id` INTEGER NOT NULL AUTO_INCREMENT,
     `sell_record` VARCHAR(191) NOT NULL,
     `sell_notice` VARCHAR(191) NOT NULL,
     `visit_date` DATETIME(3) NOT NULL,
@@ -42,12 +42,12 @@ CREATE TABLE `sell_notice` (
     `tenement_id` INTEGER NOT NULL,
     `isDelete` BOOLEAN NOT NULL,
 
-    PRIMARY KEY (`sell_id`)
+    PRIMARY KEY (`notice_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `develop_notice` (
-    `develop_id` INTEGER NOT NULL,
+    `notice_id` INTEGER NOT NULL AUTO_INCREMENT,
     `develop_record` VARCHAR(191) NOT NULL,
     `develop_feedback` VARCHAR(191) NOT NULL,
     `visit_date` DATETIME(3) NOT NULL,
@@ -55,21 +55,34 @@ CREATE TABLE `develop_notice` (
     `tenement_id` INTEGER NOT NULL,
     `isDelete` BOOLEAN NOT NULL,
 
-    PRIMARY KEY (`develop_id`)
+    PRIMARY KEY (`notice_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `market_notice` (
-    `market_id` INTEGER NOT NULL,
+    `notice_id` INTEGER NOT NULL AUTO_INCREMENT,
     `market_hint` VARCHAR(191) NOT NULL,
     `market_remark` VARCHAR(191) NOT NULL,
     `market_content` VARCHAR(191) NOT NULL,
     `market_responses` VARCHAR(191) NOT NULL,
-    `market_date` DATETIME(3) NOT NULL,
+    `visit_date` DATETIME(3) NOT NULL,
     `tenement_id` INTEGER NOT NULL,
     `isDelete` BOOLEAN NOT NULL,
 
-    PRIMARY KEY (`market_id`)
+    PRIMARY KEY (`notice_id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `collection_notice` (
+    `notice_id` INTEGER NOT NULL AUTO_INCREMENT,
+    `collection_id` INTEGER NOT NULL,
+    `collection_record` VARCHAR(191) NOT NULL,
+    `collection_notice` VARCHAR(191) NOT NULL,
+    `visit_date` DATETIME(3) NOT NULL,
+    `notice_date` DATETIME(3) NOT NULL,
+    `isDelete` BOOLEAN NOT NULL,
+
+    PRIMARY KEY (`notice_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -186,19 +199,6 @@ CREATE TABLE `collection_info` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `collection_notice` (
-    `notice_id` INTEGER NOT NULL AUTO_INCREMENT,
-    `collection_id` INTEGER NOT NULL,
-    `collection_record` VARCHAR(191) NOT NULL,
-    `collection_notice` VARCHAR(191) NOT NULL,
-    `visit_date` DATETIME(3) NOT NULL,
-    `notice_date` DATETIME(3) NOT NULL,
-    `isDelete` BOOLEAN NOT NULL,
-
-    PRIMARY KEY (`notice_id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `user` (
     `user_id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_name` VARCHAR(191) NOT NULL,
@@ -228,6 +228,9 @@ ALTER TABLE `develop_notice` ADD CONSTRAINT `develop_notice_tenement_id_fkey` FO
 ALTER TABLE `market_notice` ADD CONSTRAINT `market_notice_tenement_id_fkey` FOREIGN KEY (`tenement_id`) REFERENCES `tenement_info`(`tenement_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `collection_notice` ADD CONSTRAINT `collection_notice_collection_id_fkey` FOREIGN KEY (`collection_id`) REFERENCES `collection_info`(`collection_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `rent_info` ADD CONSTRAINT `rent_info_tenement_id_fkey` FOREIGN KEY (`tenement_id`) REFERENCES `tenement_info`(`tenement_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -247,6 +250,3 @@ ALTER TABLE `renter_info` ADD CONSTRAINT `renter_info_tenement_id_fkey` FOREIGN 
 
 -- AddForeignKey
 ALTER TABLE `collection_info` ADD CONSTRAINT `collection_info_tenement_id_fkey` FOREIGN KEY (`tenement_id`) REFERENCES `tenement_info`(`tenement_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `collection_notice` ADD CONSTRAINT `collection_notice_collection_id_fkey` FOREIGN KEY (`collection_id`) REFERENCES `collection_info`(`collection_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
