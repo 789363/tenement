@@ -1,4 +1,5 @@
 export class UpdateCollectionDto {
+
     collection_id?: number;
     collection_name?: string;
     price?: number;

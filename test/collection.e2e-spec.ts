@@ -19,7 +19,7 @@ describe('CollectionController (e2e)', () => {
         return request(app.getHttpServer())
             .post('/collections')
             .send({
-                "tenements_id": "1",
+                "tenement_id": "1",
                 "collection_name": "水费",
                 "collection_type": "代收",
                 "price": 500,
@@ -50,7 +50,7 @@ describe('CollectionController (e2e)', () => {
                 "remittance_bank": "ABC Bank",
                 "remittance_account": "1234567890"
             })
-            .expect(201)
+            .expect(200)
             .expect(response => {
                 expect(response.body).toHaveProperty('message', 'Successfully updated the collection');
                 expect(response.body).toHaveProperty('data');
@@ -64,7 +64,7 @@ describe('CollectionController (e2e)', () => {
                 "tenement_id": 1,
                 "collection_id": 1
             })
-            .expect(201)
+            .expect(200)
             .expect(response => {
                 expect(response.body).toHaveProperty('message', 'Successfully Deleted the collection');
                 expect(response.body).toHaveProperty('data');

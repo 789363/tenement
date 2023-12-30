@@ -32,10 +32,17 @@ export class CollectionService {
         });
     }
 
-    async updateCollection(collectionId: number, collectionData: UpdateCollectionDto): Promise<any> {
+    async updateCollection(collectionData: UpdateCollectionDto): Promise<any> {
         return this.prisma.collection_info.update({
-            where: { collection_id: collectionId },
-            data: collectionData,
+            where: { collection_id: collectionData.collection_id },
+            data: {
+                collection_name: collectionData.collection_name,
+                price: collectionData.price,
+                payment: collectionData.payment,
+                collection_remark: collectionData.collection_remark,
+                remittance_bank: collectionData.remittance_bank,
+                remittance_account: collectionData.remittance_account,
+            },
         });
     }
 

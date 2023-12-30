@@ -24,7 +24,7 @@ export class CollectionController {
     @ApiOperation({ summary: 'Update a new collection' })
     @ApiResponse({ status: 201, description: 'Successfully Updated the collection' })
     updateCollection(@Body() updateCollectionDto: UpdateCollectionDto) {
-        const updatedCollection = this.collectionsService.updateCollection(updateCollectionDto.collection_id, updateCollectionDto);
+        const updatedCollection = this.collectionsService.updateCollection(updateCollectionDto);
         return {
             message: 'Successfully updated the collection',
             data: updatedCollection,
