@@ -93,8 +93,6 @@ describe('CollectionController (e2e)', () => {
                 remindDate: new Date(),
             })
             .expect(201);
-        console.log(response.body.data.notice_id)
-        console.log(response.body)
         testCollectionNoticeID = response.body.data.notice_id;
         expect(response.body)
     });
