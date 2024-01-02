@@ -13,7 +13,7 @@ export class NoticesController {
     async getNotices(@Param() params: GetNoticesDto) {
         const data = await this.noticesService.getNotices(params.year, params.month);
         return {
-            message: '成功新增資料',
+            message: '成功取得資料',
             data: data,
         };
     }

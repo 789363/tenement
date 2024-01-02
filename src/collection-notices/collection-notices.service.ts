@@ -16,8 +16,8 @@ export class CollectionNoticeService {
         return this.prisma.collection_notice.create({
             data: {
                 collection_id: collectionId,
-                record: noticeData.record,
-                remind: noticeData.remind,
+                collection_record: noticeData.collection_record,
+                collection_remind: noticeData.collection_remind,
                 visitDate: noticeData.visitDate, // 確保這是一個合適的日期格式
                 remindDate: noticeData.remindDate, // 確保這是一個合適的日期格式
             },
@@ -40,9 +40,9 @@ export class CollectionNoticeService {
             where: { notice_id: noticeId },
             data: {
                 visitDate: updateData.visitDate,
-                record: updateData.record,
+                collection_record: updateData.collection_record,
                 remindDate: updateData.remindDate,
-                remind: updateData.remind,
+                collection_remind: updateData.collection_remind,
             },
         });
     }

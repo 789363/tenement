@@ -19,7 +19,7 @@ import { NoticesModule } from './notice/notice.module';
     AuthModule,
     CollectionModule,
     CollectionNoticeModule,
-    NoticesModule, // 添加 AuthModule
+    NoticesModule,
   ],
   controllers: [
     AppController,

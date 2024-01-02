@@ -1,6 +1,6 @@
 export class UpdateCollectionNoticeDto {
     visitDate: Date;
-    record: string;
+    collection_record: string;
     remindDate: Date;
-    remind: string;
+    collection_remind: string;
 }

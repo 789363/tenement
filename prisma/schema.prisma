@@ -42,8 +42,8 @@ model tenement_info {
 model rent_notice {
   notice_id   Int           @id @default(autoincrement())
   rent_record String
-  rent_notice String
-  visit_date  DateTime
+  rent_remind String
+  visitDate   DateTime
   notice_date DateTime
   tenement_id Int
   tenement    tenement_info @relation(fields: [tenement_id], references: [tenement_id])
@@ -52,8 +52,8 @@ model rent_notice {
 model sell_notice {
   notice_id   Int           @id @default(autoincrement())
   sell_record String
-  sell_notice String
-  visit_date  DateTime
+  sell_remind String
+  visitDate   DateTime
   notice_date DateTime
   tenement_id Int
   tenement    tenement_info @relation(fields: [tenement_id], references: [tenement_id])
@@ -63,8 +63,8 @@ model develop_notice {
   notice_id        Int           @id @default(autoincrement())
   develop_record   String
   develop_feedback String
-  visit_date       DateTime
-  notice_date      DateTime
+  visitDate        DateTime
+  remindDate       DateTime
   tenement_id      Int
   tenement         tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
@@ -75,19 +75,19 @@ model market_notice {
   market_remark    String
   market_content   String
   market_responses String
-  visit_date       DateTime
+  visitDate        DateTime
   tenement_id      Int
   tenement         tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
 
 model collection_notice {
-  notice_id     Int             @id @default(autoincrement())
-  collection_id Int
-  remind        String
-  record        String
-  visitDate     DateTime
-  remindDate    DateTime
-  collection    collection_info @relation(fields: [collection_id], references: [collection_id])
+  notice_id         Int             @id @default(autoincrement())
+  collection_id     Int
+  collection_remind String
+  collection_record String
+  visitDate         DateTime
+  remindDate        DateTime
+  collection        collection_info @relation(fields: [collection_id], references: [collection_id])
 }
 
 model rent_info {

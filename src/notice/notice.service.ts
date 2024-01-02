@@ -9,7 +9,6 @@ export class NoticesService {
         // 将年份和月份字符串转换为数字
         const yearNum = parseInt(year);
         const monthNum = parseInt(month);
-
         // 使用转换后的数字构造日期
         const startDate = new Date(yearNum, monthNum - 1, 1);
         const endDate = new Date(yearNum, monthNum, 0);
@@ -17,24 +16,24 @@ export class NoticesService {
         // 并行查询五个表
         const [rentNotices, sellNotices, developNotices, marketNotices, collectionNotices] = await Promise.all([
             this.prisma.rent_notice.findMany({
-                where: { visit_date: { gte: startDate, lte: endDate } },
-                select: { notice_id: true, rent_record: true, visit_date: true }
+                where: { visitDate: { gte: startDate, lte: endDate } },
+                select: { notice_id: true, rent_record: true, visitDate: true }
             }),
             this.prisma.sell_notice.findMany({
-                where: { visit_date: { gte: startDate, lte: endDate } },
-                select: { notice_id: true, sell_record: true, visit_date: true }
+                where: { visitDate: { gte: startDate, lte: endDate } },
+                select: { notice_id: true, sell_record: true, visitDate: true }
             }),
             this.prisma.develop_notice.findMany({
-                where: { visit_date: { gte: startDate, lte: endDate } },
-                select: { notice_id: true, develop_record: true, visit_date: true }
+                where: { visitDate: { gte: startDate, lte: endDate } },
+                select: { notice_id: true, develop_record: true, visitDate: true }
             }),
             this.prisma.market_notice.findMany({
-                where: { visit_date: { gte: startDate, lte: endDate } },
-                select: { notice_id: true, market_hint: true, visit_date: true }
+                where: { visitDate: { gte: startDate, lte: endDate } },
+                select: { notice_id: true, market_hint: true, visitDate: true }
             }),
             this.prisma.collection_notice.findMany({
-                where: { visit_date: { gte: startDate, lte: endDate } },
-                select: { notice_id: true, collection_record: true, visit_date: true }
+                where: { visitDate: { gte: startDate, lte: endDate } },
+                select: { notice_id: true, collection_record: true, visitDate: true }
             })
         ]);
 
@@ -49,7 +48,7 @@ export class NoticesService {
         ];
         // 格式化数据以符合响应结构
         const formattedData = allNotices.reduce((acc, notice) => {
-            const day = notice.visit_date.getDate();
+            const day = notice.visitDate.getDate();
             if (!acc[day]) {
                 acc[day] = { day, events: [] };
             }
@@ -74,7 +73,6 @@ export class NoticesService {
             acc[day].events.push(event);
             return acc;
         }, {});
-
 
         return Object.values(formattedData);
     }
