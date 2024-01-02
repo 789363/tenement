@@ -1,5 +1,4 @@
 // src/upload/upload.controller.ts
-
 import { Controller, Post, UseInterceptors, UploadedFile, Res } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
@@ -11,7 +10,7 @@ export class UploadController {
     @Post()
     @UseInterceptors(FileInterceptor('file', {
         storage: multer.diskStorage({
-            destination: join(__dirname, '..', 'public'),
+            destination: join(__dirname, '..', '..', 'public'), // 修改路径
             filename: (req, file, callback) => {
                 const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
                 const filename = `${uniqueSuffix}-${file.originalname}`;
