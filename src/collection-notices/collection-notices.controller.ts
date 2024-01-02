@@ -12,7 +12,7 @@ export class CollectionNoticeController {
     @ApiOperation({ summary: 'Create a new collection notice' })
     @ApiResponse({ status: 201, description: 'Successfully created the collection notice' })
     async createCollectionNotice(@Body() createCollectionNoticeDto: CreateCollectionNoticeDto) {
-        const newNotice = this.collectionNoticeService.createCollectionNotice(createCollectionNoticeDto);
+        const newNotice = await this.collectionNoticeService.createCollectionNotice(createCollectionNoticeDto);
         return {
             message: 'Successfully created the collection notice',
             data: newNotice,
