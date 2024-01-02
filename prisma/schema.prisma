@@ -85,8 +85,8 @@ model collection_notice {
   collection_id Int
   remind        String
   record        String
-  visit_date    DateTime
-  notice_date   DateTime
+  visitDate     DateTime
+  remindDate    DateTime
   collection    collection_info @relation(fields: [collection_id], references: [collection_id])
 }
 

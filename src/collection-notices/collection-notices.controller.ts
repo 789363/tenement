@@ -11,7 +11,7 @@ export class CollectionNoticeController {
     @Post()
     @ApiOperation({ summary: 'Create a new collection notice' })
     @ApiResponse({ status: 201, description: 'Successfully created the collection notice' })
-    createCollectionNotice(@Body() createCollectionNoticeDto: CreateCollectionNoticeDto) {
+    async createCollectionNotice(@Body() createCollectionNoticeDto: CreateCollectionNoticeDto) {
         const newNotice = this.collectionNoticeService.createCollectionNotice(createCollectionNoticeDto);
         return {
             message: 'Successfully created the collection notice',
@@ -31,11 +31,11 @@ export class CollectionNoticeController {
 
     @Put(':noticeId')
     @ApiOperation({ summary: 'Update a collection notice' })
-    @ApiResponse({ status: 200, description: 'Successfully update data' })
+    @ApiResponse({ status: 200, description: 'Successfully updated the notice data' })
     async updateCollectionNotice(@Param('noticeId') noticeId: number, @Body() updateDto: UpdateCollectionNoticeDto) {
         const updatedNotice = await this.collectionNoticeService.updateCollectionNotice(noticeId, updateDto);
         return {
-            message: 'Successfully update data',
+            message: 'Successfully updated the notice data',
             data: updatedNotice,
         };
     }

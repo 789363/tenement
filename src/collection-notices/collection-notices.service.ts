@@ -9,7 +9,6 @@ export class CollectionNoticeService {
 
     async createCollectionNotice(noticeData: CreateCollectionNoticeDto): Promise<collection_notice> {
         // 檢查 collection_id 是否為字符串，並將其轉換為數字
-        console.log(noticeData)
         const collectionId = typeof noticeData.collection_id === 'string'
             ? parseInt(noticeData.collection_id, 10)
             : noticeData.collection_id;
@@ -19,24 +18,30 @@ export class CollectionNoticeService {
                 collection_id: collectionId,
                 record: noticeData.record,
                 remind: noticeData.remind,
-                visit_date: noticeData.visitDate, // 確保這是一個合適的日期格式
-                notice_date: noticeData.remindDate, // 確保這是一個合適的日期格式
+                visitDate: noticeData.visitDate, // 確保這是一個合適的日期格式
+                remindDate: noticeData.remindDate, // 確保這是一個合適的日期格式
             },
         });
     }
-    async deleteCollectionNotice(noticeId: number): Promise<void> {
+    async deleteCollectionNotice(notice_id: number): Promise<void> {
+        const noticeId = typeof notice_id === 'string'
+            ? parseInt(notice_id, 10)
+            : notice_id;
         await this.prisma.collection_notice.delete({
             where: { notice_id: noticeId },
         });
     }
 
-    async updateCollectionNotice(noticeId: number, updateData: UpdateCollectionNoticeDto): Promise<collection_notice> {
+    async updateCollectionNotice(notice_id: number, updateData: UpdateCollectionNoticeDto): Promise<collection_notice> {
+        const noticeId = typeof notice_id === 'string'
+            ? parseInt(notice_id, 10)
+            : notice_id;
         return this.prisma.collection_notice.update({
             where: { notice_id: noticeId },
             data: {
-                visit_date: updateData.visitDate,
+                visitDate: updateData.visitDate,
                 record: updateData.record,
-                notice_date: updateData.remindDate,
+                remindDate: updateData.remindDate,
                 remind: updateData.remind,
             },
         });

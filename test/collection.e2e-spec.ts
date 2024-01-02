@@ -2,10 +2,10 @@ import * as request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../src/app.module';
-
+import { collection_notice } from '@prisma/client';
 describe('CollectionController (e2e)', () => {
     let app: INestApplication;
-
+    let testCollectionNoticeID: collection_notice
     beforeAll(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
             imports: [AppModule],
@@ -81,7 +81,6 @@ describe('CollectionController (e2e)', () => {
     });
 
 
-    let createdNoticeId;
 
     it('/collection-notices (POST) - Create collection notice', async () => {
         const response = await request(app.getHttpServer())
@@ -90,38 +89,36 @@ describe('CollectionController (e2e)', () => {
                 collection_id: 1,
                 remind: "Record details",
                 record: "Reminder details",
-                visit_date: new Date(),
-                notice_date: new Date(),
+                visitDate: new Date(),
+                remindDate: new Date(),
             })
             .expect(201);
-
+        testCollectionNoticeID = response.body.data.notice_id;
         expect(response.body)
-        createdNoticeId = response.body.data.notice_id; // 儲存創建的通知 ID 以供後續測試使用
     });
 
     it('/collection-notices/:id (PUT) - Update collection notice', () => {
-        console.log(createdNoticeId);
         return request(app.getHttpServer())
-            .put(`/collection-notices/${createdNoticeId}`)
+            .put(`/collection-notices/${testCollectionNoticeID}`)
             .send({
-                visit_date: new Date(),
+                visitDate: new Date(),
                 record: "Reminder details123",
-                notice_date: new Date(),
+                remindDate: new Date(),
                 remind: "Record details1223",
             })
             .expect(200)
             .expect(response => {
-                expect(response.body).toHaveProperty('message', 'Successfully updated the collection notice');
+                expect(response.body).toHaveProperty('message', 'Successfully updated the notice data');
                 expect(response.body).toHaveProperty('data');
             });
     });
 
     it('/collection-notices/:id (DELETE) - Delete collection notice', () => {
         return request(app.getHttpServer())
-            .delete(`/collection-notices/${createdNoticeId}`)
+            .delete(`/collection-notices/${testCollectionNoticeID}`)
             .expect(200)
             .expect(response => {
-                expect(response.body).toHaveProperty('message', 'Successfully deleted the collection notice');
+                expect(response.body).toHaveProperty('message', 'Successfully delete the notice data');
             });
     });
 
