@@ -1,8 +1,8 @@
 // schema.prisma
 
 datasource db {
-  provider = "mysql" // 或者您使用的数据库
-  url      = env("DATABASE_URL")
+  provider = "sqlite" // 或者您使用的数据库
+  url      = "file:./dev.db"
 }
 
 generator client {
@@ -21,7 +21,7 @@ model tenement_info {
   management_fee      Int
   tenement_status     Int
   tenement_type       Int
-  tenement_photo      Json
+  tenement_photo      String
   tenement_floor      Int
   tenement_style      String
   isDelete            Boolean
@@ -154,7 +154,7 @@ model buyer_info {
   buyer_name         String
   buyer_phone        String
   buyer_jobtitle     String
-  buyer_idcard_image Json
+  buyer_idcard_image String
   tenement_id        Int
   isDelete           Boolean
   tenement           tenement_info @relation(fields: [tenement_id], references: [tenement_id])
@@ -169,7 +169,7 @@ model renter_info {
   renter_jobtitle     String
   guarantor_name      String
   guarantor_phone     String
-  renter_idcard_image Json
+  renter_idcard_image String
   renter_agreement    String
   tenement_id         Int
   isDelete            Boolean
