@@ -81,13 +81,13 @@ model market_notice {
 }
 
 model collection_notice {
-  notice_id         Int             @id @default(autoincrement())
-  collection_id     Int
-  collection_record String
-  collection_notice String
-  visit_date        DateTime
-  notice_date       DateTime
-  collection        collection_info @relation(fields: [collection_id], references: [collection_id])
+  notice_id     Int             @id @default(autoincrement())
+  collection_id Int
+  remind        String
+  record        String
+  visit_date    DateTime
+  notice_date   DateTime
+  collection    collection_info @relation(fields: [collection_id], references: [collection_id])
 }
 
 model rent_info {

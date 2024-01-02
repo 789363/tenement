@@ -40,7 +40,4 @@ export class CollectionNoticeController {
         };
     }
 
-
-
-    // 這裡可以添加更多方法，如更新、刪除、獲取特定通知等
 }

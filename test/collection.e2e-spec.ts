@@ -80,6 +80,52 @@ describe('CollectionController (e2e)', () => {
             });
     });
 
+
+    let createdNoticeId;
+
+    it('/collection-notices (POST) - Create collection notice', async () => {
+        const response = await request(app.getHttpServer())
+            .post('/collection-notices')
+            .send({
+                collection_id: 1,
+                collection_record: "Record details",
+                collection_notice: "Reminder details",
+                visit_date: new Date(),
+                notice_date: new Date(),
+            })
+            .expect(201);
+
+        expect(response.body)
+        createdNoticeId = response.body.data.notice_id; // 儲存創建的通知 ID 以供後續測試使用
+    });
+
+    it('/collection-notices/:id (PUT) - Update collection notice', () => {
+        console.log(createdNoticeId);
+        return request(app.getHttpServer())
+            .put(`/collection-notices/${createdNoticeId}`)
+            .send({
+                visit_date: new Date(),
+                collection_record: "Updated record details",
+                notice_date: new Date(),
+                collection_notice: "Updated reminder details",
+            })
+            .expect(200)
+            .expect(response => {
+                expect(response.body).toHaveProperty('message', 'Successfully updated the collection notice');
+                expect(response.body).toHaveProperty('data');
+            });
+    });
+
+    it('/collection-notices/:id (DELETE) - Delete collection notice', () => {
+        return request(app.getHttpServer())
+            .delete(`/collection-notices/${createdNoticeId}`)
+            .expect(200)
+            .expect(response => {
+                expect(response.body).toHaveProperty('message', 'Successfully deleted the collection notice');
+            });
+    });
+
+
     it('/collections (DELETE) - Delete collection', () => {
         return request(app.getHttpServer())
             .delete('/collections')
@@ -93,6 +139,7 @@ describe('CollectionController (e2e)', () => {
                 expect(response.body).toHaveProperty('data');
             });
     });
+
     afterAll(async () => {
         await app.close();
     });
