@@ -88,8 +88,8 @@ describe('CollectionController (e2e)', () => {
             .post('/collection-notices')
             .send({
                 collection_id: 1,
-                collection_record: "Record details",
-                collection_notice: "Reminder details",
+                remind: "Record details",
+                record: "Reminder details",
                 visit_date: new Date(),
                 notice_date: new Date(),
             })
@@ -105,9 +105,9 @@ describe('CollectionController (e2e)', () => {
             .put(`/collection-notices/${createdNoticeId}`)
             .send({
                 visit_date: new Date(),
-                collection_record: "Updated record details",
+                record: "Reminder details123",
                 notice_date: new Date(),
-                collection_notice: "Updated reminder details",
+                remind: "Record details1223",
             })
             .expect(200)
             .expect(response => {
