@@ -57,6 +57,34 @@ describe('CollectionController (e2e)', () => {
             });
     });
 
+    it('/collections (GET) - Get collections', () => {
+        return request(app.getHttpServer())
+            .get('/collections')
+            .query({
+                tenement_id: 1,
+                collection_name: "水费",
+                payment: "银行转账"
+            })
+            .expect(200)
+            .expect(response => {
+                expect(Array.isArray(response.body)).toBeTruthy();
+                expect(response.body.length).toBeGreaterThan(0);
+                expect(response.body[0]).toHaveProperty('collection_name', '水费');
+            });
+    });
+
+    it('/collections/:id (GET) - Get collection by ID', () => {
+        const collectionId = 1; // 假設的 collection ID
+        return request(app.getHttpServer())
+            .get(`/collections/${collectionId}`)
+            .expect(200)
+            .expect(response => {
+                expect(response.body).toHaveProperty('collection_id', collectionId);
+                expect(response.body).toHaveProperty('collection_name');
+                expect(response.body).toHaveProperty('price');
+            });
+    });
+
     it('/collections (DELETE) - Delete collection', () => {
         return request(app.getHttpServer())
             .delete('/collections')
@@ -70,6 +98,8 @@ describe('CollectionController (e2e)', () => {
                 expect(response.body).toHaveProperty('data');
             });
     });
+
+
 
     afterAll(async () => {
         await app.close();

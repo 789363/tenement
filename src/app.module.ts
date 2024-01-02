@@ -11,7 +11,7 @@ import { CollectionModule } from './collection/collection.module';
 import { PrismaService } from '../prisma/prisma.service';
 import { CollectionNoticeService } from './collection-notices/collection-notices.service';
 import { CollectionNoticeModule } from './collection-notices/collection-notices.module';
-import { NoticeModule } from './notice/notice.module';
+import { NoticesModule } from './notice/notice.module';
 
 @Module({
   imports: [
@@ -19,7 +19,7 @@ import { NoticeModule } from './notice/notice.module';
     AuthModule,
     CollectionModule,
     CollectionNoticeModule,
-    NoticeModule, // 添加 AuthModule
+    NoticesModule, // 添加 AuthModule
   ],
   controllers: [
     AppController,

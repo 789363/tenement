@@ -36,6 +36,7 @@ export class UsersService {
         status: true,
         isadmin: true,
         isDelete: true,
+        user_password: false,
         // 注意：不返回 user_password 字段
       }
     });
@@ -43,7 +44,7 @@ export class UsersService {
     return user;
   }
 
-  async findOneByEmail(email: string): Promise<UserData> {
+  async findOneByEmail(email: string): Promise<user> {
     const user = await this.prisma.user.findUnique({
       where: {
         user_email: email,
@@ -57,7 +58,7 @@ export class UsersService {
     return user;
   }
 
-  async updateUser(userId: number, updateData: any): Promise<UserData> {
+  async updateUser(userId: number, updateData: any): Promise<user> {
     const user = await this.prisma.user.findUnique({
       where: {
         user_id: userId,
@@ -79,7 +80,7 @@ export class UsersService {
     });
   }
 
-  async deleteUser(userId: number, isDeleted: boolean): Promise<UserData> {
+  async deleteUser(userId: number, isDeleted: boolean): Promise<user> {
     const user = await this.prisma.user.findUnique({
       where: {
         user_id: userId,

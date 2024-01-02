@@ -15,7 +15,6 @@ export class CollectionNoticeService {
                 collection_notice: noticeData.remind,
                 visit_date: noticeData.visitDate,
                 notice_date: noticeData.remindDate,
-                isDelete: false,
             },
         });
     }

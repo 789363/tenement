@@ -17,23 +17,23 @@ export class NoticesService {
         // 并行查询五个表
         const [rentNotices, sellNotices, developNotices, marketNotices, collectionNotices] = await Promise.all([
             this.prisma.rent_notice.findMany({
-                where: { visit_date: { gte: startDate, lte: endDate }, isDelete: false },
+                where: { visit_date: { gte: startDate, lte: endDate } },
                 select: { notice_id: true, rent_record: true, visit_date: true }
             }),
             this.prisma.sell_notice.findMany({
-                where: { visit_date: { gte: startDate, lte: endDate }, isDelete: false },
+                where: { visit_date: { gte: startDate, lte: endDate } },
                 select: { notice_id: true, sell_record: true, visit_date: true }
             }),
             this.prisma.develop_notice.findMany({
-                where: { visit_date: { gte: startDate, lte: endDate }, isDelete: false },
+                where: { visit_date: { gte: startDate, lte: endDate } },
                 select: { notice_id: true, develop_record: true, visit_date: true }
             }),
             this.prisma.market_notice.findMany({
-                where: { visit_date: { gte: startDate, lte: endDate }, isDelete: false },
+                where: { visit_date: { gte: startDate, lte: endDate } },
                 select: { notice_id: true, market_hint: true, visit_date: true }
             }),
             this.prisma.collection_notice.findMany({
-                where: { visit_date: { gte: startDate, lte: endDate }, isDelete: false },
+                where: { visit_date: { gte: startDate, lte: endDate } },
                 select: { notice_id: true, collection_record: true, visit_date: true }
             })
         ]);
