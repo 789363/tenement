@@ -46,7 +46,6 @@ model rent_notice {
   visit_date  DateTime
   notice_date DateTime
   tenement_id Int
-  isDelete    Boolean
   tenement    tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
 
@@ -57,7 +56,6 @@ model sell_notice {
   visit_date  DateTime
   notice_date DateTime
   tenement_id Int
-  isDelete    Boolean
   tenement    tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
 
@@ -68,7 +66,6 @@ model develop_notice {
   visit_date       DateTime
   notice_date      DateTime
   tenement_id      Int
-  isDelete         Boolean
   tenement         tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
 
@@ -80,7 +77,6 @@ model market_notice {
   market_responses String
   visit_date       DateTime
   tenement_id      Int
-  isDelete         Boolean
   tenement         tenement_info @relation(fields: [tenement_id], references: [tenement_id])
 }
 
@@ -91,7 +87,6 @@ model collection_notice {
   collection_notice String
   visit_date        DateTime
   notice_date       DateTime
-  isDelete          Boolean
   collection        collection_info @relation(fields: [collection_id], references: [collection_id])
 }
 
