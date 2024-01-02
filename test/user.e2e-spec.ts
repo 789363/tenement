@@ -19,11 +19,13 @@ describe('Users e2e test', () => {
   });
 
   it('/users/register (POST)', async () => {
+    const randomEmail = `testuser${Math.floor(Math.random() * 10000)}@example.com`;
     const response = await request(app.getHttpServer())
+
       .post('/users/register')
       .send({
         user_name: 'testuser',
-        user_email: 'test@example.com',
+        user_email: randomEmail, // 使用随机生成的电子邮件
         user_password: 'password123',
         status: true,
         isadmin: true,
@@ -57,7 +59,7 @@ describe('Users e2e test', () => {
       .put(`/users/${testUser.user_id}`) // 使用 testUser
       .set('Authorization', `Bearer ${jwtToken}`)
       .send({
-        user_email: '123456',
+        user_name: 'UpdateSuccess',
       })
       .expect(200); // 假设更新成功返回状态码是 200
   });
