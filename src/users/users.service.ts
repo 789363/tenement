@@ -8,7 +8,7 @@ import { UserData } from './interface/user.interface';
 export class UsersService {
   constructor(private prisma: PrismaService) { }
 
-  async createUser(createUserDto: { user_name: string; user_email: string; user_password: string; isadmin: boolean, isDelete: boolean }): Promise<user> {
+  async createUser(createUserDto: { user_name: string; user_email: string; user_password: string; isadmin: boolean, isDelete: boolean }): Promise<UserData> {
     const existingUser = await this.prisma.user.findUnique({
       where: {
         user_email: createUserDto.user_email,
@@ -35,7 +35,7 @@ export class UsersService {
         user_email: true,
         status: true,
         isadmin: true,
-        isDelete: false
+        isDelete: true,
         // 注意：不返回 user_password 字段
       }
     });
@@ -43,7 +43,7 @@ export class UsersService {
     return user;
   }
 
-  async findOneByEmail(email: string): Promise<user> {
+  async findOneByEmail(email: string): Promise<UserData> {
     const user = await this.prisma.user.findUnique({
       where: {
         user_email: email,
@@ -57,7 +57,7 @@ export class UsersService {
     return user;
   }
 
-  async updateUser(userId: number, updateData: any): Promise<user> {
+  async updateUser(userId: number, updateData: any): Promise<UserData> {
     const user = await this.prisma.user.findUnique({
       where: {
         user_id: userId,
@@ -79,7 +79,7 @@ export class UsersService {
     });
   }
 
-  async deleteUser(userId: number, isDeleted: boolean): Promise<user> {
+  async deleteUser(userId: number, isDeleted: boolean): Promise<UserData> {
     const user = await this.prisma.user.findUnique({
       where: {
         user_id: userId,
