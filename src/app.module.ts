@@ -12,7 +12,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CollectionNoticeService } from './collection-notices/collection-notices.service';
 import { CollectionNoticeModule } from './collection-notices/collection-notices.module';
 import { NoticesModule } from './notice/notice.module';
-
+import { UploadController } from './upload/upload.controller';
+import { MulterModule } from '@nestjs/platform-express';
 @Module({
   imports: [
     UsersModule,
@@ -20,11 +21,15 @@ import { NoticesModule } from './notice/notice.module';
     CollectionModule,
     CollectionNoticeModule,
     NoticesModule,
+    MulterModule.register({
+      dest: './uploads',
+    }),
   ],
   controllers: [
     AppController,
     UsersController,
     CollectionController,
+    UploadController,
   ],
   providers: [AppService, CollectionService, PrismaService, CollectionNoticeService],
 })
