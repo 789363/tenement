@@ -54,7 +54,7 @@ export class CollectionService {
         });
     }
 
-    getCollections(collectionData: GetCollectionsDto) {
+    async getCollections(collectionData: GetCollectionsDto) {
         let filteredCollections = this.collections.filter(collection =>
             (!collectionData.tenement_id || collection.tenement_id === collectionData.tenement_id) &&
             (!collectionData.collection_name || collectionData.collection_name.includes(collection.collection_name)) &&
@@ -71,7 +71,7 @@ export class CollectionService {
         return filteredCollections;
     }
 
-    getCollectionById(collectionId: number) {
+    async getCollectionById(collectionId: number) {
         const collection = this.collections.find(c => c.collection_id === collectionId);
         return collection || null; // 如果找不到，返回 null 或拋出異常
     }
