@@ -57,7 +57,7 @@ describe('Users e2e test', () => {
       .put(`/users/${testUser.user_id}`) // 使用 testUser
       .set('Authorization', `Bearer ${jwtToken}`)
       .send({
-        user_email: '123',
+        user_email: '123456',
       })
       .expect(200); // 假设更新成功返回状态码是 200
   });
