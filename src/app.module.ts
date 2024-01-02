@@ -22,7 +22,7 @@ import { MulterModule } from '@nestjs/platform-express';
     CollectionNoticeModule,
     NoticesModule,
     MulterModule.register({
-      dest: './uploads',
+      dest: './src/public',
     }),
   ],
   controllers: [
