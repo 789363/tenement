@@ -2,11 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCollectionNoticeDto } from './dto/create-collection-notice.dto';
 import { UpdateCollectionNoticeDto } from './dto/update-collection-notice.dto';
+import { collection_notice } from '@prisma/client';
 @Injectable()
 export class CollectionNoticeService {
     constructor(private prisma: PrismaService) { }
 
-    async createCollectionNotice(noticeData: CreateCollectionNoticeDto): Promise<any> {
+    async createCollectionNotice(noticeData: CreateCollectionNoticeDto): Promise<collection_notice> {
         return this.prisma.collection_notice.create({
             data: {
                 collection_id: noticeData.collection_id,
@@ -24,7 +25,7 @@ export class CollectionNoticeService {
         });
     }
 
-    async updateCollectionNotice(noticeId: number, updateData: UpdateCollectionNoticeDto): Promise<any> {
+    async updateCollectionNotice(noticeId: number, updateData: UpdateCollectionNoticeDto): Promise<collection_notice> {
         return this.prisma.collection_notice.update({
             where: { notice_id: noticeId },
             data: {

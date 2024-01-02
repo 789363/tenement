@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { LoginDto } from './dto/login.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { ResponseInterceptor } from './response.interceptor';
 import { GetUserListDto } from './dto/get-userlist.dto';
+import { user } from '@prisma/client';
+import { UserData } from './interface/user.interface';
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) { }
 
-  async createUser(createUserDto: { user_name: string; user_email: string; user_password: string; isadmin: boolean, isDelete: boolean }): Promise<any> {
+  async createUser(createUserDto: { user_name: string; user_email: string; user_password: string; isadmin: boolean, isDelete: boolean }): Promise<user> {
     const existingUser = await this.prisma.user.findUnique({
       where: {
         user_email: createUserDto.user_email,
@@ -44,7 +43,7 @@ export class UsersService {
     return user;
   }
 
-  async findOneByEmail(email: string): Promise<any> {
+  async findOneByEmail(email: string): Promise<user> {
     const user = await this.prisma.user.findUnique({
       where: {
         user_email: email,
@@ -58,7 +57,7 @@ export class UsersService {
     return user;
   }
 
-  async updateUser(userId: number, updateData: any): Promise<any> {
+  async updateUser(userId: number, updateData: any): Promise<user> {
     const user = await this.prisma.user.findUnique({
       where: {
         user_id: userId,
@@ -80,7 +79,7 @@ export class UsersService {
     });
   }
 
-  async deleteUser(userId: number, isDeleted: boolean): Promise<any> {
+  async deleteUser(userId: number, isDeleted: boolean): Promise<user> {
     const user = await this.prisma.user.findUnique({
       where: {
         user_id: userId,
@@ -98,7 +97,7 @@ export class UsersService {
     });
   }
 
-  async getUsers(query: GetUserListDto): Promise<any[]> {
+  async getUsers(query: GetUserListDto): Promise<UserData[]> {
     const { name, email, status, offset, page } = query;
     const pageSize = 10;
 
@@ -135,13 +134,13 @@ export class UsersService {
         user_email: true,
         status: true,
         isadmin: true,
-        isDelete: false
-      }
+        isDelete: true,
+      },
     });
 
   }
 
-  async getUserById(userId: number): Promise<any> {
+  async getUserById(userId: number): Promise<UserData> {
     const user = await this.prisma.user.findUnique({
       where: {
         user_id: userId,
@@ -152,7 +151,7 @@ export class UsersService {
         user_email: true,
         status: true,
         isadmin: true,
-        isDelete: false
+        isDelete: true,
       }
     });
 

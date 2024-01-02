@@ -3,11 +3,12 @@ import { CreateCollectionDto } from './dto/create-collection.dto';
 import { UpdateCollectionDto } from './dto/update-collection.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { GetCollectionsDto } from './dto/get-colletions.dto';
+import { collection_info } from '@prisma/client';
 @Injectable()
 export class CollectionService {
     constructor(private prisma: PrismaService) { }
     private collections = [];
-    async createCollection(collectionData: CreateCollectionDto): Promise<any> {
+    async createCollection(collectionData: CreateCollectionDto): Promise<collection_info> {
 
 
         let isDelete: boolean | string;
@@ -32,7 +33,7 @@ export class CollectionService {
         });
     }
 
-    async updateCollection(collectionData: UpdateCollectionDto): Promise<any> {
+    async updateCollection(collectionData: UpdateCollectionDto): Promise<collection_info> {
         return this.prisma.collection_info.update({
             where: { collection_id: collectionData.collection_id },
             data: {
@@ -47,14 +48,14 @@ export class CollectionService {
     }
 
 
-    async deleteCollection(collectionId: number, tenement_id: number): Promise<any> {
+    async deleteCollection(collectionId: number, tenement_id: number): Promise<collection_info> {
         return this.prisma.collection_info.update({
             where: { collection_id: collectionId, tenement_id: tenement_id },
             data: { isDelete: true },
         });
     }
 
-    async getCollections(collectionData: GetCollectionsDto) {
+    async getCollections(collectionData: GetCollectionsDto): Promise<collection_info[]> {
         let filteredCollections = this.collections.filter(collection =>
             (!collectionData.tenement_id || collection.tenement_id === collectionData.tenement_id) &&
             (!collectionData.collection_name || collectionData.collection_name.includes(collection.collection_name)) &&
@@ -71,7 +72,7 @@ export class CollectionService {
         return filteredCollections;
     }
 
-    async getCollectionById(collectionId: number) {
+    async getCollectionById(collectionId: number): Promise<collection_info> {
         const collection = this.collections.find(c => c.collection_id === collectionId);
         return collection || null; // 如果找不到，返回 null 或拋出異常
     }
