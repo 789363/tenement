@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Delete, Put, Body, Param, UseGuards, UseInterceptors, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Put, Body, Param, UseGuards, UseInterceptors, Query, Request, ParseIntPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { AuthService } from '../auth/auth.service';
@@ -64,10 +64,18 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Get()
   @ApiOperation({ summary: 'Get user list' })
-  @ApiResponse({ status: 200, description: 'Successfully get data' })
+  @ApiResponse({ status: 200, description: 'Successfully retrieved user data' })
+  async getUsers(@Request() req) {
+    const userRole = req.userRole;
+    const userId = req.user.userId; // 假设用户ID存储在req.user.userId中
 
-  async getUsers(@Query() query: GetUserListDto) {
-    return this.usersService.getUsers(query);
+    if (userRole === 'admin') {
+      return this.usersService.getUsersForAdmin();
+    } else if (userRole === 'regular') {
+      return this.usersService.getUsersForRegular(userId);
+    } else {
+      throw new Error('Access Denied');
+    }
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)

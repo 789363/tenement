@@ -162,4 +162,37 @@ export class UsersService {
 
     return user;
   }
+
+  async getUsersForRegular(userId: number): Promise<UserData[]> {
+    return this.prisma.user.findMany({
+      where: {
+        user_id: userId,
+      },
+      select: {
+        user_id: true,
+        user_name: true,
+        user_email: true,
+        status: true,
+        isadmin: true,
+        isDelete: true,
+      },
+    });
+  }
+
+  async getUsersForAdmin(): Promise<UserData[]> {
+    return this.prisma.user.findMany({
+      select: {
+        user_id: true,
+        user_name: true,
+        user_email: true,
+        status: true,
+        isadmin: true,
+        isDelete: true,
+      },
+    });
+  }
+
+
 }
+
+
