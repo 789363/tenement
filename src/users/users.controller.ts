@@ -41,24 +41,24 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
-  @Delete(':id')
+  @Delete(':user_id')
   @ApiOperation({ summary: 'Delete a user' })
-  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiParam({ name: 'user_id', description: 'User ID' })
   @ApiResponse({ status: 200, description: 'User successfully deleted.' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async deleteUser(@Param('id') userId: string, isDeleted: boolean) {
-    return this.usersService.deleteUser(parseInt(userId, 10), isDeleted);
+  async deleteUser(@Param('user_id', ParseIntPipe) userId: number) {
+    return this.usersService.deleteUser(userId);
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
-  @Put(':id')
+  @Put(':user_id')
   @ApiOperation({ summary: 'Update a user' })
-  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiParam({ name: 'user_id', description: 'User ID' })
   @ApiBody({ description: 'User Update Data', type: UpdateUserDto })
   @ApiResponse({ status: 200, description: 'User successfully updated.' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async updateUser(@Param('id') userId: string, @Body() updateData: UpdateUserDto) {
-    return this.usersService.updateUser(parseInt(userId, 10), updateData);
+  async updateUser(@Param('user_id', ParseIntPipe) userId: number, @Body() updateData: UpdateUserDto) {
+    return this.usersService.updateUser(userId, updateData);
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
@@ -67,23 +67,27 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'Successfully retrieved user data' })
   async getUsers(@Request() req) {
     const userRole = req.userRole;
-    const userId = req.user.userId; // 假设用户ID存储在req.user.userId中
 
     if (userRole === 'admin') {
-      return this.usersService.getUsersForAdmin();
+      // 如果用户是管理员，返回所有用户数据
+      return this.usersService.getUsers();
     } else if (userRole === 'regular') {
-      return this.usersService.getUsersForRegular(userId);
+      // 如果用户是普通用户，仅返回该用户的数据
+      return this.usersService.getUserById(req.user.user_id);
     } else {
+      // 如果用户既不是管理员也不是普通用户，抛出异常
       throw new Error('Access Denied');
     }
   }
 
+
   @UseGuards(AuthGuard('jwt'), AdminGuard)
-  @Get(':id')
+  @Get(':user_id')
   @ApiOperation({ summary: 'Get user details' })
+  @ApiParam({ name: 'user_id', description: 'User ID' })
   @ApiResponse({ status: 200, description: 'Successfully retrieved user details' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async getUserById(@Param('id', ParseIntPipe) userId: number) {
+  async getUserById(@Param('user_id', ParseIntPipe) userId: number) {
     return this.usersService.getUserById(userId);
   }
 }

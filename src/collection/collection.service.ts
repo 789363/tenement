@@ -55,10 +55,21 @@ export class CollectionService {
         });
     }
 
-    async getCollections(): Promise<collection_info[]> {
-        return this.prisma.collection_info.findMany({
-            where: { isDelete: false },
-        });
+    async getCollections(collectionData: GetCollectionsDto): Promise<collection_info[]> {
+        let filteredCollections = this.collections.filter(collection =>
+            (!collectionData.tenement_id || collection.tenement_id === collectionData.tenement_id) &&
+            (!collectionData.collection_name || collectionData.collection_name.includes(collection.collection_name)) &&
+            (!collectionData.payment || collectionData.payment.includes(collection.payment))
+        );
+
+        // 分頁邏輯
+        const offset = collectionData.offset || 10;
+        const page = collectionData.page || 1;
+        const startIndex = (page - 1) * offset;
+        const endIndex = page * offset;
+        filteredCollections = filteredCollections.slice(startIndex, endIndex);
+
+        return filteredCollections;
     }
 
     async getCollectionById(collectionId: number): Promise<collection_info> {

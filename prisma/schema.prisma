@@ -1,5 +1,3 @@
-// schema.prisma
-
 datasource db {
   provider = "sqlite" // 或者您使用的数据库
   url      = "file:./dev.db"
@@ -9,194 +7,165 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model tenement_info {
-  tenement_id         Int               @id
-  user_id             Int
-  tenement_no         Int
-  tenement_face       String
-  Total_rating        Int
-  main_building       Int
-  affiliated_building Int
-  public_buliding     Int
-  management_fee      Int
-  tenement_status     Int
-  tenement_type       Int
-  tenement_photo      String
-  tenement_floor      Int
-  tenement_style      String
-  isDelete            Boolean
-  rent_info           rent_info[]
-  sell_info           sell_info[]
-  market_info         market_info[]
-  develop_info        develop_info[]
-  buyer_info          buyer_info[]
-  renter_info         renter_info[]
-  rent_notice         rent_notice[]
-  sell_notice         sell_notice[]
-  market_notice       market_notice[]
-  develop_notice      develop_notice[]
-  collection_info     collection_info[]
-  user                user              @relation(fields: [user_id], references: [user_id])
+model Tenement {
+  id                               Int                @id @default(autoincrement())
+  tenement_address                 String
+  tenement_product_type            String
+  tenement_type                    String
+  tenement_face                    String
+  tenement_images                  String
+  tenement_status                  String
+  total_rating                     String
+  main_building                    String
+  affiliated_building              String
+  public_buliding                  String
+  unregistered_area                String
+  management_magnification         String
+  management_fee                   String
+  tenement_floor                   String
+  tenement_host_name               String
+  tenement_host_telphone           String
+  tenement_host_phone              String
+  tenement_host_line               String
+  tenement_host_remittance_bank    String
+  tenement_host_remittance_account String
+  tenement_host_address            String
+  tenement_host_birthday           String
+  tenement_host_hobby              String
+  tenement_host_remark             String
+  createdAt                        DateTime           @default(now())
+  updatedAt                        DateTime           @updatedAt
+  owner                            Int
+  is_deleted                       Boolean
+  Tenement_Market                  Tenement_Market[]
+  Tenement_Rent                    Tenement_Rent[]
+  Tenement_Develop                 Tenement_Develop[]
+  Tenement_Sell                    Tenement_Sell[]
+  Tenement_Notice                  Tenement_Notice[]
+  User                             User               @relation(fields: [owner], references: [id])
 }
 
-model rent_notice {
-  notice_id   Int           @id @default(autoincrement())
-  rent_record String
-  rent_remind String
-  visitDate   DateTime
-  notice_date DateTime
-  tenement_id Int
-  tenement    tenement_info @relation(fields: [tenement_id], references: [tenement_id])
+model Tenement_Market {
+  tenement_id                      Int      @id
+  tenement_host_name               String
+  tenement_host_telphone           String
+  tenement_host_phone              String
+  tenement_host_line               String
+  tenement_host_remittance_bank    String
+  tenement_host_remittance_account String
+  tenement_host_address            String
+  tenement_host_birthday           String
+  tenement_host_hobby              String
+  tenement_host_remark             String
+  tenement_area_max                String
+  tenement_area_min                String
+  burget_rent_max                  String
+  burget_rent_min                  String
+  hopefloor_max                    String
+  hopefloor_min                    String
+  market_state                     String
+  createdAt                        DateTime @default(now())
+  updatedAt                        DateTime @updatedAt
+  Tenement                         Tenement @relation(fields: [tenement_id], references: [id])
 }
 
-model sell_notice {
-  notice_id   Int           @id @default(autoincrement())
-  sell_record String
-  sell_remind String
-  visitDate   DateTime
-  notice_date DateTime
-  tenement_id Int
-  tenement    tenement_info @relation(fields: [tenement_id], references: [tenement_id])
+model Tenement_Rent {
+  tenement_id            Int      @id
+  rent_price             String
+  deposit_price          String
+  renter_start_date      String
+  renter_end_date        String
+  renter_name            String
+  renter_id_images       String
+  renter_phone           String
+  renter_jobtitle        String
+  renter_guarantor_name  String
+  renter_guarantor_phone String
+  renter_remark          String
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  Tenement               Tenement @relation(fields: [tenement_id], references: [id])
 }
 
-model develop_notice {
-  notice_id        Int           @id @default(autoincrement())
-  develop_record   String
-  develop_feedback String
-  visitDate        DateTime
-  remindDate       DateTime
-  tenement_id      Int
-  tenement         tenement_info @relation(fields: [tenement_id], references: [tenement_id])
+model Tenement_Develop {
+  tenement_id   Int      @id
+  selling_price String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  Tenement      Tenement @relation(fields: [tenement_id], references: [id])
 }
 
-model market_notice {
-  notice_id        Int           @id @default(autoincrement())
-  market_hint      String
-  market_remark    String
-  market_content   String
-  market_responses String
-  visitDate        DateTime
-  tenement_id      Int
-  tenement         tenement_info @relation(fields: [tenement_id], references: [tenement_id])
-}
-
-model collection_notice {
-  notice_id         Int             @id @default(autoincrement())
-  collection_id     Int
-  collection_remind String
-  collection_record String
-  visitDate         DateTime
-  remindDate        DateTime
-  collection        collection_info @relation(fields: [collection_id], references: [collection_id])
-}
-
-model rent_info {
-  rent_id          Int           @id
-  owner_name       String
-  owner_phone      String
-  owner_telephone  String
-  owner_line       String
-  owner_remittance String
-  rental           Int
-  deposit          Int
-  tenement_id      Int
-  isDelete         Boolean
-  tenement         tenement_info @relation(fields: [tenement_id], references: [tenement_id])
-}
-
-model sell_info {
-  sell_id          Int           @id
-  owner_name       String
-  owner_phone      String
-  owner_telephone  String
-  owner_line       String
-  owner_remittance String
-  price            Int
-  tenement_id      Int
-  isDelete         Boolean
-  tenement         tenement_info @relation(fields: [tenement_id], references: [tenement_id])
-}
-
-model develop_info {
-  develop_id       Int           @id
-  owner_name       String
-  owner_phone      String
-  owner_telephone  String
-  owner_line       String
-  owner_remittance String
-  rental           Int
-  deposit          Int
-  price            Int
-  tenement_id      Int
-  isDelete         Boolean
-  tenement         tenement_info @relation(fields: [tenement_id], references: [tenement_id])
-}
-
-model market_info {
-  market_id       Int           @id
-  owner_name      String
-  owner_phone     String
-  owner_telephone String
-  owner_line      String
-  owner_demand    String
-  owner_want      String
-  min_budget      Int
-  max_budget      Int
-  tenement_id     Int
-  isDelete        Boolean
-  tenement        tenement_info @relation(fields: [tenement_id], references: [tenement_id])
-}
-
-model buyer_info {
-  buyer_id           Int           @id
-  order_date         String
-  delivery_date      String
+model Tenement_Sell {
+  tenement_id        Int      @id
+  buyer_order_date   String
+  buyer_handout_date String
   buyer_name         String
+  buyer_id_images    String
   buyer_phone        String
   buyer_jobtitle     String
-  buyer_idcard_image String
-  tenement_id        Int
-  isDelete           Boolean
-  tenement           tenement_info @relation(fields: [tenement_id], references: [tenement_id])
+  buyer_remark       String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  Tenement           Tenement @relation(fields: [tenement_id], references: [id])
 }
 
-model renter_info {
-  renter_id           Int           @id
-  start_date          DateTime
-  end_date            DateTime
-  renter_name         String
-  renter_phone        String
-  renter_jobtitle     String
-  guarantor_name      String
-  guarantor_phone     String
-  renter_idcard_image String
-  renter_agreement    String
-  tenement_id         Int
-  isDelete            Boolean
-  tenement            tenement_info @relation(fields: [tenement_id], references: [tenement_id])
+model Collection {
+  id                     Int                 @id @default(autoincrement())
+  tenement_no            String
+  collection_id          String
+  collection_name        String
+  collection_type        String
+  price                  String
+  payment                String
+  collection_remark      String
+  collection_date        String
+  remittance_bank        String
+  remittance_account     String
+  cus_remittance_account String
+  cus_remittance_bank    String
+  collection_complete    String
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+  owner                  Int
+  is_deleted             Boolean
+  User                   User                @relation(fields: [owner], references: [id])
+  Collection_Notice      Collection_Notice[]
 }
 
-model collection_info {
-  collection_id      Int                 @id @default(autoincrement())
-  tenement_id        Int
-  collection_name    String
-  price              Int
-  payment            String
-  collection_remark  String
-  remittance_bank    String
-  remittance_account String
-  isDelete           Boolean
-  tenement           tenement_info       @relation(fields: [tenement_id], references: [tenement_id])
-  collection_notice  collection_notice[]
+model Collection_Notice {
+  id            Int        @id @default(autoincrement())
+  collection_id Int
+  visitDate     String
+  record        String
+  remindDate    String
+  remind        String
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  Collection    Collection @relation(fields: [collection_id], references: [id])
 }
 
-model user {
-  user_id       Int             @id @default(autoincrement())
-  user_name     String
-  user_email    String          @unique
-  user_password String
-  status        Boolean
-  isadmin       Boolean
-  isDelete      Boolean
-  tenement_info tenement_info[]
+model Tenement_Notice {
+  id          Int      @id @default(autoincrement())
+  tenement_id Int
+  visitDate   String
+  record      String
+  remindDate  String
+  remind      String
+  type        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  owner       Int
+  Tenement    Tenement @relation(fields: [tenement_id], references: [id])
+  User        User     @relation(fields: [owner], references: [id])
+}
+
+model User {
+  id               Int               @id @default(autoincrement())
+  user_name        String
+  user_email       String            @unique
+  user_password    String
+  status           Boolean
+  Tenements        Tenement[]
+  Collections      Collection[]
+  Tenement_Notices Tenement_Notice[]
 }
