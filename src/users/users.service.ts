@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { GetUserListDto } from './dto/get-userlist.dto';
-import { user } from '@prisma/client';
+import { User } from '@prisma/client';
 import { UserData } from './interface/user.interface';
 @Injectable()
 export class UsersService {
@@ -26,7 +26,7 @@ export class UsersService {
         user_email: createUserDto.user_email,
         user_password: hashedPassword,
         status: true, // 根据业务逻辑设置默认状态
-        isadmin: createUserDto.isadmin, // 使用传入的值
+        isAdmin: createUserDto.isadmin, // 使用传入的值
         isDelete: createUserDto.isDelete
       },
       select: {
@@ -34,8 +34,8 @@ export class UsersService {
         user_name: true,
         user_email: true,
         status: true,
-        isadmin: true,
-        isDelete: true,
+        isAdmin: true,
+        isDeleted: true,
         user_password: false,
         // 注意：不返回 user_password 字段
       }
@@ -44,7 +44,7 @@ export class UsersService {
     return user;
   }
 
-  async findOneByEmail(email: string): Promise<user> {
+  async findOneByEmail(email: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: {
         user_email: email,
@@ -58,7 +58,7 @@ export class UsersService {
     return user;
   }
 
-  async updateUser(userId: number, updateData: any): Promise<user> {
+  async updateUser(userId: number, updateData: any): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: {
         user_id: userId,
@@ -80,34 +80,34 @@ export class UsersService {
     });
   }
 
-  async deleteUser(userId: number): Promise<user> {
+  async deleteUser(userId: number): Promise<User> {
     return this.prisma.user.update({
       where: {
         user_id: userId
       },
       data: {
-        isDelete: true,
+        isDeleted: true,
       },
     });
   }
 
-  async getUsers(): Promise<UserData[]> {
+  async getUsers(): Promise<GetUserListDto[]> {
     return this.prisma.user.findMany({
       where: {
-        isDelete: false,
+        isDeleted: false,
       },
       select: {
         user_id: true,
         user_name: true,
         user_email: true,
         status: true,
-        isadmin: true,
-        isDelete: true,
+        isAdmin: true,
+        isDeleted: true,
       },
     });
   }
 
-  async getUserById(userId: number): Promise<UserData> {
+  async getUserById(userId: number): Promise<GetUserListDto> {
     const user = await this.prisma.user.findUnique({
       where: {
         user_id: userId,
@@ -117,8 +117,8 @@ export class UsersService {
         user_name: true,
         user_email: true,
         status: true,
-        isadmin: true,
-        isDelete: true,
+        isAdmin: true,
+        isDeleted: true,
       }
     });
 

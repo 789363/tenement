@@ -14,6 +14,7 @@ import { CollectionNoticeModule } from './collection-notices/collection-notices.
 import { NoticesModule } from './notice/notice.module';
 import { UploadController } from './upload/upload.controller';
 import { MulterModule } from '@nestjs/platform-express';
+import { TenementModule } from './tenement/tenement.module';
 @Module({
   imports: [
     UsersModule,
@@ -24,6 +25,7 @@ import { MulterModule } from '@nestjs/platform-express';
     MulterModule.register({
       dest: './src/public',
     }),
+    TenementModule,
   ],
   controllers: [
     AppController,

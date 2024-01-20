@@ -42,7 +42,7 @@ model Tenement {
   Tenement_Develop                 Tenement_Develop[]
   Tenement_Sell                    Tenement_Sell[]
   Tenement_Notice                  Tenement_Notice[]
-  User                             User               @relation(fields: [owner], references: [id])
+  User                             User               @relation(fields: [owner], references: [user_id])
 }
 
 model Tenement_Market {
@@ -128,7 +128,7 @@ model Collection {
   updatedAt              DateTime            @updatedAt
   owner                  Int
   is_deleted             Boolean
-  User                   User                @relation(fields: [owner], references: [id])
+  User                   User                @relation(fields: [owner], references: [user_id])
   Collection_Notice      Collection_Notice[]
 }
 
@@ -156,14 +156,16 @@ model Tenement_Notice {
   updatedAt   DateTime @updatedAt
   owner       Int
   Tenement    Tenement @relation(fields: [tenement_id], references: [id])
-  User        User     @relation(fields: [owner], references: [id])
+  User        User     @relation(fields: [owner], references: [user_id])
 }
 
 model User {
-  id               Int               @id @default(autoincrement())
+  user_id          Int               @id @default(autoincrement())
   user_name        String
   user_email       String            @unique
   user_password    String
+  isAdmin          Boolean           @default(false)
+  isDeleted        Boolean           @default(false)
   status           Boolean
   Tenements        Tenement[]
   Collections      Collection[]
