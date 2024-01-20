@@ -27,7 +27,7 @@ export class UsersService {
         user_password: hashedPassword,
         status: true, // 根据业务逻辑设置默认状态
         isAdmin: createUserDto.isadmin, // 使用传入的值
-        isDelete: createUserDto.isDelete
+        isDeleted: createUserDto.isDelete
       },
       select: {
         user_id: true,
@@ -41,7 +41,11 @@ export class UsersService {
       }
     });
 
-    return user;
+    return {
+      ...user,
+      isadmin: user.isAdmin,
+      isDelete: user.isDeleted
+    };
   }
 
   async findOneByEmail(email: string): Promise<User> {
