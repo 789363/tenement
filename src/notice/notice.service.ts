@@ -1,79 +1,44 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { NoticeDto } from './dto/notice.dto';
 
 @Injectable()
-export class NoticesService {
+export class NoticeService {
     constructor(private prisma: PrismaService) { }
 
-    async getNotices(year: string, month: string): Promise<any> {
-        // 将年份和月份字符串转换为数字
-        const yearNum = parseInt(year);
-        const monthNum = parseInt(month);
-        // 使用转换后的数字构造日期
-        const startDate = new Date(yearNum, monthNum - 1, 1);
-        const endDate = new Date(yearNum, monthNum, 0);
+    async getNoticeByIdAndType(id: number, type: string) {
+        const notice = await this.prisma.notice.findFirst({
+            where: {
+                id: id,
+                type: type,
+            },
+        });
 
-        // 并行查询五个表
-        const [rentNotices, sellNotices, developNotices, marketNotices, collectionNotices] = await Promise.all([
-            this.prisma.rent_notice.findMany({
-                where: { visitDate: { gte: startDate, lte: endDate } },
-                select: { notice_id: true, rent_record: true, visitDate: true }
-            }),
-            this.prisma.sell_notice.findMany({
-                where: { visitDate: { gte: startDate, lte: endDate } },
-                select: { notice_id: true, sell_record: true, visitDate: true }
-            }),
-            this.prisma.develop_notice.findMany({
-                where: { visitDate: { gte: startDate, lte: endDate } },
-                select: { notice_id: true, develop_record: true, visitDate: true }
-            }),
-            this.prisma.market_notice.findMany({
-                where: { visitDate: { gte: startDate, lte: endDate } },
-                select: { notice_id: true, market_hint: true, visitDate: true }
-            }),
-            this.prisma.collection_notice.findMany({
-                where: { visitDate: { gte: startDate, lte: endDate } },
-                select: { notice_id: true, collection_record: true, visitDate: true }
-            })
-        ]);
+        return notice ? { message: "success", data: [notice] } : { message: "Notice not found" };
+    }
 
+    async createNotice(noticeData: NoticeDto) {
+        const newNotice = await this.prisma.notice.create({
+            data: noticeData,
+        });
 
-        // 格式化数据以符合响应结构
-        const allNotices = [
-            ...rentNotices.map(notice => ({ ...notice, type: 'rent' })),
-            ...sellNotices.map(notice => ({ ...notice, type: 'sell' })),
-            ...developNotices.map(notice => ({ ...notice, type: 'develop' })),
-            ...marketNotices.map(notice => ({ ...notice, type: 'market' })),
-            ...collectionNotices.map(notice => ({ ...notice, type: 'collection' }))
-        ];
-        // 格式化数据以符合响应结构
-        const formattedData = allNotices.reduce((acc, notice) => {
-            const day = notice.visitDate.getDate();
-            if (!acc[day]) {
-                acc[day] = { day, events: [] };
-            }
-            const event = {
-                id: notice.notice_id,
-                content: '',
-                class: notice.type
-            };
+        return { message: "notices saved", data: [newNotice] };
+    }
 
-            if (notice.type === 'rent' && 'rent_record' in notice) {
-                event.content = notice.rent_record;
-            } else if (notice.type === 'sell' && 'sell_record' in notice) {
-                event.content = notice.sell_record;
-            } else if (notice.type === 'develop' && 'develop_record' in notice) {
-                event.content = notice.develop_record;
-            } else if (notice.type === 'market' && 'market_hint' in notice) {
-                event.content = notice.market_hint; // 或其他适当的字段
-            } else if (notice.type === 'collection' && 'collection_record' in notice) {
-                event.content = notice.collection_record;
-            }
+    async updateNotice(id: number, noticeData: NoticeDto) {
+        const updatedNotice = await this.prisma.notice.update({
+            where: { id },
+            data: noticeData,
+        });
 
-            acc[day].events.push(event);
-            return acc;
-        }, {});
+        return { message: "notices updated", data: [updatedNotice] };
+    }
 
-        return Object.values(formattedData);
+    async deleteNotice(id: number) {
+        const deletedNotice = await this.prisma.notice.delete({
+            where: { id },
+        });
+
+        return { message: "notices deleted", data: [deletedNotice] };
     }
 }
