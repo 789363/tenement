@@ -26,7 +26,6 @@ export class CreateTenementDto {
     tenement_host_remark: string;
     owner: number;
     is_deleted: boolean;
-    // 注意：关联的字段（如 Tenement_Market[]）通常不包含在创建 DTO 中
 }
 
 export class UpdateTenementDto {

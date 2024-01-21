@@ -1,12 +1,17 @@
+// src/collection/dto/update-collection.dto.ts
 export class UpdateCollectionDto {
-
-    collection_id?: number;
+    tenement_no?: string;
+    collection_id?: string;
     collection_name?: string;
-    price?: number;
+    collection_type?: string;
+    price?: string;
     payment?: string;
     collection_remark?: string;
+    collection_date?: string;
     remittance_bank?: string;
     remittance_account?: string;
-    isDelete?: boolean;
-    // 不包含 tenement_id，因为通常不更新外键关联
+    cus_remittance_account?: string;
+    cus_remittance_bank?: string;
+    collection_complete?: string;
+    owner?: number;
 }
