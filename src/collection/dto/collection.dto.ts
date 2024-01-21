@@ -1,7 +1,7 @@
 // src/collection/dto/create-collection.dto.ts
 export class CreateCollectionDto {
     tenement_no: string;
-    collection_id: string;
+
     collection_name: string;
     collection_type: string;
     price: string;
@@ -21,15 +21,8 @@ export class CreateCollectionDto {
 
 
 
-
-
-
-
-
-
 export class UpdateCollectionDto {
     tenement_no?: string;
-    collection_id?: string;
     collection_name?: string;
     collection_type?: string;
     price?: string;
