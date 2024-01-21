@@ -15,6 +15,7 @@ import { NoticesModule } from './notice/notice.module';
 import { UploadController } from './upload/upload.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { TenementModule } from './tenement/tenement.module';
+import { CalendarModule } from './calendar/calendar.module';
 @Module({
   imports: [
     UsersModule,
@@ -26,6 +27,7 @@ import { TenementModule } from './tenement/tenement.module';
       dest: './src/public',
     }),
     TenementModule,
+    CalendarModule,
   ],
   controllers: [
     AppController,
