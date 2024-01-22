@@ -29,6 +29,14 @@ export class TenementService {
             data: tenementData,
         });
     }
+    async getTenementsByUserId(userId: number): Promise<Tenement[]> {
+        return this.prisma.tenement.findMany({
+            where: {
+                owner: userId, // 过滤属于特定用户的物业
+            },
+        });
+    }
+
 
     async deleteTenement(id: number): Promise<Tenement> {
         return this.prisma.tenement.delete({

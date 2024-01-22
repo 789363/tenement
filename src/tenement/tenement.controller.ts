@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, ParseIntPipe, UseGuards, Request } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard';// 请确保导入正确的路径
@@ -10,19 +10,18 @@ import { CreateTenementDto, UpdateTenementDto } from './dto/tenement.dto';
 export class TenementController {
     constructor(private tenementService: TenementService) { }
 
+
     @UseGuards(AuthGuard('jwt'), AdminGuard)
     @Get()
     @ApiOperation({ summary: 'Get all tenements' })
-    async getAllTenements() {
-        return this.tenementService.getAllTenements();
-    }
+    async getAllTenements(@Request() req) {
+        const userRole = req.user.role; // 假设角色存储在 req.user.role
 
-    @UseGuards(AuthGuard('jwt'), AdminGuard)
-    @Get(':id')
-    @ApiOperation({ summary: 'Get tenement by ID' })
-    @ApiParam({ name: 'id', description: 'Tenement ID' })
-    async getTenementById(@Param('id', ParseIntPipe) id: number) {
-        return this.tenementService.getTenementById(id);
+        if (userRole === 'admin') {
+            return this.tenementService.getAllTenements();
+        } else {
+            return this.tenementService.getTenementsByUserId(req.user.userId);
+        }
     }
 
     @UseGuards(AuthGuard('jwt'), AdminGuard)
