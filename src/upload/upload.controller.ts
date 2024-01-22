@@ -1,28 +1,18 @@
-// src/upload/upload.controller.ts
-import { Controller, Post, UseInterceptors, UploadedFile, Res } from '@nestjs/common';
+import { Controller, Post, UseInterceptors, UploadedFile, Body } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Response } from 'express';
-import * as multer from 'multer';
-import { join } from 'path';
+import { LocalStorageService } from './upload.servie';
 
-@Controller('upload')
-export class UploadController {
-    @Post()
-    @UseInterceptors(FileInterceptor('file', {
-        storage: multer.diskStorage({
-            destination: join(__dirname, '..', '..', 'public'), // 修改路径
-            filename: (req, file, callback) => {
-                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-                const filename = `${uniqueSuffix}-${file.originalname}`;
-                callback(null, filename);
-            }
-        })
-    }))
-    async uploadFile(@UploadedFile() file: Express.Multer.File, @Res() res: Response) {
-        const fileUrl = `http://localhost:3000/public/${file.filename}`;
-        return res.json({
-            message: "Successfully upload the image",
-            data: { url: fileUrl }
-        });
+@Controller('files')
+export class FileUploadController {
+    constructor(private readonly localStorageService: LocalStorageService) { }
+
+    @Post('upload')
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadFile(@UploadedFile() file: Express.Multer.File) {
+        const fileUrl = await this.localStorageService.saveFile(file);
+        return {
+            message: 'File uploaded successfully',
+            url: fileUrl,
+        };
     }
 }
