@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { NoticeService } from './notice.service';
-import { CreateNoticeDto, UpdateNoticeDto } from './dto/notice.dto';
-
+import { CreateCollectionNoticeDto, UpdateCollectionNoticeDto, CreateTenementNoticeDto, UpdateTenementNoticeDto } from './dto/notice.dto';
 
 @Controller('api/notices')
 export class NoticeController {
@@ -12,18 +11,18 @@ export class NoticeController {
         return this.noticeService.getNoticeByIdAndType(id, type);
     }
 
-    @Post()
-    createNotice(@Body() noticeData: CreateNoticeDto) {
-        return this.noticeService.createNotice(noticeData);
+    @Post(':type')
+    createNotice(@Param('type') type: string, @Body() noticeData: CreateCollectionNoticeDto | CreateTenementNoticeDto) {
+        return this.noticeService.createNotice(type, noticeData);
     }
 
-    @Put(':id')
-    updateNotice(@Param('id') id: number, @Body() noticeData: UpdateNoticeDto) {
-        return this.noticeService.updateNotice(id, noticeData);
+    @Put(':id/:type')
+    updateNotice(@Param('id') id: number, @Param('type') type: string, @Body() noticeData: UpdateCollectionNoticeDto | UpdateTenementNoticeDto) {
+        return this.noticeService.updateNotice(id, type, noticeData);
     }
 
-    @Delete(':id')
-    deleteNotice(@Param('id') id: number) {
-        return this.noticeService.deleteNotice(id);
+    @Delete(':id/:type')
+    deleteNotice(@Param('id') id: number, @Param('type') type: string) {
+        return this.noticeService.deleteNotice(id, type);
     }
 }
