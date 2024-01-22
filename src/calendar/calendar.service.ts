@@ -17,10 +17,67 @@ export class CalendarService {
             },
         });
 
-        const formattedEvents = this.formatEvents(notices);
         return {
             message: "Successfully retrieved the events",
-            data: formattedEvents,
+            data: this.formatEvents(notices),
+        };
+    }
+
+    async getUserCalendarEvents(year: number, month: number, userId: number) {
+        const yearStr = year.toString();
+        const monthStr = month.toString().padStart(2, '0');
+
+        const notices = await this.prisma.tenement_Notice.findMany({
+            where: {
+                visitDate: {
+                    startsWith: `${yearStr}-${monthStr}`,
+                },
+                owner: userId,
+            },
+        });
+
+        return {
+            message: "Successfully retrieved user-specific events",
+            data: this.formatEvents(notices),
+        };
+    }
+
+    async getCollectionNotices(year: number, month: number) {
+        const yearStr = year.toString();
+        const monthStr = month.toString().padStart(2, '0');
+
+        const collectionNotices = await this.prisma.collection_Notice.findMany({
+            where: {
+                visitDate: {
+                    startsWith: `${yearStr}-${monthStr}`,
+                },
+            },
+        });
+
+        return {
+            message: "Successfully retrieved the collection notices",
+            data: this.formatCollectionNotices(collectionNotices),
+        };
+    }
+
+    async getUserCollectionNotices(year: number, month: number, userId: number) {
+        const yearStr = year.toString();
+        const monthStr = month.toString().padStart(2, '0');
+
+        const collectionNotices = await this.prisma.collection_Notice.findMany({
+            where: {
+                visitDate: {
+                    startsWith: `${yearStr}-${monthStr}`,
+                },
+                Collection: {
+                    owner: userId,
+                },
+            },
+        });
+
+        return {
+            message: "Successfully retrieved user-specific collection notices",
+            data: this.formatCollectionNotices(collectionNotices),
         };
     }
 
@@ -40,25 +97,6 @@ export class CalendarService {
         });
     }
 
-    async getCollectionNotices(year: number, month: number) {
-        const yearStr = year.toString();
-        const monthStr = month.toString().padStart(2, '0');
-
-        const collectionNotices = await this.prisma.collection_Notice.findMany({
-            where: {
-                visitDate: {
-                    startsWith: `${yearStr}-${monthStr}`,
-                },
-            },
-        });
-
-        const formattedNotices = this.formatCollectionNotices(collectionNotices);
-        return {
-            message: "Successfully retrieved the collection notices",
-            data: formattedNotices,
-        };
-    }
-
     private formatCollectionNotices(notices: any[]): any[] {
         return notices.map(notice => {
             const date = new Date(notice.visitDate);
@@ -74,5 +112,4 @@ export class CalendarService {
             };
         });
     }
-
 }
