@@ -105,3 +105,38 @@ export class UpdateTenementNoticeDto {
     @IsInt()
     readonly owner?: number;
 }
+
+export class NoticeDto {
+    @IsOptional()
+    @IsInt()
+    readonly collection_id?: number;
+
+    @IsOptional()
+    @IsInt()
+    readonly tenement_id?: number;
+
+    @IsOptional()
+    @IsString()
+    readonly visitDate?: string;
+
+    @IsOptional()
+    @IsString()
+    readonly record?: string;
+
+    @IsOptional()
+    @IsString()
+    readonly remindDate?: string;
+
+    @IsOptional()
+    @IsString()
+    readonly remind?: string;
+
+    // 特定于 TenementNotice 的字段
+    @IsOptional()
+    @IsString()
+    readonly type?: string;
+
+    @IsOptional()
+    @IsInt()
+    readonly owner?: number;
+}
