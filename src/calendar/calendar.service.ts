@@ -15,7 +15,6 @@ export class CalendarService {
                     startsWith: `${yearStr}-${monthStr}`,
                 },
             },
-            // 可能需要其他查询参数，如排序
         });
 
         const formattedEvents = this.formatEvents(notices);
@@ -51,7 +50,6 @@ export class CalendarService {
                     startsWith: `${yearStr}-${monthStr}`,
                 },
             },
-            // 可能需要其他查询参数，如排序
         });
 
         const formattedNotices = this.formatCollectionNotices(collectionNotices);
@@ -70,7 +68,7 @@ export class CalendarService {
                     {
                         content: notice.record,
                         id: notice.id.toString(),
-                        class: 'collection-notice', // 或者根据您的业务需求来设置
+                        class: 'collection-notice',
                     },
                 ],
             };
