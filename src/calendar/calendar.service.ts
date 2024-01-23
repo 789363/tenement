@@ -82,20 +82,27 @@ export class CalendarService {
     }
 
     private formatEvents(notices: any[]): any[] {
-        return notices.map(notice => {
+        const eventsByDay = {};
+
+        notices.forEach(notice => {
             const date = new Date(notice.visitDate);
-            return {
-                day: date.getDate(),
-                events: [
-                    {
-                        content: notice.record,
-                        id: notice.id.toString(),
-                        class: notice.type,
-                    },
-                ],
-            };
+            const day = date.getDate();
+
+            if (!eventsByDay[day]) {
+                eventsByDay[day] = { day, events: [] };
+            }
+
+            eventsByDay[day].events.push({
+                content: notice.record,
+                id: notice.id.toString(),
+                class: notice.type,
+            });
         });
+
+        // 將映射對象轉換為數組
+        return Object.values(eventsByDay);
     }
+
 
     private formatCollectionNotices(notices: any[]): any[] {
         const groupedByDay = {};

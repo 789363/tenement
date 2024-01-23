@@ -15,7 +15,7 @@ export class CalendarController {
     @ApiResponse({ status: 404, description: 'Events not found' })
     async getCalendarEvents(@Param('year') year: number, @Param('month') month: number, @Request() req) {
         const userisAdmin = req.user.isAdmin; // 假设角色存储在 req.user.isAdmin
-        if (userisAdmin === 'admin') {
+        if (userisAdmin === true) {
             return this.calendarService.getCalendarEvents(year, month);
         } else {
             return this.calendarService.getUserCalendarEvents(year, month, req.user.userId);
