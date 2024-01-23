@@ -46,8 +46,15 @@ export class UsersController {
   @ApiParam({ name: 'user_id', description: 'User ID' })
   @ApiResponse({ status: 200, description: 'User successfully deleted.' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async deleteUser(@Param('user_id', ParseIntPipe) userId: number) {
-    return this.usersService.deleteUser(userId);
+  async deleteUser(@Request() req, @Param('user_id', ParseIntPipe) userId: number) {
+    const userisAdmin = req.user.isadmin;
+    if (userisAdmin === true) {
+
+      return this.usersService.deleteUser(userId);
+    } else {
+      throw new Error('Access Denied');
+    }
+
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
@@ -63,7 +70,6 @@ export class UsersController {
 
       return this.usersService.updateUser(userId, updateData);
     } else {
-      // 如果用户既不是管理员也不是普通用户，抛出异常
       throw new Error('Access Denied');
     }
 
@@ -80,7 +86,6 @@ export class UsersController {
 
       return this.usersService.getUsers();
     } else {
-      // 如果用户既不是管理员也不是普通用户，抛出异常
       throw new Error('Access Denied');
     }
   }
@@ -100,7 +105,6 @@ export class UsersController {
 
       return this.usersService.getUserById(userId);
     } else {
-      // 如果用户既不是管理员也不是普通用户，抛出异常
       throw new Error('Access Denied');
     }
   }
