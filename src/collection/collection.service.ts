@@ -111,10 +111,17 @@ export class CollectionService {
 
 
     async createCollection(collectionData: CreateCollectionDto): Promise<{ message: string }> {
-        await this.prisma.collection.create({
-            data: collectionData,
-        });
-        return { message: "Successfully add the media" };
+        try {
+            await this.prisma.collection.create({
+                data: {
+                    ...collectionData,
+                    is_deleted: false,
+                },
+            });
+            return { message: "Successfully add the media" };
+        } catch (error) {
+            throw new InternalServerErrorException('An error occurred while creating the collection.');
+        }
     }
 
 
