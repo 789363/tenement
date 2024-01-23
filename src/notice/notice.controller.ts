@@ -30,15 +30,13 @@ export class NoticeController {
     }
 
     @UseGuards(AuthGuard('jwt'), AdminGuard)
-    @Put(':id/:type')
-    @ApiOperation({ summary: 'Update an existing notice' })
-    @ApiParam({ name: 'id', description: 'Notice ID' })
+    @Put('/:type')
+    @ApiOperation({ summary: 'Update multiple notices' })
     @ApiParam({ name: 'type', description: 'Notice type (collection or tenement)' })
-    @ApiResponse({ status: 200, description: 'Notice updated successfully' })
-    updateNotice(@Param('id') id: number, @Param('type') type: string, @Body() noticeData: UpdateCollectionNoticeDto | UpdateTenementNoticeDto) {
-        return this.noticeService.updateNotice(id, type, noticeData);
+    @ApiResponse({ status: 200, description: 'Notices updated successfully' })
+    updateNotices(@Param('type') type: string, @Body() noticeDataArray: UpdateCollectionNoticeDto[] | UpdateTenementNoticeDto[]) {
+        return this.noticeService.updateNotices(type, noticeDataArray);
     }
-
     @UseGuards(AuthGuard('jwt'), AdminGuard)
     @Delete(':id/:type')
     @ApiOperation({ summary: 'Delete a notice' })

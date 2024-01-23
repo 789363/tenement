@@ -44,21 +44,22 @@ export class NoticeService {
         return { message: "notices saved", data: [newNotice] };
     }
 
-    async updateNotice(id: number, type: string, noticeData: UpdateCollectionNoticeDto | UpdateTenementNoticeDto) {
-        let updatedNotice;
-        if (type === 'collection') {
-            updatedNotice = await this.prisma.collection_Notice.update({
-                where: { id },
-                data: noticeData as UpdateCollectionNoticeDto,
-            });
-        } else {
-            updatedNotice = await this.prisma.tenement_Notice.update({
-                where: { id },
-                data: noticeData as UpdateTenementNoticeDto,
-            });
-        }
+    async updateNotices(type: string, noticeDataArray: UpdateCollectionNoticeDto[] | UpdateTenementNoticeDto[]) {
+        await Promise.all(noticeDataArray.map(async noticeData => {
+            if (type === 'collection') {
+                await this.prisma.collection_Notice.update({
+                    where: { id: parseInt(noticeData.id) },
+                    data: noticeData,
+                });
+            } else {
+                await this.prisma.tenement_Notice.update({
+                    where: { id: parseInt(noticeData.id) },
+                    data: noticeData,
+                });
+            }
+        }));
 
-        return { message: "notices updated", data: [updatedNotice] };
+        return { message: "notices updated" };
     }
 
     async deleteNotice(id: number, type: string) {
