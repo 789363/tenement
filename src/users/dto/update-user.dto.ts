@@ -13,4 +13,8 @@ export class UpdateUserDto {
     @ApiProperty({ example: true, description: 'User\'s status' })
     status: boolean;
 
+    @ApiProperty({ example: true, description: 'User\'s isAdmin' })
+    isAdmin: boolean;
+
+
 }

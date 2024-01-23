@@ -57,8 +57,16 @@ export class UsersController {
   @ApiBody({ description: 'User Update Data', type: UpdateUserDto })
   @ApiResponse({ status: 200, description: 'User successfully updated.' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async updateUser(@Param('user_id', ParseIntPipe) userId: number, @Body() updateData: UpdateUserDto) {
-    return this.usersService.updateUser(userId, updateData);
+  async updateUser(@Request() req, @Param('user_id', ParseIntPipe) userId: number, @Body() updateData: UpdateUserDto) {
+    const userisAdmin = req.user.isadmin;
+    if (userisAdmin === true) {
+
+      return this.usersService.updateUser(userId, updateData);
+    } else {
+      // 如果用户既不是管理员也不是普通用户，抛出异常
+      throw new Error('Access Denied');
+    }
+
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
