@@ -18,13 +18,20 @@ export class UsersController {
     private authService: AuthService,
   ) { }
 
-  @Post('register')
+  @Post('user')
   @ApiOperation({ summary: 'Register a new user' })
   @ApiBody({ description: 'User Registration Data', type: CreateUserDto })
   @ApiResponse({ status: 201, description: 'User successfully registered.' })
   @ApiResponse({ status: 403, description: 'User already register' })
-  async register(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.createUser(createUserDto);
+  async register(@Request() req, @Body() createUserDto: CreateUserDto) {
+    const userisAdmin = req.user.isadmin;
+    if (userisAdmin === true) {
+
+      return this.usersService.createUser(createUserDto);
+    } else {
+      throw new Error('Access Denied');
+    }
+
   }
 
   @Post('login')
