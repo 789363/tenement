@@ -36,3 +36,11 @@ export class UpdateCollectionDto {
     collection_complete?: string;
     owner?: number;
 }
+export class CollectionDto {
+    collection_name: string;
+    tenement_address: string;
+    collection_type: string;
+    price: string;
+    collection_id: number;
+    // 可以根据需要添加其他字段
+}

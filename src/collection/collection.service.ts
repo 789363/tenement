@@ -1,8 +1,8 @@
 // src/collection/collection.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Collection } from '@prisma/client';
-import { CreateCollectionDto, UpdateCollectionDto } from './dto/collection.dto';
+import { CreateCollectionDto, UpdateCollectionDto, CollectionDto } from './dto/collection.dto';
 
 @Injectable()
 export class CollectionService {
@@ -23,15 +23,46 @@ export class CollectionService {
         });
     }
 
-    async getAllCollections(): Promise<Collection[]> {
-        return this.prisma.collection.findMany();
+    async getAllCollections(): Promise<{ message: string; data: CollectionDto[] }> {
+        try {
+            const collections = await this.prisma.collection.findMany();
+            const data = collections.map(collection => ({
+                collection_name: collection.collection_name,
+                tenement_address: collection.tenement_no,
+                collection_type: collection.collection_type,
+                price: collection.price,
+                collection_id: collection.id
+                // 可以根据需要添加其他字段
+            }));
+            return { message: "Successfully get the media", data };
+        } catch (error) {
+            throw new InternalServerErrorException('An error occurred while retrieving collections.');
+        }
     }
 
-    async getCollectionsByUserId(userId: number): Promise<Collection[]> {
-        return this.prisma.collection.findMany({
-            where: { owner: userId },
-        });
+    async getCollectionsByUserId(userId: number): Promise<{ message: string; data: CollectionDto[] }> {
+        try {
+            const collections = await this.prisma.collection.findMany({
+                where: {
+                    owner: userId,
+                    is_deleted: false // 仅返回未被删除的记录
+                }
+            });
+            const data = collections.map(collection => ({
+                collection_name: collection.collection_name,
+                tenement_address: collection.tenement_no,
+                collection_type: collection.collection_type,
+                price: collection.price,
+                collection_id: collection.id
+                // 可以根据需要添加其他字段
+            }));
+            return { message: "Successfully get the media", data };
+        } catch (error) {
+            throw new InternalServerErrorException('An error occurred while retrieving user-specific collections.');
+        }
     }
+
+
 
     async createCollection(collectionData: CreateCollectionDto): Promise<{ message: string }> {
         await this.prisma.collection.create({

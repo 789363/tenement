@@ -16,8 +16,8 @@ export class CollectionController {
     @ApiOperation({ summary: 'Get collection by ID' })
     @ApiParam({ name: 'id', description: 'Collection ID' })
     async getCollectionById(@Param('id', ParseIntPipe) id: number, @Request() req) {
-        const userRole = req.user.role;
-        if (userRole === 'admin') {
+        const userisAdmin = req.user.isAdmin;
+        if (userisAdmin === true) {
             return this.collectionService.getCollectionById(id);
         } else {
             // 如果用户是普通用户，只能获取与其相关的收藏信息
@@ -29,11 +29,11 @@ export class CollectionController {
     @Get()
     @ApiOperation({ summary: 'Get all collections' })
     async getAllCollections(@Request() req) {
-        const userRole = req.user.role;
-        if (userRole === 'admin') {
+        const userisAdmin = req.user.isAdmin;
+        if (userisAdmin === true) {
             return this.collectionService.getAllCollections();
         } else {
-            // 如果用户是普通用户，只能获取与其相关的所有收藏信息
+            // 如果用户是普通用户，只能获取与其相关的收藏信息
             return this.collectionService.getCollectionsByUserId(req.user.userId);
         }
     }
