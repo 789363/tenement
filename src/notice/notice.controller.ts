@@ -21,14 +21,13 @@ export class NoticeController {
     }
 
     @UseGuards(AuthGuard('jwt'), AdminGuard)
-    @Post(':type')
-    @ApiOperation({ summary: 'Create a new notice' })
+    @Post('/:type')
+    @ApiOperation({ summary: 'Create new notices' })
     @ApiParam({ name: 'type', description: 'Notice type (collection or tenement)' })
-    @ApiResponse({ status: 201, description: 'Notice created successfully' })
-    createNotice(@Param('type') type: string, @Body() noticeData: CreateCollectionNoticeDto | CreateTenementNoticeDto) {
-        return this.noticeService.createNotice(type, noticeData);
+    @ApiResponse({ status: 200, description: 'Notices created successfully' })
+    createNotices(@Param('type') type: string, @Body() noticeDataArray: (CreateCollectionNoticeDto | CreateTenementNoticeDto)[]) {
+        return this.noticeService.createNotices(type, noticeDataArray);
     }
-
     @UseGuards(AuthGuard('jwt'), AdminGuard)
     @Put('/:type')
     @ApiOperation({ summary: 'Update multiple notices' })

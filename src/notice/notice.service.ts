@@ -29,20 +29,23 @@ export class NoticeService {
     }
 
 
-    async createNotice(type: string, noticeData: CreateCollectionNoticeDto | CreateTenementNoticeDto) {
-        let newNotice;
-        if (type === 'collection') {
-            newNotice = await this.prisma.collection_Notice.create({
-                data: noticeData as CreateCollectionNoticeDto,
-            });
-        } else {
-            newNotice = await this.prisma.tenement_Notice.create({
-                data: noticeData as CreateTenementNoticeDto,
-            });
-        }
+    async createNotices(type: string, noticeDataArray: (CreateCollectionNoticeDto | CreateTenementNoticeDto)[]) {
+        const createdNotices = await Promise.all(noticeDataArray.map(async noticeData => {
+            if (type === 'collection') {
+                return await this.prisma.collection_Notice.create({
+                    data: noticeData as CreateCollectionNoticeDto,
+                });
+            } else {
+                return await this.prisma.tenement_Notice.create({
+                    data: noticeData as CreateTenementNoticeDto,
+                });
+            }
+        }));
 
-        return { message: "notices saved", data: [newNotice] };
+        return { message: "notices saved", data: createdNotices };
     }
+
+
 
     async updateNotices(type: string, noticeDataArray: UpdateCollectionNoticeDto[] | UpdateTenementNoticeDto[]) {
         await Promise.all(noticeDataArray.map(async noticeData => {
