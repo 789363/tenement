@@ -1,5 +1,5 @@
 // src/collection/collection.service.ts
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Collection } from '@prisma/client';
 import { CreateCollectionDto, UpdateCollectionDto, CollectionDto } from './dto/collection.dto';
@@ -8,19 +8,65 @@ import { CreateCollectionDto, UpdateCollectionDto, CollectionDto } from './dto/c
 export class CollectionService {
     constructor(private prisma: PrismaService) { }
 
-    async getCollectionById(id: number): Promise<Collection | null> {
-        return this.prisma.collection.findUnique({
-            where: { id },
-        });
+    async getCollectionById(id: number): Promise<{ message: string; data: any }> {
+        try {
+            const collection = await this.prisma.collection.findUnique({
+                where: { id },
+                include: {
+                    Collection_Notice: true, // 包括关联的通知信息
+                },
+            });
+
+            if (!collection) {
+                throw new NotFoundException('Collection not found.');
+            }
+
+            const data = this.formatCollectionData(collection);
+            return { message: "Successfully get the media", data };
+        } catch (error) {
+            throw new InternalServerErrorException('An error occurred while retrieving the collection.');
+        }
     }
 
-    async getCollectionByIdAndUserId(id: number, userId: number): Promise<Collection | null> {
-        return this.prisma.collection.findFirst({
-            where: {
-                id,
-                owner: userId // 假设收藏信息中有一个字段是 owner，表示收藏的拥有者
-            },
-        });
+    async getCollectionByIdAndUserId(id: number, userId: number): Promise<{ message: string; data: any }> {
+        try {
+            const collection = await this.prisma.collection.findFirst({
+                where: {
+                    id,
+                    owner: userId, // 假设收藏信息中有一个字段是 owner，表示收藏的拥有者
+                },
+                include: {
+                    Collection_Notice: true, // 包括关联的通知信息
+                },
+            });
+
+            if (!collection) {
+                throw new NotFoundException('Collection not found.');
+            }
+
+            const data = this.formatCollectionData(collection);
+            return { message: "Successfully get the media", data };
+        } catch (error) {
+            throw new InternalServerErrorException('An error occurred while retrieving the collection.');
+        }
+    }
+
+    private formatCollectionData(collection: any): any {
+        return {
+            tenement_address: collection.tenement_no,
+            collection_name: collection.collection_name,
+            collection_type: collection.collection_type,
+            price: collection.price,
+            collection_id: collection.id,
+            // ... 其他字段
+            notices: collection.Collection_Notice.map(notice => ({
+                id: notice.id,
+                visitDate: notice.visitDate,
+                record: notice.record,
+                remindDate: notice.remindDate,
+                remind: notice.remind,
+            })),
+        };
     }
 
     async getAllCollections(): Promise<{ message: string; data: CollectionDto[] }> {
@@ -79,9 +125,15 @@ export class CollectionService {
         });
     }
 
-    async deleteCollection(id: number): Promise<Collection> {
-        return this.prisma.collection.delete({
-            where: { id },
-        });
+    async deleteCollection(id: number): Promise<{ message: string }> {
+        try {
+            await this.prisma.collection.update({
+                where: { id },
+                data: { is_deleted: true },
+            });
+            return { message: "Successfully delete the media" };
+        } catch (error) {
+            throw new InternalServerErrorException('An error occurred while deleting the collection.');
+        }
     }
 }
