@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, UseGuards, Request } from '@nestjs/common';
 import { NoticeService } from './notice.service';
 import { CreateCollectionNoticeDto, UpdateCollectionNoticeDto, CreateTenementNoticeDto, UpdateTenementNoticeDto } from './dto/notice.dto';
 import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiResponse } from '@nestjs/swagger';
@@ -25,8 +25,9 @@ export class NoticeController {
     @ApiOperation({ summary: 'Create new notices' })
     @ApiParam({ name: 'type', description: 'Notice type (collection or tenement)' })
     @ApiResponse({ status: 200, description: 'Notices created successfully' })
-    createNotices(@Param('type') type: string, @Body() noticeDataArray: (CreateCollectionNoticeDto | CreateTenementNoticeDto)[]) {
-        return this.noticeService.createNotices(type, noticeDataArray);
+    createNotices(@Param('type') type: string, @Body() noticeDataArray: (CreateCollectionNoticeDto | CreateTenementNoticeDto)[], @Request() req) {
+        const userId = req.user.sub; // 提取用户 ID
+        return this.noticeService.createNotices(type, noticeDataArray, userId);
     }
     @UseGuards(AuthGuard('jwt'), AdminGuard)
     @Put('/:type')

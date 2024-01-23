@@ -28,16 +28,16 @@ export class NoticeService {
             : { message: "Notice not found" };
     }
 
-
-    async createNotices(type: string, noticeDataArray: (CreateCollectionNoticeDto | CreateTenementNoticeDto)[]) {
+    async createNotices(type: string, noticeDataArray: (CreateCollectionNoticeDto | CreateTenementNoticeDto)[], userId: number) {
         const createdNotices = await Promise.all(noticeDataArray.map(async noticeData => {
+            const data = { ...noticeData, owner: userId }; // 添加 owner 字段
             if (type === 'collection') {
                 return await this.prisma.collection_Notice.create({
-                    data: noticeData as CreateCollectionNoticeDto,
+                    data: data as CreateCollectionNoticeDto,
                 });
             } else {
                 return await this.prisma.tenement_Notice.create({
-                    data: noticeData as CreateTenementNoticeDto,
+                    data: data as CreateTenementNoticeDto,
                 });
             }
         }));
