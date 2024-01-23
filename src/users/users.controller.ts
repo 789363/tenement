@@ -66,7 +66,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Get user list' })
   @ApiResponse({ status: 200, description: 'Successfully retrieved user data' })
   async getUsers(@Request() req) {
-    const userisAdmin = req.userisAdmin;
+    const userisAdmin = req.user.isadmin;
 
     if (userisAdmin === true) {
 
@@ -84,7 +84,16 @@ export class UsersController {
   @ApiParam({ name: 'user_id', description: 'User ID' })
   @ApiResponse({ status: 200, description: 'Successfully retrieved user details' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async getUserById(@Param('user_id', ParseIntPipe) userId: number) {
-    return this.usersService.getUserById(userId);
+  async getUserById(@Param('user_id', ParseIntPipe) userId: number, @Request() req) {
+
+    const userisAdmin = req.user.isadmin;
+
+    if (userisAdmin === true) {
+
+      return this.usersService.getUserById(userId);
+    } else {
+      // 如果用户既不是管理员也不是普通用户，抛出异常
+      throw new Error('Access Denied');
+    }
   }
 }
