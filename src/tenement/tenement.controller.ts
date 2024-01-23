@@ -18,9 +18,9 @@ export class TenementController {
     @ApiResponse({ status: 200, description: 'Successfully retrieved all tenements.' })
     @ApiResponse({ status: 404, description: 'Tenement not found' })
     async getAllTenements(@Request() req) {
-        const userRole = req.user.role;
+        const userisAdmin = req.user.isAdmin;
 
-        if (userRole === 'admin') {
+        if (userisAdmin === 'admin') {
             return this.tenementService.getAllTenements();
         } else {
             return this.tenementService.getTenementsByUserId(req.user.userId);
@@ -34,12 +34,12 @@ export class TenementController {
     @ApiResponse({ status: 200, description: 'Tenement retrieved successfully.' })
     @ApiResponse({ status: 404, description: 'Tenement not found' })
     // 根据类型、用户ID和物业ID获取物业信息
-    async getTenementByIdTypeAndUser(type: string, id: number, user: User) {
+    async getTenementByIdTypeAndUser(@Request() req, type: string, id: number, user: User) {
         if (user.isAdmin === true) {
             return this.getTenementByIdAndType(type, id);
         } else {
             // 如果是普通用户，确保只能获取与其相关的物业信息
-            return this.getTenementByIdAndTypeForUser(type, id, user.id);
+            return this.getTenementByIdAndTypeForUser(type, id, req.user.userId);
         }
     }
 

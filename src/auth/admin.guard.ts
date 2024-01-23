@@ -9,11 +9,11 @@ export class AdminGuard implements CanActivate {
     if (user) {
       if (user.isadmin) {
         // 设置用户角色为管理员
-        request.userRole = 'admin';
+        request.user.isadmin = true;
         return true;
       } else if (user.isregular) {
         // 设置用户角色为普通用户
-        request.userRole = 'regular';
+        request.user.isadmin = false;
         return true;
       }
     }
