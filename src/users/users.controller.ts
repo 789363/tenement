@@ -66,14 +66,11 @@ export class UsersController {
   @ApiOperation({ summary: 'Get user list' })
   @ApiResponse({ status: 200, description: 'Successfully retrieved user data' })
   async getUsers(@Request() req) {
-    const userRole = req.userRole;
+    const userisAdmin = req.userisAdmin;
 
-    if (userRole === 'admin') {
-      // 如果用户是管理员，返回所有用户数据
+    if (userisAdmin === true) {
+
       return this.usersService.getUsers();
-    } else if (userRole === 'regular') {
-      // 如果用户是普通用户，仅返回该用户的数据
-      return this.usersService.getUserById(req.user.user_id);
     } else {
       // 如果用户既不是管理员也不是普通用户，抛出异常
       throw new Error('Access Denied');
