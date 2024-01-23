@@ -65,6 +65,8 @@ export class NoticeService {
         return { message: "notices updated" };
     }
 
+
+
     async deleteNotice(id: number, type: string) {
         try {
             if (type === 'collection') {

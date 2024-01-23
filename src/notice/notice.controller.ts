@@ -33,9 +33,10 @@ export class NoticeController {
     @ApiOperation({ summary: 'Update multiple notices' })
     @ApiParam({ name: 'type', description: 'Notice type (collection or tenement)' })
     @ApiResponse({ status: 200, description: 'Notices updated successfully' })
-    updateNotices(@Param('type') type: string, @Body() noticeDataArray: UpdateCollectionNoticeDto[] | UpdateTenementNoticeDto[]) {
+    updateNotices(@Param('type') type: string, @Body() noticeDataArray: (UpdateCollectionNoticeDto | UpdateTenementNoticeDto)[]) {
         return this.noticeService.updateNotices(type, noticeDataArray);
     }
+
     @UseGuards(AuthGuard('jwt'), AdminGuard)
     @Delete(':id/:type')
     @ApiOperation({ summary: 'Delete a notice' })
