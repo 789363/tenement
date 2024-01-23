@@ -45,6 +45,8 @@ export class UpdateCollectionNoticeDto {
     @IsOptional()
     @IsString()
     readonly remind?: string;
+
+    isNew?: boolean;
 }
 export class CreateTenementNoticeDto {
     @IsNotEmpty()
@@ -104,6 +106,8 @@ export class UpdateTenementNoticeDto {
     @IsOptional()
     @IsInt()
     readonly owner?: number;
+
+    isNew?: boolean;
 }
 
 export class NoticeDto {

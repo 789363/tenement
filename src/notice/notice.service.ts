@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCollectionNoticeDto, UpdateCollectionNoticeDto, CreateTenementNoticeDto, UpdateTenementNoticeDto, NoticeDto } from './dto/notice.dto';
 import { Prisma } from '@prisma/client';
@@ -47,25 +47,37 @@ export class NoticeService {
 
 
 
-    async updateNotices(type: string, noticeDataArray: UpdateCollectionNoticeDto[] | UpdateTenementNoticeDto[]) {
-        await Promise.all(noticeDataArray.map(async noticeData => {
-            if (type === 'collection') {
-                await this.prisma.collection_Notice.update({
-                    where: { id: parseInt(noticeData.id) },
-                    data: noticeData,
-                });
-            } else {
-                await this.prisma.tenement_Notice.update({
-                    where: { id: parseInt(noticeData.id) },
-                    data: noticeData,
-                });
-            }
-        }));
 
-        return { message: "notices updated" };
+
+    async updateNotices(type: string, noticeDataArray: CreateCollectionNoticeDto[] | UpdateCollectionNoticeDto[] | UpdateTenementNoticeDto[]) {
+        try {
+            await Promise.all(noticeDataArray.map(async noticeData => {
+                if (type === 'collection') {
+                    if (noticeData.isNew) {
+                        delete noticeData.isNew; // 移除 isNew 字段
+                        await this.prisma.collection_Notice.create({
+                            data: noticeData as CreateCollectionNoticeDto
+                        });
+                    } else {
+                        await this.prisma.collection_Notice.update({
+                            where: { id: parseInt(noticeData.id) },
+                            data: noticeData as UpdateCollectionNoticeDto,
+                        });
+                    }
+                } else if (type === 'tenement') {
+
+                    await this.prisma.tenement_Notice.update({
+                        where: { id: parseInt(noticeData.id) },
+                        data: noticeData as UpdateTenementNoticeDto,
+                    });
+
+                }
+            }));
+            return { message: "notices updated" };
+        } catch (error) {
+            throw new InternalServerErrorException('An error occurred while updating the notices.');
+        }
     }
-
-
 
     async deleteNotice(id: number, type: string) {
         try {
