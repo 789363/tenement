@@ -98,18 +98,23 @@ export class CalendarService {
     }
 
     private formatCollectionNotices(notices: any[]): any[] {
-        return notices.map(notice => {
+        const groupedByDay = {};
+
+        notices.forEach(notice => {
             const date = new Date(notice.visitDate);
-            return {
-                day: date.getDate(),
-                events: [
-                    {
-                        content: notice.record,
-                        id: notice.id.toString(),
-                        class: 'collection-notice',
-                    },
-                ],
-            };
+            const day = date.getDate();
+
+            if (!groupedByDay[day]) {
+                groupedByDay[day] = { day, events: [] };
+            }
+
+            groupedByDay[day].events.push({
+                content: notice.record,
+                id: notice.id.toString(),
+                class: notice.class, // 確保這裡根據您的業務邏輯設置正確
+            });
         });
+
+        return Object.values(groupedByDay);
     }
 }
