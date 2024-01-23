@@ -1,7 +1,7 @@
 // src/collection/collection.service.ts
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { Collection } from '@prisma/client';
+import { Collection, Prisma } from '@prisma/client';
 import { CreateCollectionDto, UpdateCollectionDto, CollectionDto } from './dto/collection.dto';
 
 @Injectable()
@@ -118,11 +118,19 @@ export class CollectionService {
     }
 
 
-    async updateCollection(id: number, collectionData: UpdateCollectionDto): Promise<Collection> {
-        return this.prisma.collection.update({
-            where: { id },
-            data: collectionData,
-        });
+    async updateCollection(id: number, collectionData: UpdateCollectionDto): Promise<{ message: string }> {
+        try {
+            await this.prisma.collection.update({
+                where: { id },
+                data: collectionData,
+            });
+            return { message: "Successfully update the media" };
+        } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+                throw new NotFoundException(`Collection with ID ${id} not found`);
+            }
+            throw new InternalServerErrorException('An error occurred while updating the collection.');
+        }
     }
 
     async deleteCollection(id: number): Promise<{ message: string }> {
