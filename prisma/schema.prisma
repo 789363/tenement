@@ -13,6 +13,7 @@ model Tenement {
   tenement_product_type String
   tenement_type         String
   tenement_face         String
+  tenement_style        String
   tenement_images       String
   createdAt             DateTime          @default(now())
   updatedAt             DateTime          @updatedAt
@@ -91,7 +92,7 @@ model Tenement_Sell {
 model Tenement_Create {
   tenement_id                      Int                @id
   total_rating                     String
-  main_building                    String
+  inside_rating                    String
   affiliated_building              String
   public_buliding                  String
   unregistered_area                String
