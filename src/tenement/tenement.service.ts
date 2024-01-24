@@ -5,12 +5,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { CreateTenementRentDto } from './dto/creat-rent.dto';
 
 @Injectable()
 export class TenementService {
   constructor(private prisma: PrismaService) {}
 
-  // 获取所有物业信息
   async getAllTenements(): Promise<{ message: string; data: any[] }> {
     const tenements = await this.prisma.tenement.findMany();
     if (!tenements || tenements.length === 0) {
@@ -27,7 +27,6 @@ export class TenementService {
     };
   }
 
-  // 根据用户 ID 获取物业信息
   async getTenementsByUserId(
     userId: number,
   ): Promise<{ message: string; data: any[] }> {
@@ -405,5 +404,75 @@ export class TenementService {
     };
 
     return { message: 'Successfully update the media', data };
+  }
+  async createTenementRent(
+    createTenementRentDto: CreateTenementRentDto,
+  ): Promise<{ message: string }> {
+    // 首先创建或更新 Tenement 记录
+    const tenement = await this.prisma.tenement.create({
+      data: {
+        tenement_address: createTenementRentDto.tenement_address,
+        tenement_product_type: createTenementRentDto.tenement_product_type,
+        tenement_type: createTenementRentDto.tenement_type,
+        tenement_status: createTenementRentDto.tenement_status,
+        tenement_face: createTenementRentDto.tenement_face,
+        tenement_style: createTenementRentDto.tenement_style,
+        tenement_images: createTenementRentDto.tenement_images,
+        owner: createTenementRentDto.owner, // 假设 owner 字段是从 DTO 中传入的
+        is_deleted: false,
+      },
+    });
+
+    // 接着创建 Tenement_Create 记录
+    const tenementCreate = await this.prisma.tenement_Create.create({
+      data: {
+        tenement_id: tenement.id,
+        total_rating: createTenementRentDto.total_rating,
+        main_building: createTenementRentDto.main_building,
+        inside_rating: createTenementRentDto.inside_rating,
+        affiliated_building: createTenementRentDto.affiliated_building,
+        public_buliding: createTenementRentDto.public_buliding,
+        unregistered_area: createTenementRentDto.unregistered_area,
+        management_magnification:
+          createTenementRentDto.management_magnification,
+        management_fee: createTenementRentDto.management_fee,
+        tenement_floor: createTenementRentDto.tenement_floor,
+        tenement_host_name: createTenementRentDto.tenement_host_name,
+        tenement_host_telphone: createTenementRentDto.tenement_host_telphone,
+        tenement_host_phone: createTenementRentDto.tenement_host_phone,
+        tenement_host_line: createTenementRentDto.tenement_host_line,
+        tenement_host_remittance_bank:
+          createTenementRentDto.tenement_host_remittance_bank,
+        tenement_host_remittance_account:
+          createTenementRentDto.tenement_host_remittance_account,
+        tenement_host_address: createTenementRentDto.tenement_host_address,
+        tenement_host_birthday: createTenementRentDto.tenement_host_birthday,
+        tenement_host_hobby: createTenementRentDto.tenement_host_hobby,
+        tenement_host_remark: createTenementRentDto.tenement_host_remark,
+        selling_price: createTenementRentDto.selling_price,
+        rent_price: createTenementRentDto.rent_price,
+        deposit_price: createTenementRentDto.deposit_price,
+      },
+    });
+
+    // 最后创建 Tenement_Rent 记录
+    await this.prisma.tenement_Rent.create({
+      data: {
+        tenement_id: tenementCreate.tenement_id, // 来自 Tenement_Create 的 ID
+        tenement_status: createTenementRentDto.tenement_status,
+        renter_start_date: createTenementRentDto.renter_start_date,
+        renter_end_date: createTenementRentDto.renter_end_date,
+        renter_name: createTenementRentDto.renter_name,
+        renter_id_images: createTenementRentDto.renter_id_images,
+        renter_phone: createTenementRentDto.renter_phone,
+        renter_jobtitle: createTenementRentDto.renter_jobtitle,
+        renter_guarantor_name: createTenementRentDto.renter_guarantor_name,
+        renter_guarantor_phone: createTenementRentDto.renter_guarantor_phone,
+        renter_remark: createTenementRentDto.renter_remark,
+        is_deleted: false, // 默认值，表示记录未被删除
+      },
+    });
+
+    return { message: 'Successfully add the media' };
   }
 }

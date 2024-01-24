@@ -1,6 +1,8 @@
 import {
   Controller,
   Get,
+  Post,
+  Body,
   Param,
   ParseIntPipe,
   UseGuards,
@@ -9,7 +11,8 @@ import {
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuthGuard } from '@nestjs/passport';
-import { AdminGuard } from '../auth/admin.guard'; // 请确保导入正确的路径
+import { AdminGuard } from '../auth/admin.guard';
+import { CreateTenementRentDto } from './dto/creat-rent.dto';
 import { TenementService } from './tenement.service';
 @ApiTags('tenements')
 @Controller('api/tenements')
@@ -122,5 +125,14 @@ export class TenementController {
       req.user.userId,
       userisAdmin,
     );
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/tenement/add/rent')
+  @ApiOperation({ summary: 'Add new tenement rent' })
+  async createTenementRent(
+    @Body() createTenementRentDto: CreateTenementRentDto,
+  ) {
+    return this.tenementService.createTenementRent(createTenementRentDto);
   }
 }
