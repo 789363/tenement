@@ -3,8 +3,7 @@ import { NoticeController } from './notice.controller';
 import { NoticeService } from './notice.service';
 import { PrismaService } from '../../prisma/prisma.service';
 @Module({
-
   controllers: [NoticeController],
-  providers: [NoticeService, PrismaService]
+  providers: [NoticeService, PrismaService],
 })
-export class NoticesModule { }
+export class NoticesModule {}

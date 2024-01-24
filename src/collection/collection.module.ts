@@ -3,7 +3,7 @@ import { CollectionService } from './collection.service';
 import { CollectionController } from './collection.controller';
 import { PrismaService } from '../../prisma/prisma.service';
 @Module({
-    controllers: [CollectionController],
-    providers: [CollectionService, PrismaService],
+  controllers: [CollectionController],
+  providers: [CollectionService, PrismaService],
 })
-export class CollectionModule { }
+export class CollectionModule {}

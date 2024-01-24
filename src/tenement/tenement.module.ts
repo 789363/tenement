@@ -6,4 +6,4 @@ import { TenementController } from './tenement.controller';
   controllers: [TenementController],
   providers: [TenementService],
 })
-export class TenementModule { }
+export class TenementModule {}

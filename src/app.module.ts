@@ -9,10 +9,8 @@ import { CollectionService } from './collection/collection.service';
 import { CollectionController } from './collection/collection.controller';
 import { CollectionModule } from './collection/collection.module';
 import { PrismaService } from '../prisma/prisma.service';
-import { CollectionNoticeService } from './collection-notices/collection-notices.service';
-import { CollectionNoticeModule } from './collection-notices/collection-notices.module';
 import { NoticesModule } from './notice/notice.module';
-import { UploadController } from './upload/upload.controller';
+import { FileUploadController } from './upload/upload.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { TenementModule } from './tenement/tenement.module';
 import { CalendarModule } from './calendar/calendar.module';
@@ -21,7 +19,6 @@ import { CalendarModule } from './calendar/calendar.module';
     UsersModule,
     AuthModule,
     CollectionModule,
-    CollectionNoticeModule,
     NoticesModule,
     MulterModule.register({
       dest: './src/public',
@@ -33,8 +30,8 @@ import { CalendarModule } from './calendar/calendar.module';
     AppController,
     UsersController,
     CollectionController,
-    UploadController,
+    FileUploadController,
   ],
-  providers: [AppService, CollectionService, PrismaService, CollectionNoticeService],
+  providers: [AppService, CollectionService, PrismaService],
 })
-export class AppModule { }
+export class AppModule {}
