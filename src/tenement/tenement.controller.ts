@@ -18,6 +18,7 @@ import { CreateTenementSellDto } from './dto/create-sell.dto';
 import { CreateTenementDevelopDto } from './dto/create-develop.dto';
 import { CreateTenementMarketDto } from './dto/create-market.dto';
 import { TenementService } from './tenement.service';
+import { UpdateTenementSellDto } from './dto/update-sell.dto';
 @ApiTags('tenements')
 @Controller('api/tenements')
 export class TenementController {
@@ -149,7 +150,7 @@ export class TenementController {
     return this.tenementService.createTenementSell(createTenementSellDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Post('/tenement/add/develop')
   @ApiOperation({ summary: 'Add new tenement development' })
   async createTenementDevelop(
@@ -157,7 +158,7 @@ export class TenementController {
   ) {
     return this.tenementService.createTenementDevelop(createTenementDevelopDto);
   }
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Post('/tenement/add/market')
   @ApiOperation({ summary: 'Add new tenement development' })
   async createTenementMarket(
@@ -166,7 +167,7 @@ export class TenementController {
     return this.tenementService.createTenementMarket(createTenementMarketDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Delete('/delete/tenement/sell/:tenementId')
   @ApiOperation({ summary: 'Delete tenement sell' })
   async deleteTenementSell(
@@ -175,7 +176,7 @@ export class TenementController {
     return this.tenementService.deleteTenementSell(tenementId);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Delete('/delete/tenement/market/:tenementId')
   async deleteTenementMarket(
     @Param('tenementId', ParseIntPipe) tenementId: number,
@@ -183,7 +184,7 @@ export class TenementController {
     return this.tenementService.deleteTenementMarket(tenementId);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Delete('/delete/tenement/develop/:tenementId')
   async deleteTenementDevelop(
     @Param('tenementId', ParseIntPipe) tenementId: number,
@@ -191,11 +192,21 @@ export class TenementController {
     return this.tenementService.deleteTenementDevelop(tenementId);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Delete('/delete/tenement/rent/:tenementId')
   async deleteTenementRent(
     @Param('tenementId', ParseIntPipe) tenementId: number,
   ) {
     return this.tenementService.deleteTenementRent(tenementId);
+  }
+
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @Post('/tenement/edit/sell/:tenementId')
+  @ApiOperation({ summary: 'Update tenement sell' })
+  async updateTenementSell(
+    @Param('tenementId', ParseIntPipe) tenementId: number,
+    @Body() updateTenementSellDto: UpdateTenementSellDto,
+  ) {
+    return this.tenementService.updateTenementSell(updateTenementSellDto);
   }
 }

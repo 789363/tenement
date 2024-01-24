@@ -9,6 +9,7 @@ import { CreateTenementRentDto } from './dto/create-rent.dto';
 import { CreateTenementSellDto } from './dto/create-sell.dto';
 import { CreateTenementDevelopDto } from './dto/create-develop.dto';
 import { CreateTenementMarketDto } from './dto/create-market.dto';
+import { UpdateTenementSellDto } from './dto/update-sell.dto';
 @Injectable()
 export class TenementService {
   constructor(private prisma: PrismaService) {}
@@ -88,7 +89,7 @@ export class TenementService {
         selling_price: sell.Tenement_Create.selling_price,
         Total_rating: sell.Tenement_Create.total_rating,
         inside_rating: sell.Tenement_Create.inside_rating,
-        public_building: sell.Tenement_Create.public_buliding,
+        public_building: sell.Tenement_Create.public_building,
         tenement_floor: sell.Tenement_Create.tenement_floor,
       }));
 
@@ -139,7 +140,7 @@ export class TenementService {
         rent: rent.Tenement_Create.rent_price,
         Total_rating: rent.Tenement_Create.total_rating,
         inside_rating: rent.Tenement_Create.inside_rating,
-        public_building: rent.Tenement_Create.public_buliding,
+        public_building: rent.Tenement_Create.public_building,
         tenement_floor: rent.Tenement_Create.tenement_floor,
       }));
 
@@ -182,7 +183,7 @@ export class TenementService {
       total_rating: tenementSell.Tenement_Create.total_rating,
       main_building: tenementSell.Tenement_Create.main_building,
       affiliated_building: tenementSell.Tenement_Create.affiliated_building,
-      public_building: tenementSell.Tenement_Create.public_buliding,
+      public_building: tenementSell.Tenement_Create.public_building,
       unregistered_area: tenementSell.Tenement_Create.unregistered_area,
       management_magnification:
         tenementSell.Tenement_Create.management_magnification,
@@ -253,7 +254,7 @@ export class TenementService {
       total_rating: tenementRent.Tenement_Create.total_rating,
       main_building: tenementRent.Tenement_Create.main_building,
       affiliated_building: tenementRent.Tenement_Create.affiliated_building,
-      public_building: tenementRent.Tenement_Create.public_buliding,
+      public_building: tenementRent.Tenement_Create.public_building,
       unregistered_area: tenementRent.Tenement_Create.unregistered_area,
       management_magnification:
         tenementRent.Tenement_Create.management_magnification,
@@ -326,7 +327,7 @@ export class TenementService {
       total_rating: tenementDevelop.Tenement_Create.total_rating,
       main_building: tenementDevelop.Tenement_Create.main_building,
       affiliated_building: tenementDevelop.Tenement_Create.affiliated_building,
-      public_building: tenementDevelop.Tenement_Create.public_buliding,
+      public_building: tenementDevelop.Tenement_Create.public_building,
       unregistered_area: tenementDevelop.Tenement_Create.unregistered_area,
       management_magnification:
         tenementDevelop.Tenement_Create.management_magnification,
@@ -434,7 +435,7 @@ export class TenementService {
         main_building: createTenementRentDto.main_building,
         inside_rating: createTenementRentDto.inside_rating,
         affiliated_building: createTenementRentDto.affiliated_building,
-        public_buliding: createTenementRentDto.public_buliding,
+        public_building: createTenementRentDto.public_building,
         unregistered_area: createTenementRentDto.unregistered_area,
         management_magnification:
           createTenementRentDto.management_magnification,
@@ -503,7 +504,7 @@ export class TenementService {
         main_building: createTenementSellDto.main_building,
         inside_rating: createTenementSellDto.inside_rating,
         affiliated_building: createTenementSellDto.affiliated_building,
-        public_buliding: createTenementSellDto.public_buliding,
+        public_building: createTenementSellDto.public_building,
         unregistered_area: createTenementSellDto.unregistered_area,
         management_magnification:
           createTenementSellDto.management_magnification,
@@ -569,7 +570,7 @@ export class TenementService {
         main_building: createTenementDevelopDto.main_building,
         inside_rating: createTenementDevelopDto.inside_rating,
         affiliated_building: createTenementDevelopDto.affiliated_building,
-        public_buliding: createTenementDevelopDto.public_buliding,
+        public_building: createTenementDevelopDto.public_building,
         unregistered_area: createTenementDevelopDto.unregistered_area,
         management_magnification:
           createTenementDevelopDto.management_magnification,
@@ -707,5 +708,67 @@ export class TenementService {
     });
 
     return { message: 'Tenement sell successfully deleted' };
+  }
+
+  async updateTenementSell(
+    updateTenementSellDto: UpdateTenementSellDto,
+  ): Promise<{ message: string }> {
+    const { tenement_id, ...updateData } = updateTenementSellDto;
+
+    // 更新 Tenement 记录
+    await this.prisma.tenement.update({
+      where: { id: tenement_id },
+      data: {
+        tenement_address: updateData.tenement_address,
+        tenement_product_type: updateData.tenement_product_type,
+        tenement_type: updateData.tenement_type,
+        tenement_face: updateData.tenement_face,
+        tenement_images: updateData.tenement_images,
+        tenement_status: updateData.tenement_status,
+      },
+    });
+
+    // 更新 Tenement_Create 记录
+    await this.prisma.tenement_Create.update({
+      where: { tenement_id: tenement_id },
+      data: {
+        total_rating: updateData.total_rating,
+        main_building: updateData.main_building,
+        affiliated_building: updateData.affiliated_building,
+        public_building: updateData.public_building,
+        unregistered_area: updateData.unregistered_area,
+        management_magnification: updateData.management_magnification,
+        management_fee: updateData.management_fee,
+        selling_price: updateData.selling_price,
+        tenement_floor: updateData.tenement_floor,
+        tenement_host_name: updateData.tenement_host_name,
+        tenement_host_telphone: updateData.tenement_host_telphone,
+        tenement_host_phone: updateData.tenement_host_phone,
+        tenement_host_line: updateData.tenement_host_line,
+        tenement_host_remittance_bank: updateData.tenement_host_remittance_bank,
+        tenement_host_remittance_account:
+          updateData.tenement_host_remittance_account,
+        tenement_host_address: updateData.tenement_host_address,
+        tenement_host_birthday: updateData.tenement_host_birthday,
+        tenement_host_hobby: updateData.tenement_host_hobby,
+        tenement_host_remark: updateData.tenement_host_remark,
+      },
+    });
+
+    // 更新 Tenement_Sell 记录
+    await this.prisma.tenement_Sell.update({
+      where: { tenement_id: tenement_id },
+      data: {
+        buyer_order_date: updateData.buyer_order_date,
+        buyer_handout_date: updateData.buyer_handout_date,
+        buyer_name: updateData.buyer_name,
+        buyer_id_images: updateData.buyer_id_images,
+        buyer_phone: updateData.buyer_phone,
+        buyer_jobtitle: updateData.buyer_jobtitle,
+        buyer_remark: updateData.buyer_remark,
+      },
+    });
+
+    return { message: 'Successfully update the media' };
   }
 }

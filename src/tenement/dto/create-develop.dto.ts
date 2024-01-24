@@ -13,7 +13,7 @@ export class CreateTenementDevelopDto {
   main_building: string;
   inside_rating: string;
   affiliated_building: string;
-  public_buliding: string;
+  public_building: string;
   unregistered_area: string;
   management_magnification: string;
   management_fee: string;

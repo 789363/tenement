@@ -98,7 +98,7 @@ model Tenement_Create {
   main_building                    String
   inside_rating                    String
   affiliated_building              String
-  public_buliding                  String
+  public_building                  String
   unregistered_area                String
   management_magnification         String
   management_fee                   String

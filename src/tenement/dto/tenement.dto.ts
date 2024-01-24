@@ -38,7 +38,7 @@ export class UpdateTenementDto {
   total_rating?: string;
   main_building?: string;
   affiliated_building?: string;
-  public_buliding?: string;
+  public_building?: string;
   unregistered_area?: string;
   management_magnification?: string;
   management_fee?: string;

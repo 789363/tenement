@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-export class CreateTenementSellDto {
+export class UpdateTenementSellDto {
   // Tenement 的字段
   tenement_address: string;
   tenement_product_type: string;
@@ -7,12 +7,10 @@ export class CreateTenementSellDto {
   tenement_face: string;
   tenement_images: string;
   tenement_status: string;
-  tenement_style: string;
-  owner: number;
+
   // Tenement_Create 的字段
   total_rating: string;
   main_building: string;
-  inside_rating: string;
   affiliated_building: string;
   public_building: string;
   unregistered_area: string;
@@ -39,6 +37,7 @@ export class CreateTenementSellDto {
   buyer_phone: string;
   buyer_jobtitle: string;
   buyer_remark: string;
-    rent_price: any;
-    deposit_price: any;
+
+  // 唯一标识字段
+  tenement_id: number;
 }
