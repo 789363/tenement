@@ -35,4 +35,12 @@ export class TenementController {
         return this.tenementService.getAllTenementSells(userisAdmin === true, req.user.userId);
     }
 
+    @UseGuards(AuthGuard('jwt'))
+    @Get('/tenements/rent')
+    @ApiOperation({ summary: 'Get all tenement rents' })
+    async getAllTenementRents(@Request() req) {
+        const userisAdmin = req.user.isAdmin;
+        return this.tenementService.getAllTenementRents(userisAdmin === true, req.user.userId);
+    }
+
 }

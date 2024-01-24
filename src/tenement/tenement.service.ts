@@ -78,7 +78,7 @@ export class TenementService {
                 management_floor_bottom: sell.Tenement_Create.tenement_floor,
                 selling_price: sell.Tenement_Create.selling_price,
                 Total_rating: sell.Tenement_Create.total_rating,
-                inside_rating: sell.Tenement_Create.inside_rating, // 根据实际情况调整
+                inside_rating: sell.Tenement_Create.inside_rating,
                 public_building: sell.Tenement_Create.public_buliding,
                 tenement_floor: sell.Tenement_Create.tenement_floor
             }));
@@ -89,6 +89,50 @@ export class TenementService {
         }
     }
 
+    async getAllTenementRents(isAdmin: boolean, userId: number): Promise<{ message: string; data: any[] }> {
+        try {
+            let queryOptions = {
+                include: {
+                    Tenement_Create: {
+                        include: {
+                            Tenement: true
+                        }
+                    }
+                }
+            };
 
+            if (!isAdmin) {
+                queryOptions['where'] = {
+                    Tenement_Create: {
+                        Tenement: {
+                            owner: userId
+                        }
+                    }
+                };
+            }
+
+            const tenementRents = await this.prisma.tenement_Rent.findMany(queryOptions);
+
+            const data = tenementRents.map(rent => ({
+                tenement_address: rent.Tenement_Create.Tenement.tenement_address,
+                tenement_face: rent.Tenement_Create.Tenement.tenement_face,
+                tenement_status: rent.Tenement_Create.Tenement.tenement_type, // 假设 tenement_status 存在于 Tenement 表中
+                tenement_type: rent.Tenement_Create.Tenement.tenement_product_type, // 假设 tenement_type 存在于 Tenement 表中
+                tenement_style: rent.Tenement_Create.Tenement.tenement_style,
+                management_fee_bottom: rent.Tenement_Create.management_fee,
+                management_floor_bottom: rent.Tenement_Create.tenement_floor,
+                rent: rent.Tenement_Create.rent_price,
+                Total_rating: rent.Tenement_Create.total_rating,
+                inside_rating: rent.Tenement_Create.inside_rating,
+                public_building: rent.Tenement_Create.public_buliding,
+                tenement_floor: rent.Tenement_Create.tenement_floor
+
+            }));
+
+            return { message: "Successfully update the media", data };
+        } catch (error) {
+            throw new InternalServerErrorException('An error occurred while retrieving tenements rents.');
+        }
+    }
 
 }
