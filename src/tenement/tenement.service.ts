@@ -287,4 +287,72 @@ export class TenementService {
 
     return { message: 'Successfully update the media', data };
   }
+
+  async getTenementDevelopById(
+    tenementId: number,
+    userId: number,
+    isAdmin: boolean,
+  ): Promise<{ message: string; data: any }> {
+    const tenementDevelop = await this.prisma.tenement_Develop.findUnique({
+      where: { tenement_id: tenementId },
+      include: {
+        Tenement_Create: {
+          include: {
+            Tenement: true,
+          },
+        },
+      },
+    });
+
+    if (!tenementDevelop) {
+      throw new NotFoundException('Tenement develop not found.');
+    }
+
+    if (!isAdmin && tenementDevelop.Tenement_Create.Tenement.owner !== userId) {
+      throw new ForbiddenException(
+        'Access to this tenement develop is forbidden.',
+      );
+    }
+
+    const data = {
+      tenement_address:
+        tenementDevelop.Tenement_Create.Tenement.tenement_address,
+      tenement_product_type:
+        tenementDevelop.Tenement_Create.Tenement.tenement_product_type,
+      tenement_type: tenementDevelop.Tenement_Create.Tenement.tenement_type,
+      tenement_face: tenementDevelop.Tenement_Create.Tenement.tenement_face,
+      tenement_images: tenementDevelop.Tenement_Create.Tenement.tenement_images,
+      total_rating: tenementDevelop.Tenement_Create.total_rating,
+      main_building: tenementDevelop.Tenement_Create.main_building,
+      affiliated_building: tenementDevelop.Tenement_Create.affiliated_building,
+      public_building: tenementDevelop.Tenement_Create.public_buliding,
+      unregistered_area: tenementDevelop.Tenement_Create.unregistered_area,
+      management_magnification:
+        tenementDevelop.Tenement_Create.management_magnification,
+      management_fee: tenementDevelop.Tenement_Create.management_fee,
+      selling_price: tenementDevelop.Tenement_Create.selling_price,
+      rent_price: tenementDevelop.Tenement_Create.rent_price,
+      deposit_price: tenementDevelop.Tenement_Create.deposit_price,
+      tenement_floor: tenementDevelop.Tenement_Create.tenement_floor,
+      tenement_host_name: tenementDevelop.Tenement_Create.tenement_host_name,
+      tenement_host_telphone:
+        tenementDevelop.Tenement_Create.tenement_host_telphone,
+      tenement_host_phone: tenementDevelop.Tenement_Create.tenement_host_phone,
+      tenement_host_line: tenementDevelop.Tenement_Create.tenement_host_line,
+      tenement_host_remittance_bank:
+        tenementDevelop.Tenement_Create.tenement_host_remittance_bank,
+      tenement_host_remittance_account:
+        tenementDevelop.Tenement_Create.tenement_host_remittance_account,
+      tenement_host_address:
+        tenementDevelop.Tenement_Create.tenement_host_address,
+      tenement_host_birthday:
+        tenementDevelop.Tenement_Create.tenement_host_birthday,
+      tenement_host_hobby: tenementDevelop.Tenement_Create.tenement_host_hobby,
+      tenement_host_remark:
+        tenementDevelop.Tenement_Create.tenement_host_remark,
+      // 如果有更多字段，继续添加
+    };
+
+    return { message: 'Successfully update the media', data };
+  }
 }

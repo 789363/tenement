@@ -78,12 +78,29 @@ export class TenementController {
   @ApiOperation({
     summary: 'Get details of a specific tenement rent for editing',
   })
-  async getTenementRentDetailsForEdit(
+  async getTenementRentById(
     @Param('id', ParseIntPipe) tenementId: number,
     @Request() req,
   ) {
     const userisAdmin = req.user.isAdmin;
     return this.tenementService.getTenementRentById(
+      tenementId,
+      req.user.userId,
+      userisAdmin,
+    );
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/tenement/edit/develop/:id')
+  @ApiOperation({
+    summary: 'Get details of a specific tenement develop for editing',
+  })
+  async getTenementDevelopById(
+    @Param('id', ParseIntPipe) tenementId: number,
+    @Request() req,
+  ) {
+    const userisAdmin = req.user.isAdmin;
+    return this.tenementService.getTenementDevelopById(
       tenementId,
       req.user.userId,
       userisAdmin,
