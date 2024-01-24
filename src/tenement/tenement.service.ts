@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { User } from '@prisma/client';
 
@@ -7,15 +7,41 @@ export class TenementService {
     constructor(private prisma: PrismaService) { }
 
     // 获取所有物业信息
-    async getAllTenements() {
-        return this.prisma.tenement.findMany();
+    async getAllTenements(): Promise<{ message: string; data: any[] }> {
+        const tenements = await this.prisma.tenement.findMany();
+        if (!tenements || tenements.length === 0) {
+            throw new NotFoundException('Tenements not found.');
+        }
+        return {
+            message: "Successfully get the tenements",
+            data: tenements.map(t => ({
+                tenement_address: t.tenement_address,
+                tenement_face: t.tenement_face,
+                tenement_status: t.tenement_status,
+                tenement_type: t.tenement_type,
+                // ...其他字段
+            }))
+        };
     }
 
-    // 根据用户 tenement_id 获取物业信息
-    async getTenementsByUserId(user_id: number) {
-        return this.prisma.tenement.findMany({
-            where: { owner: user_id }
+    // 根据用户 ID 获取物业信息
+    async getTenementsByUserId(userId: number): Promise<{ message: string; data: any[] }> {
+        const tenements = await this.prisma.tenement.findMany({
+            where: { owner: userId }
         });
+        if (!tenements || tenements.length === 0) {
+            throw new NotFoundException('Tenements not found.');
+        }
+        return {
+            message: "Successfully get the tenements",
+            data: tenements.map(t => ({
+                tenement_address: t.tenement_address,
+                tenement_face: t.tenement_face,
+                tenement_status: t.tenement_status,
+                tenement_type: t.tenement_type,
+                // ...其他字段
+            }))
+        };
     }
 
     // 获取物业信息，根据类型和查询参数
