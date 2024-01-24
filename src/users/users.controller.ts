@@ -1,5 +1,23 @@
-import { Controller, Post, Get, Delete, Put, Body, Param, UseGuards, UseInterceptors, Query, Request, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
+import {
+  Controller,
+  Post,
+  Get,
+  Delete,
+  Put,
+  Body,
+  Param,
+  UseGuards,
+  UseInterceptors,
+  Request,
+  ParseIntPipe,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiParam,
+} from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { AuthService } from '../auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -8,15 +26,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ResponseInterceptor } from './response.interceptor';
-import { GetUserListDto } from './dto/get-userlist.dto';
 @ApiTags('users')
-@Controller('users')
+@Controller('api/users')
 @UseInterceptors(ResponseInterceptor)
 export class UsersController {
   constructor(
     private usersService: UsersService,
     private authService: AuthService,
-  ) { }
+  ) {}
 
   @Post('user')
   @ApiOperation({ summary: 'Register a new user' })
@@ -26,12 +43,10 @@ export class UsersController {
   async register(@Request() req, @Body() createUserDto: CreateUserDto) {
     const userisAdmin = req.user.isadmin;
     if (userisAdmin === true) {
-
       return this.usersService.createUser(createUserDto);
     } else {
       throw new Error('Access Denied');
     }
-
   }
 
   @Post('login')
@@ -40,7 +55,10 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'User successfully logged in.' })
   @ApiResponse({ status: 404, description: 'User not exist' })
   async login(@Body() loginDto: LoginDto) {
-    const user = await this.authService.validateUser(loginDto.user_email, loginDto.user_password);
+    const user = await this.authService.validateUser(
+      loginDto.user_email,
+      loginDto.user_password,
+    );
     if (!user) {
       throw new Error('Invalid credentials');
     }
@@ -53,15 +71,16 @@ export class UsersController {
   @ApiParam({ name: 'user_id', description: 'User ID' })
   @ApiResponse({ status: 200, description: 'User successfully deleted.' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async deleteUser(@Request() req, @Param('user_id', ParseIntPipe) userId: number) {
+  async deleteUser(
+    @Request() req,
+    @Param('user_id', ParseIntPipe) userId: number,
+  ) {
     const userisAdmin = req.user.isadmin;
     if (userisAdmin === true) {
-
       return this.usersService.deleteUser(userId);
     } else {
       throw new Error('Access Denied');
     }
-
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
@@ -71,15 +90,17 @@ export class UsersController {
   @ApiBody({ description: 'User Update Data', type: UpdateUserDto })
   @ApiResponse({ status: 200, description: 'User successfully updated.' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async updateUser(@Request() req, @Param('user_id', ParseIntPipe) userId: number, @Body() updateData: UpdateUserDto) {
+  async updateUser(
+    @Request() req,
+    @Param('user_id', ParseIntPipe) userId: number,
+    @Body() updateData: UpdateUserDto,
+  ) {
     const userisAdmin = req.user.isadmin;
     if (userisAdmin === true) {
-
       return this.usersService.updateUser(userId, updateData);
     } else {
       throw new Error('Access Denied');
     }
-
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
@@ -90,26 +111,28 @@ export class UsersController {
     const userisAdmin = req.user.isadmin;
 
     if (userisAdmin === true) {
-
       return this.usersService.getUsers();
     } else {
       throw new Error('Access Denied');
     }
   }
 
-
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Get(':user_id')
   @ApiOperation({ summary: 'Get user details' })
   @ApiParam({ name: 'user_id', description: 'User ID' })
-  @ApiResponse({ status: 200, description: 'Successfully retrieved user details' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully retrieved user details',
+  })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async getUserById(@Param('user_id', ParseIntPipe) userId: number, @Request() req) {
-
+  async getUserById(
+    @Param('user_id', ParseIntPipe) userId: number,
+    @Request() req,
+  ) {
     const userisAdmin = req.user.isadmin;
 
     if (userisAdmin === true) {
-
       return this.usersService.getUserById(userId);
     } else {
       throw new Error('Access Denied');

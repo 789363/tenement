@@ -12,7 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard'; // 请确保导入正确的路径
 import { TenementService } from './tenement.service';
 @ApiTags('tenements')
-@Controller('')
+@Controller('api/tenements')
 export class TenementController {
   constructor(
     private tenementService: TenementService,
