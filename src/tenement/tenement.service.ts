@@ -10,6 +10,7 @@ import { CreateTenementSellDto } from './dto/create-sell.dto';
 import { CreateTenementDevelopDto } from './dto/create-develop.dto';
 import { CreateTenementMarketDto } from './dto/create-market.dto';
 import { UpdateTenementSellDto } from './dto/update-sell.dto';
+import { UpdateTenementRentDto } from './dto/update-rent.dtp';
 @Injectable()
 export class TenementService {
   constructor(private prisma: PrismaService) {}
@@ -770,5 +771,75 @@ export class TenementService {
     });
 
     return { message: 'Successfully update the media' };
+  }
+
+  async updateTenementRent(
+    updateTenementRentDto: UpdateTenementRentDto,
+  ): Promise<{ message: string }> {
+    const { tenement_id, ...updateData } = updateTenementRentDto;
+
+    // 更新 Tenement 记录
+    await this.prisma.tenement.update({
+      where: { id: tenement_id },
+      data: {
+        tenement_address: updateData.tenement_address,
+        tenement_product_type: updateData.tenement_product_type,
+        tenement_type: updateData.tenement_type,
+        tenement_face: updateData.tenement_face,
+        tenement_images: updateData.tenement_images,
+        tenement_status: updateData.tenement_status,
+        // 可以添加其他 Tenement 字段
+      },
+    });
+
+    // 更新 Tenement_Create 记录
+    await this.prisma.tenement_Create.update({
+      where: { tenement_id: tenement_id },
+      data: {
+        total_rating: updateData.total_rating,
+        main_building: updateData.main_building,
+        inside_rating: updateData.inside_rating,
+        affiliated_building: updateData.affiliated_building,
+        public_building: updateData.public_building,
+        unregistered_area: updateData.unregistered_area,
+        management_magnification: updateData.management_magnification,
+        management_fee: updateData.management_fee,
+        selling_price: updateData.selling_price,
+        rent_price: updateData.rent_price,
+        deposit_price: updateData.deposit_price,
+        tenement_floor: updateData.tenement_floor,
+        tenement_host_name: updateData.tenement_host_name,
+        tenement_host_telphone: updateData.tenement_host_telphone,
+        tenement_host_phone: updateData.tenement_host_phone,
+        tenement_host_line: updateData.tenement_host_line,
+        tenement_host_remittance_bank: updateData.tenement_host_remittance_bank,
+        tenement_host_remittance_account:
+          updateData.tenement_host_remittance_account,
+        tenement_host_address: updateData.tenement_host_address,
+        tenement_host_birthday: updateData.tenement_host_birthday,
+        tenement_host_hobby: updateData.tenement_host_hobby,
+        tenement_host_remark: updateData.tenement_host_remark,
+        // 可以添加其他 Tenement_Create 字段
+      },
+    });
+
+    // 更新 Tenement_Rent 记录
+    await this.prisma.tenement_Rent.update({
+      where: { tenement_id: tenement_id },
+      data: {
+        renter_start_date: updateData.renter_start_date,
+        renter_end_date: updateData.renter_end_date,
+        renter_name: updateData.renter_name,
+        renter_id_images: updateData.renter_id_images,
+        renter_phone: updateData.renter_phone,
+        renter_jobtitle: updateData.renter_jobtitle,
+        renter_guarantor_name: updateData.renter_guarantor_name,
+        renter_guarantor_phone: updateData.renter_guarantor_phone,
+        renter_remark: updateData.renter_remark,
+        // 可以添加其他 Tenement_Rent 字段
+      },
+    });
+
+    return { message: 'Tenement rent successfully updated' };
   }
 }
