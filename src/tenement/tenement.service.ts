@@ -8,6 +8,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreateTenementRentDto } from './dto/create-rent.dto';
 import { CreateTenementSellDto } from './dto/create-sell.dto';
 import { CreateTenementDevelopDto } from './dto/create-develop.dto';
+import { CreateTenementMarketDto } from './dto/create-market.dto';
 @Injectable()
 export class TenementService {
   constructor(private prisma: PrismaService) {}
@@ -594,6 +595,53 @@ export class TenementService {
       data: {
         tenement_id: tenementCreate.tenement_id,
         is_deleted: false,
+      },
+    });
+
+    return { message: 'Successfully add the media' };
+  }
+
+  async createTenementMarket(
+    createTenementMarketDto: CreateTenementMarketDto,
+  ): Promise<{ message: string }> {
+    // 创建 Tenement 记录
+    const tenement = await this.prisma.tenement.create({
+      data: {
+        tenement_address: createTenementMarketDto.tenement_address,
+        tenement_product_type: createTenementMarketDto.tenement_product_type,
+        tenement_type: createTenementMarketDto.tenement_type,
+        tenement_face: createTenementMarketDto.tenement_face,
+        tenement_images: createTenementMarketDto.tenement_images,
+        tenement_style: createTenementMarketDto.tenement_style,
+        owner: createTenementMarketDto.owner,
+        tenement_status: createTenementMarketDto.tenement_status,
+        is_deleted: false,
+      },
+    });
+
+    // 创建 Tenement_Develop 记录
+    await this.prisma.tenement_Market.create({
+      data: {
+        tenement_id: tenement.id,
+        tenement_host_name: createTenementMarketDto.tenement_host_name,
+        tenement_host_telphone: createTenementMarketDto.tenement_host_telphone,
+        tenement_host_phone: createTenementMarketDto.tenement_host_phone,
+        tenement_host_line: createTenementMarketDto.tenement_host_line,
+        tenement_host_remittance_bank:
+          createTenementMarketDto.tenement_host_remittance_bank,
+        tenement_host_remittance_account:
+          createTenementMarketDto.tenement_host_remittance_account,
+        tenement_host_address: createTenementMarketDto.tenement_host_address,
+        tenement_host_birthday: createTenementMarketDto.tenement_host_birthday,
+        tenement_host_hobby: createTenementMarketDto.tenement_host_hobby,
+        tenement_host_remark: createTenementMarketDto.tenement_host_remark,
+        tenement_area_max: createTenementMarketDto.tenement_area_max,
+        tenement_area_min: createTenementMarketDto.tenement_area_min,
+        burget_rent_max: createTenementMarketDto.burget_rent_max,
+        burget_rent_min: createTenementMarketDto.burget_rent_min,
+        hopefloor_max: createTenementMarketDto.hopefloor_max,
+        hopefloor_min: createTenementMarketDto.hopefloor_min,
+        market_state: createTenementMarketDto.market_state,
       },
     });
 

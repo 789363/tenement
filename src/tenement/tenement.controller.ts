@@ -15,6 +15,7 @@ import { AdminGuard } from '../auth/admin.guard';
 import { CreateTenementRentDto } from './dto/create-rent.dto';
 import { CreateTenementSellDto } from './dto/create-sell.dto';
 import { CreateTenementDevelopDto } from './dto/create-develop.dto';
+import { CreateTenementMarketDto } from './dto/create-market.dto';
 import { TenementService } from './tenement.service';
 @ApiTags('tenements')
 @Controller('api/tenements')
@@ -154,5 +155,13 @@ export class TenementController {
     @Body() createTenementDevelopDto: CreateTenementDevelopDto,
   ) {
     return this.tenementService.createTenementDevelop(createTenementDevelopDto);
+  }
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/tenement/add/market')
+  @ApiOperation({ summary: 'Add new tenement development' })
+  async createTenementMarket(
+    @Body() createTenementMarketDto: CreateTenementMarketDto,
+  ) {
+    return this.tenementService.createTenementMarket(createTenementMarketDto);
   }
 }
