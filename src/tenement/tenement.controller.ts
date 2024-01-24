@@ -14,6 +14,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard';
 import { CreateTenementRentDto } from './dto/create-rent.dto';
 import { CreateTenementSellDto } from './dto/create-sell.dto';
+import { CreateTenementDevelopDto } from './dto/create-develop.dto';
 import { TenementService } from './tenement.service';
 @ApiTags('tenements')
 @Controller('api/tenements')
@@ -144,5 +145,14 @@ export class TenementController {
     @Body() createTenementSellDto: CreateTenementSellDto,
   ) {
     return this.tenementService.createTenementSell(createTenementSellDto);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/tenement/add/develop')
+  @ApiOperation({ summary: 'Add new tenement development' })
+  async createTenementDevelop(
+    @Body() createTenementDevelopDto: CreateTenementDevelopDto,
+  ) {
+    return this.tenementService.createTenementDevelop(createTenementDevelopDto);
   }
 }
