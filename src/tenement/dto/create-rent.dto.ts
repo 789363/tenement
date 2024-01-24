@@ -6,6 +6,7 @@ export class CreateTenementRentDto {
   tenement_face: string;
   tenement_images: string;
   tenement_status: string;
+  
   total_rating: string;
   main_building: string;
   affiliated_building: string;

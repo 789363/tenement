@@ -12,7 +12,8 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard';
-import { CreateTenementRentDto } from './dto/creat-rent.dto';
+import { CreateTenementRentDto } from './dto/create-rent.dto';
+import { CreateTenementSellDto } from './dto/create-sell.dto';
 import { TenementService } from './tenement.service';
 @ApiTags('tenements')
 @Controller('api/tenements')
@@ -50,7 +51,7 @@ export class TenementController {
     );
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Get('/rent')
   @ApiOperation({ summary: 'Get all tenement rents' })
   async getAllTenementRents(@Request() req) {
@@ -61,7 +62,7 @@ export class TenementController {
     );
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Get('/edit/sell/:id')
   @ApiOperation({ summary: 'Get a specific tenement sell for editing' })
   async getTenementSellById(
@@ -76,7 +77,7 @@ export class TenementController {
     );
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Get('/edit/rent/:id')
   @ApiOperation({
     summary: 'Get details of a specific tenement rent for editing',
@@ -93,7 +94,7 @@ export class TenementController {
     );
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Get('/edit/develop/:id')
   @ApiOperation({
     summary: 'Get details of a specific tenement develop for editing',
@@ -110,7 +111,7 @@ export class TenementController {
     );
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Get('/edit/market/:id')
   @ApiOperation({
     summary: 'Get details of a specific tenement market for editing',
@@ -127,12 +128,21 @@ export class TenementController {
     );
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Post('/tenement/add/rent')
   @ApiOperation({ summary: 'Add new tenement rent' })
   async createTenementRent(
     @Body() createTenementRentDto: CreateTenementRentDto,
   ) {
     return this.tenementService.createTenementRent(createTenementRentDto);
+  }
+
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @Post('/tenement/add/sell')
+  @ApiOperation({ summary: 'Add new tenement sell' })
+  async createTenementSell(
+    @Body() createTenementSellDto: CreateTenementSellDto,
+  ) {
+    return this.tenementService.createTenementSell(createTenementSellDto);
   }
 }

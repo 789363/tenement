@@ -5,8 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreateTenementRentDto } from './dto/creat-rent.dto';
-
+import { CreateTenementRentDto } from './dto/create-rent.dto';
+import { CreateTenementSellDto } from './dto/create-sell.dto';
 @Injectable()
 export class TenementService {
   constructor(private prisma: PrismaService) {}
@@ -470,6 +470,69 @@ export class TenementService {
         renter_guarantor_phone: createTenementRentDto.renter_guarantor_phone,
         renter_remark: createTenementRentDto.renter_remark,
         is_deleted: false, // 默认值，表示记录未被删除
+      },
+    });
+
+    return { message: 'Successfully add the media' };
+  }
+  async createTenementSell(
+    createTenementSellDto: CreateTenementSellDto,
+  ): Promise<{ message: string }> {
+    const tenement = await this.prisma.tenement.create({
+      data: {
+        tenement_address: createTenementSellDto.tenement_address,
+        tenement_product_type: createTenementSellDto.tenement_product_type,
+        tenement_type: createTenementSellDto.tenement_type,
+        tenement_status: createTenementSellDto.tenement_status,
+        tenement_face: createTenementSellDto.tenement_face,
+        tenement_style: createTenementSellDto.tenement_style,
+        tenement_images: createTenementSellDto.tenement_images,
+        owner: createTenementSellDto.owner, // 假设 owner 字段是从 DTO 中传入的
+        is_deleted: false,
+      },
+    });
+
+    await this.prisma.tenement_Create.create({
+      data: {
+        tenement_id: tenement.id,
+        total_rating: createTenementSellDto.total_rating,
+        main_building: createTenementSellDto.main_building,
+        inside_rating: createTenementSellDto.inside_rating,
+        affiliated_building: createTenementSellDto.affiliated_building,
+        public_buliding: createTenementSellDto.public_buliding,
+        unregistered_area: createTenementSellDto.unregistered_area,
+        management_magnification:
+          createTenementSellDto.management_magnification,
+        management_fee: createTenementSellDto.management_fee,
+        tenement_floor: createTenementSellDto.tenement_floor,
+        tenement_host_name: createTenementSellDto.tenement_host_name,
+        tenement_host_telphone: createTenementSellDto.tenement_host_telphone,
+        tenement_host_phone: createTenementSellDto.tenement_host_phone,
+        tenement_host_line: createTenementSellDto.tenement_host_line,
+        tenement_host_remittance_bank:
+          createTenementSellDto.tenement_host_remittance_bank,
+        tenement_host_remittance_account:
+          createTenementSellDto.tenement_host_remittance_account,
+        tenement_host_address: createTenementSellDto.tenement_host_address,
+        tenement_host_birthday: createTenementSellDto.tenement_host_birthday,
+        tenement_host_hobby: createTenementSellDto.tenement_host_hobby,
+        tenement_host_remark: createTenementSellDto.tenement_host_remark,
+        selling_price: createTenementSellDto.selling_price,
+        rent_price: createTenementSellDto.rent_price,
+        deposit_price: createTenementSellDto.deposit_price,
+      },
+    });
+
+    await this.prisma.tenement_Sell.create({
+      data: {
+        tenement_id: tenement.id,
+        buyer_order_date: createTenementSellDto.buyer_order_date,
+        buyer_handout_date: createTenementSellDto.buyer_handout_date,
+        buyer_name: createTenementSellDto.buyer_name,
+        buyer_id_images: createTenementSellDto.buyer_id_images,
+        buyer_phone: createTenementSellDto.buyer_phone,
+        buyer_jobtitle: createTenementSellDto.buyer_jobtitle,
+        buyer_remark: createTenementSellDto.buyer_remark,
       },
     });
 
