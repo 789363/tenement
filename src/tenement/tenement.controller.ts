@@ -106,4 +106,21 @@ export class TenementController {
       userisAdmin,
     );
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/tenement/edit/market/:id')
+  @ApiOperation({
+    summary: 'Get details of a specific tenement market for editing',
+  })
+  async getTenementMarketDetails(
+    @Param('id', ParseIntPipe) tenementId: number,
+    @Request() req,
+  ) {
+    const userisAdmin = req.user.isAdmin;
+    return this.tenementService.getTenementMarketById(
+      tenementId,
+      req.user.userId,
+      userisAdmin,
+    );
+  }
 }

@@ -350,7 +350,58 @@ export class TenementService {
       tenement_host_hobby: tenementDevelop.Tenement_Create.tenement_host_hobby,
       tenement_host_remark:
         tenementDevelop.Tenement_Create.tenement_host_remark,
-      // 如果有更多字段，继续添加
+    };
+
+    return { message: 'Successfully update the media', data };
+  }
+
+  async getTenementMarketById(
+    tenementId: number,
+    userId: number,
+    isAdmin: boolean,
+  ): Promise<{ message: string; data: any }> {
+    const tenementMarket = await this.prisma.tenement_Market.findUnique({
+      where: { tenement_id: tenementId },
+      include: {
+        Tenement: true,
+      },
+    });
+
+    if (!tenementMarket) {
+      throw new NotFoundException('Tenement market not found.');
+    }
+
+    if (!isAdmin && tenementMarket.Tenement.owner !== userId) {
+      throw new ForbiddenException(
+        'Access to this tenement market is forbidden.',
+      );
+    }
+
+    const data = {
+      tenement_address: tenementMarket.Tenement.tenement_address,
+      tenement_product_type: tenementMarket.Tenement.tenement_product_type,
+      tenement_type: tenementMarket.Tenement.tenement_type,
+      tenement_face: tenementMarket.Tenement.tenement_face,
+      tenement_images: tenementMarket.Tenement.tenement_images,
+      tenement_host_name: tenementMarket.tenement_host_name,
+      tenement_host_telphone: tenementMarket.tenement_host_telphone,
+      tenement_host_phone: tenementMarket.tenement_host_phone,
+      tenement_host_line: tenementMarket.tenement_host_line,
+      tenement_host_remittance_bank:
+        tenementMarket.tenement_host_remittance_bank,
+      tenement_host_remittance_account:
+        tenementMarket.tenement_host_remittance_account,
+      tenement_host_address: tenementMarket.tenement_host_address,
+      tenement_host_birthday: tenementMarket.tenement_host_birthday,
+      tenement_host_hobby: tenementMarket.tenement_host_hobby,
+      tenement_host_remark: tenementMarket.tenement_host_remark,
+      tenement_area_max: tenementMarket.tenement_area_max,
+      tenement_area_min: tenementMarket.tenement_area_min,
+      burget_rent_max: tenementMarket.burget_rent_max,
+      burget_rent_min: tenementMarket.burget_rent_min,
+      hopefloor_max: tenementMarket.hopefloor_max,
+      hopefloor_min: tenementMarket.hopefloor_min,
+      market_state: tenementMarket.market_state,
     };
 
     return { message: 'Successfully update the media', data };
