@@ -43,4 +43,11 @@ export class TenementController {
         return this.tenementService.getAllTenementRents(userisAdmin === true, req.user.userId);
     }
 
+    @UseGuards(AuthGuard('jwt'))
+    @Get('/tenement/edit/sell/:id')
+    @ApiOperation({ summary: 'Get a specific tenement sell for editing' })
+    async getTenementSellById(@Param('id', ParseIntPipe) tenementId: number, @Request() req) {
+        const userisAdmin = req.user.isAdmin;
+        return this.tenementService.getTenementSellById(tenementId, req.user.userId, userisAdmin);
+    }
 }
