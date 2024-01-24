@@ -12,7 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard'; // 请确保导入正确的路径
 import { TenementService } from './tenement.service';
 @ApiTags('tenements')
-@Controller('api/tenements')
+@Controller('')
 export class TenementController {
   constructor(
     private tenementService: TenementService,
@@ -37,7 +37,7 @@ export class TenementController {
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
-  @Get('/tenements/sell')
+  @Get('/sell')
   @ApiOperation({ summary: 'Get all tenement sells' })
   async getAllTenementSells(@Request() req) {
     const userisAdmin = req.user.isAdmin;
@@ -48,7 +48,7 @@ export class TenementController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('/tenements/rent')
+  @Get('/rent')
   @ApiOperation({ summary: 'Get all tenement rents' })
   async getAllTenementRents(@Request() req) {
     const userisAdmin = req.user.isAdmin;
@@ -59,7 +59,7 @@ export class TenementController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('/tenement/edit/sell/:id')
+  @Get('/edit/sell/:id')
   @ApiOperation({ summary: 'Get a specific tenement sell for editing' })
   async getTenementSellById(
     @Param('id', ParseIntPipe) tenementId: number,
@@ -74,7 +74,7 @@ export class TenementController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('/tenement/edit/rent/:id')
+  @Get('/edit/rent/:id')
   @ApiOperation({
     summary: 'Get details of a specific tenement rent for editing',
   })
@@ -91,7 +91,7 @@ export class TenementController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('/tenement/edit/develop/:id')
+  @Get('/edit/develop/:id')
   @ApiOperation({
     summary: 'Get details of a specific tenement develop for editing',
   })
@@ -108,7 +108,7 @@ export class TenementController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('/tenement/edit/market/:id')
+  @Get('/edit/market/:id')
   @ApiOperation({
     summary: 'Get details of a specific tenement market for editing',
   })

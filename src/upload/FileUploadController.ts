@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiBody, ApiTags, ApiResponse } from '@nestjs/swagger';
-import { LocalStorageService } from './upload.servie';
+import { LocalStorageService } from './LocalStorageService';
 
 @ApiTags('files')
 @Controller('files')
@@ -18,7 +18,6 @@ export class FileUploadController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Upload a file',
-    type: FileUploadDto,
   })
   @ApiResponse({ status: 200, description: 'File uploaded successfully' })
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
@@ -28,8 +27,4 @@ export class FileUploadController {
       url: fileUrl,
     };
   }
-}
-
-class FileUploadDto {
-  file: any;
 }
