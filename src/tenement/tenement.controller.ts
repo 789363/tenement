@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Delete,
   Body,
   Param,
   ParseIntPipe,
@@ -163,5 +164,38 @@ export class TenementController {
     @Body() createTenementMarketDto: CreateTenementMarketDto,
   ) {
     return this.tenementService.createTenementMarket(createTenementMarketDto);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/delete/tenement/sell/:tenementId')
+  @ApiOperation({ summary: 'Delete tenement sell' })
+  async deleteTenementSell(
+    @Param('tenementId', ParseIntPipe) tenementId: number,
+  ) {
+    return this.tenementService.deleteTenementSell(tenementId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/delete/tenement/market/:tenementId')
+  async deleteTenementMarket(
+    @Param('tenementId', ParseIntPipe) tenementId: number,
+  ) {
+    return this.tenementService.deleteTenementMarket(tenementId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/delete/tenement/develop/:tenementId')
+  async deleteTenementDevelop(
+    @Param('tenementId', ParseIntPipe) tenementId: number,
+  ) {
+    return this.tenementService.deleteTenementDevelop(tenementId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/delete/tenement/rent/:tenementId')
+  async deleteTenementRent(
+    @Param('tenementId', ParseIntPipe) tenementId: number,
+  ) {
+    return this.tenementService.deleteTenementRent(tenementId);
   }
 }

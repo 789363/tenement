@@ -45,6 +45,7 @@ model Tenement_Market {
   hopefloor_max                    String
   hopefloor_min                    String
   market_state                     String
+  is_deleted             Boolean         @default(false)
   createdAt                        DateTime @default(now())
   updatedAt                        DateTime @updatedAt
   Tenement                         Tenement @relation(fields: [tenement_id], references: [id])
@@ -78,6 +79,7 @@ model Tenement_Develop {
 
 model Tenement_Sell {
   tenement_id        Int             @id
+  is_deleted             Boolean         @default(false)
   buyer_order_date   String
   buyer_handout_date String
   buyer_name         String

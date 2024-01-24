@@ -407,6 +407,7 @@ export class TenementService {
 
     return { message: 'Successfully update the media', data };
   }
+
   async createTenementRent(
     createTenementRentDto: CreateTenementRentDto,
   ): Promise<{ message: string }> {
@@ -477,6 +478,7 @@ export class TenementService {
 
     return { message: 'Successfully add the media' };
   }
+
   async createTenementSell(
     createTenementSellDto: CreateTenementSellDto,
   ): Promise<{ message: string }> {
@@ -540,6 +542,7 @@ export class TenementService {
 
     return { message: 'Successfully add the media' };
   }
+
   async createTenementDevelop(
     createTenementDevelopDto: CreateTenementDevelopDto,
   ): Promise<{ message: string }> {
@@ -646,5 +649,63 @@ export class TenementService {
     });
 
     return { message: 'Successfully add the media' };
+  }
+
+  async deleteTenementRent(tenementId: number): Promise<{ message: string }> {
+    await this.prisma.tenement_Rent.updateMany({
+      where: {
+        tenement_id: tenementId,
+        is_deleted: false,
+      },
+      data: {
+        is_deleted: true,
+      },
+    });
+
+    return { message: 'Tenement rent successfully deleted' };
+  }
+
+  async deleteTenementDevelop(
+    tenementId: number,
+  ): Promise<{ message: string }> {
+    await this.prisma.tenement_Develop.updateMany({
+      where: {
+        tenement_id: tenementId,
+        is_deleted: false,
+      },
+      data: {
+        is_deleted: true,
+      },
+    });
+
+    return { message: 'Tenement develop successfully deleted' };
+  }
+
+  async deleteTenementMarket(tenementId: number): Promise<{ message: string }> {
+    await this.prisma.tenement_Market.updateMany({
+      where: {
+        tenement_id: tenementId,
+        is_deleted: false,
+      },
+      data: {
+        is_deleted: true,
+      },
+    });
+
+    return { message: 'Tenement market successfully deleted' };
+  }
+
+  async deleteTenementSell(tenementId: number): Promise<{ message: string }> {
+    await this.prisma.tenement_Sell.updateMany({
+      where: {
+        tenement_id: tenementId,
+        is_deleted: false, // 只更新未被删除的记录
+      },
+      data: {
+        is_deleted: true,
+      },
+    });
+
+    return { message: 'Tenement sell successfully deleted' };
   }
 }
