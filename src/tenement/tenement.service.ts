@@ -188,5 +188,65 @@ export class TenementService {
 
         return { message: "Successfully update the media", data };
     }
+    async getTenementRentById(tenementId: number, userId: number, isAdmin: boolean): Promise<{ message: string; data: any }> {
+        const tenementRent = await this.prisma.tenement_Rent.findUnique({
+            where: { tenement_id: tenementId },
+            include: {
+                Tenement_Create: {
+                    include: {
+                        Tenement: true
+                    }
+                }
+            }
+        });
+
+        if (!tenementRent) {
+            throw new NotFoundException('Tenement rent not found.');
+        }
+
+        if (!isAdmin && tenementRent.Tenement_Create.Tenement.owner !== userId) {
+            throw new ForbiddenException('Access to this tenement rent is forbidden.');
+        }
+
+        const data = {
+            tenement_address: tenementRent.Tenement_Create.Tenement.tenement_address,
+            tenement_product_type: tenementRent.Tenement_Create.Tenement.tenement_product_type,
+            tenement_type: tenementRent.Tenement_Create.Tenement.tenement_type,
+            tenement_face: tenementRent.Tenement_Create.Tenement.tenement_face,
+            tenement_images: tenementRent.Tenement_Create.Tenement.tenement_images,
+            tenement_status: tenementRent.Tenement_Create.Tenement.tenement_status,
+            total_rating: tenementRent.Tenement_Create.total_rating,
+            main_building: tenementRent.Tenement_Create.main_building,
+            affiliated_building: tenementRent.Tenement_Create.affiliated_building,
+            public_building: tenementRent.Tenement_Create.public_buliding,
+            unregistered_area: tenementRent.Tenement_Create.unregistered_area,
+            management_magnification: tenementRent.Tenement_Create.management_magnification,
+            management_fee: tenementRent.Tenement_Create.management_fee,
+            rent_price: tenementRent.Tenement_Create.rent_price,
+            deposit_price: tenementRent.Tenement_Create.deposit_price,
+            tenement_floor: tenementRent.Tenement_Create.tenement_floor,
+            tenement_host_name: tenementRent.Tenement_Create.tenement_host_name,
+            tenement_host_telphone: tenementRent.Tenement_Create.tenement_host_telphone,
+            tenement_host_phone: tenementRent.Tenement_Create.tenement_host_phone,
+            tenement_host_line: tenementRent.Tenement_Create.tenement_host_line,
+            tenement_host_remittance_bank: tenementRent.Tenement_Create.tenement_host_remittance_bank,
+            tenement_host_remittance_account: tenementRent.Tenement_Create.tenement_host_remittance_account,
+            tenement_host_address: tenementRent.Tenement_Create.tenement_host_address,
+            tenement_host_birthday: tenementRent.Tenement_Create.tenement_host_birthday,
+            tenement_host_hobby: tenementRent.Tenement_Create.tenement_host_hobby,
+            tenement_host_remark: tenementRent.Tenement_Create.tenement_host_remark,
+            renter_start_date: tenementRent.renter_start_date,
+            renter_end_date: tenementRent.renter_end_date,
+            renter_name: tenementRent.renter_name,
+            renter_id_images: tenementRent.renter_id_images,
+            renter_phone: tenementRent.renter_phone,
+            renter_jobtitle: tenementRent.renter_jobtitle,
+            renter_guarantor_name: tenementRent.renter_guarantor_name,
+            renter_guarantor_phone: tenementRent.renter_guarantor_phone,
+            renter_remark: tenementRent.renter_remark
+        };
+
+        return { message: "Successfully update the media", data };
+    }
 
 }
