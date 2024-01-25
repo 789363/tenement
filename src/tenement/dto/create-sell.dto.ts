@@ -5,7 +5,7 @@ export class CreateTenementSellDto {
   tenement_product_type: string;
   tenement_type: string;
   tenement_face: string;
-  tenement_images: string;
+  tenement_images: string[];
   tenement_status: string;
   tenement_style: string;
   owner: number;
@@ -35,7 +35,7 @@ export class CreateTenementSellDto {
   buyer_order_date: string;
   buyer_handout_date: string;
   buyer_name: string;
-  buyer_id_images: string;
+  buyer_id_images: string[];
   buyer_phone: string;
   buyer_jobtitle: string;
   buyer_remark: string;

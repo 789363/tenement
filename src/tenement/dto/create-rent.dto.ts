@@ -4,7 +4,7 @@ export class CreateTenementRentDto {
   tenement_product_type: string;
   tenement_type: string;
   tenement_face: string;
-  tenement_images: string;
+  tenement_images: string[];
   tenement_status: string;
   
   total_rating: string;
@@ -35,7 +35,7 @@ export class CreateTenementRentDto {
   renter_guarantor_name: string;
   renter_guarantor_phone: string;
   renter_remark: string;
-  renter_id_images: string;
+  renter_id_images: string[];
   tenement_style: string;
   owner: number;
   inside_rating: any;

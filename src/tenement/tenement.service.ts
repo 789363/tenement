@@ -415,7 +415,10 @@ export class TenementService {
   async createTenementRent(
     createTenementRentDto: CreateTenementRentDto,
   ): Promise<{ message: string }> {
-    // 首先创建或更新 Tenement 记录
+    const renterIdImagesAsString =
+      createTenementRentDto.renter_id_images.join(',');
+    const tenementIdImagesAsString =
+      createTenementRentDto.tenement_images.join(',');
     const tenement = await this.prisma.tenement.create({
       data: {
         tenement_address: createTenementRentDto.tenement_address,
@@ -424,7 +427,7 @@ export class TenementService {
         tenement_status: createTenementRentDto.tenement_status,
         tenement_face: createTenementRentDto.tenement_face,
         tenement_style: createTenementRentDto.tenement_style,
-        tenement_images: createTenementRentDto.tenement_images,
+        tenement_images: tenementIdImagesAsString,
         owner: createTenementRentDto.owner, // 假设 owner 字段是从 DTO 中传入的
         is_deleted: false,
       },
@@ -470,7 +473,7 @@ export class TenementService {
         renter_start_date: createTenementRentDto.renter_start_date,
         renter_end_date: createTenementRentDto.renter_end_date,
         renter_name: createTenementRentDto.renter_name,
-        renter_id_images: createTenementRentDto.renter_id_images,
+        renter_id_images: renterIdImagesAsString,
         renter_phone: createTenementRentDto.renter_phone,
         renter_jobtitle: createTenementRentDto.renter_jobtitle,
         renter_guarantor_name: createTenementRentDto.renter_guarantor_name,
@@ -486,6 +489,10 @@ export class TenementService {
   async createTenementSell(
     createTenementSellDto: CreateTenementSellDto,
   ): Promise<{ message: string }> {
+    const sellIdImagesAsString =
+      createTenementSellDto.buyer_id_images.join(',');
+    const tenementIdImagesAsString =
+      createTenementSellDto.tenement_images.join(',');
     const tenement = await this.prisma.tenement.create({
       data: {
         tenement_address: createTenementSellDto.tenement_address,
@@ -494,7 +501,7 @@ export class TenementService {
         tenement_status: createTenementSellDto.tenement_status,
         tenement_face: createTenementSellDto.tenement_face,
         tenement_style: createTenementSellDto.tenement_style,
-        tenement_images: createTenementSellDto.tenement_images,
+        tenement_images: tenementIdImagesAsString,
         owner: createTenementSellDto.owner, // 假设 owner 字段是从 DTO 中传入的
         is_deleted: false,
       },
@@ -537,7 +544,7 @@ export class TenementService {
         buyer_order_date: createTenementSellDto.buyer_order_date,
         buyer_handout_date: createTenementSellDto.buyer_handout_date,
         buyer_name: createTenementSellDto.buyer_name,
-        buyer_id_images: createTenementSellDto.buyer_id_images,
+        buyer_id_images: sellIdImagesAsString,
         buyer_phone: createTenementSellDto.buyer_phone,
         buyer_jobtitle: createTenementSellDto.buyer_jobtitle,
         buyer_remark: createTenementSellDto.buyer_remark,
@@ -550,14 +557,15 @@ export class TenementService {
   async createTenementDevelop(
     createTenementDevelopDto: CreateTenementDevelopDto,
   ): Promise<{ message: string }> {
-    // 创建 Tenement 记录
+    const tenementIdImagesAsString =
+      createTenementDevelopDto.tenement_images.join(',');
     const tenement = await this.prisma.tenement.create({
       data: {
         tenement_address: createTenementDevelopDto.tenement_address,
         tenement_product_type: createTenementDevelopDto.tenement_product_type,
         tenement_type: createTenementDevelopDto.tenement_type,
         tenement_face: createTenementDevelopDto.tenement_face,
-        tenement_images: createTenementDevelopDto.tenement_images,
+        tenement_images: tenementIdImagesAsString,
         tenement_style: createTenementDevelopDto.tenement_style,
         owner: createTenementDevelopDto.owner,
         tenement_status: createTenementDevelopDto.tenement_status,
@@ -611,14 +619,15 @@ export class TenementService {
   async createTenementMarket(
     createTenementMarketDto: CreateTenementMarketDto,
   ): Promise<{ message: string }> {
-    // 创建 Tenement 记录
+    const tenementIdImagesAsString =
+      createTenementMarketDto.tenement_images.join(',');
     const tenement = await this.prisma.tenement.create({
       data: {
         tenement_address: createTenementMarketDto.tenement_address,
         tenement_product_type: createTenementMarketDto.tenement_product_type,
         tenement_type: createTenementMarketDto.tenement_type,
         tenement_face: createTenementMarketDto.tenement_face,
-        tenement_images: createTenementMarketDto.tenement_images,
+        tenement_images: tenementIdImagesAsString,
         tenement_style: createTenementMarketDto.tenement_style,
         owner: createTenementMarketDto.owner,
         tenement_status: createTenementMarketDto.tenement_status,

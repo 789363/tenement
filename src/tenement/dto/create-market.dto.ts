@@ -5,7 +5,7 @@ export class CreateTenementMarketDto {
     tenement_product_type: string;
     tenement_type: string;
     tenement_face: string;
-    tenement_images: string;
+    tenement_images: string[];
     tenement_style: string;
     tenement_status: string;
     owner: number;
