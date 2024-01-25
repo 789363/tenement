@@ -11,6 +11,7 @@ import { CreateTenementDevelopDto } from './dto/create-develop.dto';
 import { CreateTenementMarketDto } from './dto/create-market.dto';
 import { UpdateTenementSellDto } from './dto/update-sell.dto';
 import { UpdateTenementRentDto } from './dto/update-rent.dtp';
+import { UpdateTenementDevelopDto } from './dto/update-develop.dto';
 @Injectable()
 export class TenementService {
   constructor(private prisma: PrismaService) {}
@@ -841,5 +842,57 @@ export class TenementService {
     });
 
     return { message: 'Tenement rent successfully updated' };
+  }
+
+  async updateTenementDevelop(
+    tenementId: number,
+    updateTenementDevelopDto: UpdateTenementDevelopDto,
+  ): Promise<{ message: string }> {
+    const { ...updateData } = updateTenementDevelopDto;
+
+    // 更新 Tenement 记录
+    await this.prisma.tenement.update({
+      where: { id: tenementId },
+      data: {
+        tenement_address: updateData.tenement_address,
+        tenement_product_type: updateData.tenement_product_type,
+        tenement_type: updateData.tenement_type,
+        tenement_face: updateData.tenement_face,
+        tenement_images: updateData.tenement_images,
+        tenement_status: updateData.tenement_status,
+      },
+    });
+
+    // 更新 Tenement_Create 记录
+    await this.prisma.tenement_Create.update({
+      where: { tenement_id: tenementId },
+      data: {
+        total_rating: updateData.total_rating,
+        main_building: updateData.main_building,
+        inside_rating: updateData.inside_rating,
+        affiliated_building: updateData.affiliated_building,
+        public_building: updateData.public_building,
+        unregistered_area: updateData.unregistered_area,
+        management_magnification: updateData.management_magnification,
+        management_fee: updateData.management_fee,
+        selling_price: updateData.selling_price,
+        rent_price: updateData.rent_price,
+        deposit_price: updateData.deposit_price,
+        tenement_floor: updateData.tenement_floor,
+        tenement_host_name: updateData.tenement_host_name,
+        tenement_host_telphone: updateData.tenement_host_telphone,
+        tenement_host_phone: updateData.tenement_host_phone,
+        tenement_host_line: updateData.tenement_host_line,
+        tenement_host_remittance_bank: updateData.tenement_host_remittance_bank,
+        tenement_host_remittance_account:
+          updateData.tenement_host_remittance_account,
+        tenement_host_address: updateData.tenement_host_address,
+        tenement_host_birthday: updateData.tenement_host_birthday,
+        tenement_host_hobby: updateData.tenement_host_hobby,
+        tenement_host_remark: updateData.tenement_host_remark,
+      },
+    });
+
+    return { message: 'Tenement develop successfully updated' };
   }
 }
