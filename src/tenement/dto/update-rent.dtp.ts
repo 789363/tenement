@@ -5,7 +5,7 @@ export class UpdateTenementRentDto {
   tenement_product_type: string;
   tenement_type: string;
   tenement_face: string;
-  tenement_images: string;
+  tenement_images: string[];
   tenement_status: string;
 
   // Tenement_Create 字段
@@ -36,7 +36,7 @@ export class UpdateTenementRentDto {
   renter_start_date: string;
   renter_end_date: string;
   renter_name: string;
-  renter_id_images: string;
+  renter_id_images: string[];
   renter_phone: string;
   renter_jobtitle: string;
   renter_guarantor_name: string;

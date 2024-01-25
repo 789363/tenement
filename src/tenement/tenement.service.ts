@@ -717,7 +717,10 @@ export class TenementService {
     updateTenementSellDto: UpdateTenementSellDto,
   ): Promise<{ message: string }> {
     const { tenement_id, ...updateData } = updateTenementSellDto;
-
+    const buyerIdImagesAsString =
+      updateTenementSellDto.buyer_id_images.join(',');
+    const tenementIdImagesAsString =
+      updateTenementSellDto.tenement_images.join(',');
     // 更新 Tenement 记录
     await this.prisma.tenement.update({
       where: { id: tenement_id },
@@ -726,7 +729,7 @@ export class TenementService {
         tenement_product_type: updateData.tenement_product_type,
         tenement_type: updateData.tenement_type,
         tenement_face: updateData.tenement_face,
-        tenement_images: updateData.tenement_images,
+        tenement_images: tenementIdImagesAsString,
         tenement_status: updateData.tenement_status,
       },
     });
@@ -765,7 +768,7 @@ export class TenementService {
         buyer_order_date: updateData.buyer_order_date,
         buyer_handout_date: updateData.buyer_handout_date,
         buyer_name: updateData.buyer_name,
-        buyer_id_images: updateData.buyer_id_images,
+        buyer_id_images: buyerIdImagesAsString,
         buyer_phone: updateData.buyer_phone,
         buyer_jobtitle: updateData.buyer_jobtitle,
         buyer_remark: updateData.buyer_remark,
@@ -779,7 +782,10 @@ export class TenementService {
     updateTenementRentDto: UpdateTenementRentDto,
   ): Promise<{ message: string }> {
     const { tenement_id, ...updateData } = updateTenementRentDto;
-
+    const tenementIdImagesAsString =
+      updateTenementRentDto.tenement_images.join(',');
+    const rentIdImagesAsString =
+      updateTenementRentDto.renter_id_images.join(',');
     // 更新 Tenement 记录
     await this.prisma.tenement.update({
       where: { id: tenement_id },
@@ -788,7 +794,7 @@ export class TenementService {
         tenement_product_type: updateData.tenement_product_type,
         tenement_type: updateData.tenement_type,
         tenement_face: updateData.tenement_face,
-        tenement_images: updateData.tenement_images,
+        tenement_images: tenementIdImagesAsString,
         tenement_status: updateData.tenement_status,
         // 可以添加其他 Tenement 字段
       },
@@ -832,7 +838,7 @@ export class TenementService {
         renter_start_date: updateData.renter_start_date,
         renter_end_date: updateData.renter_end_date,
         renter_name: updateData.renter_name,
-        renter_id_images: updateData.renter_id_images,
+        renter_id_images: rentIdImagesAsString,
         renter_phone: updateData.renter_phone,
         renter_jobtitle: updateData.renter_jobtitle,
         renter_guarantor_name: updateData.renter_guarantor_name,
@@ -850,7 +856,8 @@ export class TenementService {
     updateTenementDevelopDto: UpdateTenementDevelopDto,
   ): Promise<{ message: string }> {
     const { ...updateData } = updateTenementDevelopDto;
-
+    const tenementIdImagesAsString =
+      updateTenementDevelopDto.tenement_images.join(',');
     // 更新 Tenement 记录
     await this.prisma.tenement.update({
       where: { id: tenementId },
@@ -859,7 +866,7 @@ export class TenementService {
         tenement_product_type: updateData.tenement_product_type,
         tenement_type: updateData.tenement_type,
         tenement_face: updateData.tenement_face,
-        tenement_images: updateData.tenement_images,
+        tenement_images: tenementIdImagesAsString,
         tenement_status: updateData.tenement_status,
       },
     });
@@ -901,6 +908,8 @@ export class TenementService {
     tenementId: number,
     updateTenementMarketDto: UpdateTenementMarketDto,
   ): Promise<{ message: string }> {
+    const tenementIdImagesAsString =
+      updateTenementMarketDto.tenement_images.join(',');
     await this.prisma.tenement.update({
       where: { id: tenementId },
       data: {
@@ -908,7 +917,7 @@ export class TenementService {
         tenement_product_type: updateTenementMarketDto.tenement_product_type,
         tenement_type: updateTenementMarketDto.tenement_type,
         tenement_face: updateTenementMarketDto.tenement_face,
-        tenement_images: updateTenementMarketDto.tenement_images,
+        tenement_images: tenementIdImagesAsString,
         tenement_status: updateTenementMarketDto.tenement_status,
       },
     });

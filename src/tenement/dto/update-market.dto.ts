@@ -4,7 +4,7 @@ export class UpdateTenementMarketDto {
   tenement_product_type: string;
   tenement_type: string;
   tenement_face: string;
-  tenement_images: string;
+  tenement_images: string[];
   tenement_status: string;
 
   tenement_host_name: string;
