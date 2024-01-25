@@ -174,7 +174,14 @@ export class TenementService {
         'Access to this tenement sell is forbidden.',
       );
     }
+    const buyerIdImagesArray = tenementSell.buyer_id_images
+      ? tenementSell.buyer_id_images.split(',')
+      : [];
 
+    const tenementImagesArray = tenementSell.Tenement_Create.Tenement
+      .tenement_images
+      ? tenementSell.Tenement_Create.Tenement.tenement_images.split(',')
+      : [];
     const data = {
       tenement_address: tenementSell.Tenement_Create.Tenement.tenement_address,
       tenement_product_type:
@@ -182,7 +189,7 @@ export class TenementService {
       tenement_type: tenementSell.Tenement_Create.Tenement.tenement_type,
       tenement_status: tenementSell.Tenement_Create.Tenement.tenement_status,
       tenement_face: tenementSell.Tenement_Create.Tenement.tenement_face,
-      tenement_images: tenementSell.Tenement_Create.Tenement.tenement_images,
+      tenement_images: tenementImagesArray,
       total_rating: tenementSell.Tenement_Create.total_rating,
       main_building: tenementSell.Tenement_Create.main_building,
       affiliated_building: tenementSell.Tenement_Create.affiliated_building,
@@ -212,7 +219,7 @@ export class TenementService {
       buyer_order_date: tenementSell.buyer_order_date,
       buyer_handout_date: tenementSell.buyer_handout_date,
       buyer_name: tenementSell.buyer_name,
-      buyer_id_images: tenementSell.buyer_id_images,
+      buyer_id_images: buyerIdImagesArray,
       buyer_phone: tenementSell.buyer_phone,
       buyer_jobtitle: tenementSell.buyer_jobtitle,
       buyer_remark: tenementSell.buyer_remark,
@@ -245,14 +252,17 @@ export class TenementService {
         'Access to this tenement rent is forbidden.',
       );
     }
-
+    // 进行字符串到数组的转换
+    const tenementImagesArray =
+      tenementRent.Tenement_Create.Tenement.tenement_images.split(',');
+    const renterIdImagesArray = tenementRent.renter_id_images.split(',');
     const data = {
       tenement_address: tenementRent.Tenement_Create.Tenement.tenement_address,
       tenement_product_type:
         tenementRent.Tenement_Create.Tenement.tenement_product_type,
       tenement_type: tenementRent.Tenement_Create.Tenement.tenement_type,
       tenement_face: tenementRent.Tenement_Create.Tenement.tenement_face,
-      tenement_images: tenementRent.Tenement_Create.Tenement.tenement_images,
+      tenement_images: tenementImagesArray,
       tenement_status: tenementRent.Tenement_Create.Tenement.tenement_status,
       total_rating: tenementRent.Tenement_Create.total_rating,
       main_building: tenementRent.Tenement_Create.main_building,
@@ -282,7 +292,7 @@ export class TenementService {
       renter_start_date: tenementRent.renter_start_date,
       renter_end_date: tenementRent.renter_end_date,
       renter_name: tenementRent.renter_name,
-      renter_id_images: tenementRent.renter_id_images,
+      renter_id_images: renterIdImagesArray,
       renter_phone: tenementRent.renter_phone,
       renter_jobtitle: tenementRent.renter_jobtitle,
       renter_guarantor_name: tenementRent.renter_guarantor_name,
@@ -318,7 +328,8 @@ export class TenementService {
         'Access to this tenement develop is forbidden.',
       );
     }
-
+    const tenementImagesArray =
+      tenementDevelop.Tenement_Create.Tenement.tenement_images.split(',');
     const data = {
       tenement_address:
         tenementDevelop.Tenement_Create.Tenement.tenement_address,
@@ -326,7 +337,7 @@ export class TenementService {
         tenementDevelop.Tenement_Create.Tenement.tenement_product_type,
       tenement_type: tenementDevelop.Tenement_Create.Tenement.tenement_type,
       tenement_face: tenementDevelop.Tenement_Create.Tenement.tenement_face,
-      tenement_images: tenementDevelop.Tenement_Create.Tenement.tenement_images,
+      tenement_images: tenementImagesArray,
       total_rating: tenementDevelop.Tenement_Create.total_rating,
       main_building: tenementDevelop.Tenement_Create.main_building,
       affiliated_building: tenementDevelop.Tenement_Create.affiliated_building,
@@ -381,13 +392,15 @@ export class TenementService {
         'Access to this tenement market is forbidden.',
       );
     }
-
+    const tenementImagesArray = tenementMarket.Tenement.tenement_images
+      ? tenementMarket.Tenement.tenement_images.split(',')
+      : [];
     const data = {
       tenement_address: tenementMarket.Tenement.tenement_address,
       tenement_product_type: tenementMarket.Tenement.tenement_product_type,
       tenement_type: tenementMarket.Tenement.tenement_type,
       tenement_face: tenementMarket.Tenement.tenement_face,
-      tenement_images: tenementMarket.Tenement.tenement_images,
+      tenement_images: tenementImagesArray,
       tenement_host_name: tenementMarket.tenement_host_name,
       tenement_host_telphone: tenementMarket.tenement_host_telphone,
       tenement_host_phone: tenementMarket.tenement_host_phone,
