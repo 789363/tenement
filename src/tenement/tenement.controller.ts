@@ -21,6 +21,7 @@ import { TenementService } from './tenement.service';
 import { UpdateTenementSellDto } from './dto/update-sell.dto';
 import { UpdateTenementRentDto } from './dto/update-rent.dtp';
 import { UpdateTenementDevelopDto } from './dto/update-develop.dto';
+import { UpdateTenementMarketDto } from './dto/update-market.dto';
 @ApiTags('tenements')
 @Controller('api/tenements')
 export class TenementController {
@@ -231,6 +232,18 @@ export class TenementController {
     return this.tenementService.updateTenementDevelop(
       tenementId,
       updateTenementDevelopDto,
+    );
+  }
+
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @Post('/tenement/edit/market/:tenementId')
+  async updateTenementMarket(
+    @Param('tenementId', ParseIntPipe) tenementId: number,
+    @Body() updateTenementMarketDto: UpdateTenementMarketDto,
+  ) {
+    return this.tenementService.updateTenementMarket(
+      tenementId,
+      updateTenementMarketDto,
     );
   }
 }

@@ -12,6 +12,7 @@ import { CreateTenementMarketDto } from './dto/create-market.dto';
 import { UpdateTenementSellDto } from './dto/update-sell.dto';
 import { UpdateTenementRentDto } from './dto/update-rent.dtp';
 import { UpdateTenementDevelopDto } from './dto/update-develop.dto';
+import { UpdateTenementMarketDto } from './dto/update-market.dto';
 @Injectable()
 export class TenementService {
   constructor(private prisma: PrismaService) {}
@@ -894,5 +895,50 @@ export class TenementService {
     });
 
     return { message: 'Tenement develop successfully updated' };
+  }
+
+  async updateTenementMarket(
+    tenementId: number,
+    updateTenementMarketDto: UpdateTenementMarketDto,
+  ): Promise<{ message: string }> {
+    await this.prisma.tenement.update({
+      where: { id: tenementId },
+      data: {
+        tenement_address: updateTenementMarketDto.tenement_address,
+        tenement_product_type: updateTenementMarketDto.tenement_product_type,
+        tenement_type: updateTenementMarketDto.tenement_type,
+        tenement_face: updateTenementMarketDto.tenement_face,
+        tenement_images: updateTenementMarketDto.tenement_images,
+        tenement_status: updateTenementMarketDto.tenement_status,
+      },
+    });
+
+    // 更新 Tenement_Market 记录
+    await this.prisma.tenement_Market.update({
+      where: { tenement_id: tenementId },
+      data: {
+        tenement_host_name: updateTenementMarketDto.tenement_host_name,
+        tenement_host_telphone: updateTenementMarketDto.tenement_host_telphone,
+        tenement_host_phone: updateTenementMarketDto.tenement_host_phone,
+        tenement_host_line: updateTenementMarketDto.tenement_host_line,
+        tenement_host_remittance_bank:
+          updateTenementMarketDto.tenement_host_remittance_bank,
+        tenement_host_remittance_account:
+          updateTenementMarketDto.tenement_host_remittance_account,
+        tenement_host_address: updateTenementMarketDto.tenement_host_address,
+        tenement_host_birthday: updateTenementMarketDto.tenement_host_birthday,
+        tenement_host_hobby: updateTenementMarketDto.tenement_host_hobby,
+        tenement_host_remark: updateTenementMarketDto.tenement_host_remark,
+        tenement_area_max: updateTenementMarketDto.tenement_area_max,
+        tenement_area_min: updateTenementMarketDto.tenement_area_min,
+        burget_rent_max: updateTenementMarketDto.burget_rent_max,
+        burget_rent_min: updateTenementMarketDto.burget_rent_min,
+        hopefloor_max: updateTenementMarketDto.hopefloor_max,
+        hopefloor_min: updateTenementMarketDto.hopefloor_min,
+        market_state: updateTenementMarketDto.market_state,
+      },
+    });
+
+    return { message: 'Tenement market successfully updated' };
   }
 }
