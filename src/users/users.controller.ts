@@ -53,13 +53,13 @@ export class UsersController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Post('login')
   @ApiOperation({ summary: 'User login' })
   @ApiBody({ description: 'User Login Data', type: LoginDto })
   @ApiResponse({ status: 200, description: 'User successfully logged in.' })
   @ApiResponse({ status: 404, description: 'User not exist' })
   async login(@Body() loginDto: LoginDto) {
+    console.log(123);
     const user = await this.authService.validateUser(
       loginDto.user_email,
       loginDto.user_password,

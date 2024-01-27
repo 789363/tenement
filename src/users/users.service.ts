@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { GetUserListDto } from './dto/get-userlist.dto';
@@ -67,7 +67,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new Error('User with this email does not exist');
+      throw new UnauthorizedException('User with this email does not exist');
     }
 
     return user;
@@ -81,7 +81,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new UnauthorizedException('User not found');
     }
     if (updateData.user_password) {
       updateData.user_password = await bcrypt.hash(
@@ -170,6 +170,8 @@ export class UsersService {
           status: false,
         },
       });
+    } else {
+      console.log('Admin user already exists');
     }
   }
 }
