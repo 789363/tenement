@@ -46,6 +46,7 @@ export class UsersController {
   @ApiResponse({ status: 403, description: 'User already register' })
   async register(@Request() req, @Body() createUserDto: CreateUserDto) {
     const userisAdmin = req.user.isadmin;
+
     if (userisAdmin === true) {
       return this.usersService.createUser(createUserDto);
     } else {
@@ -59,7 +60,6 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'User successfully logged in.' })
   @ApiResponse({ status: 404, description: 'User not exist' })
   async login(@Body() loginDto: LoginDto) {
-    console.log(123);
     const user = await this.authService.validateUser(
       loginDto.user_email,
       loginDto.user_password,

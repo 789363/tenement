@@ -16,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return {
       userId: payload.sub,
       username: payload.user_name,
-      isadmin: payload.isadmin, // 确保 JWT payload 中包含此字段
+      isAdmin: payload.isAdmin, // 确保 JWT payload 中包含此字段
     };
   }
 }

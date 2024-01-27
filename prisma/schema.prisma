@@ -178,7 +178,7 @@ model User {
   user_name        String
   user_email       String            @unique
   user_password    String
-  isAdmin          Boolean           @default(false)
+  isadmin          Boolean           @default(false)
   isDeleted        Boolean           @default(false)
   status           Boolean
   Tenements        Tenement[]

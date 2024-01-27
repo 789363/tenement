@@ -37,7 +37,7 @@ export class UsersService {
         user_email: createUserDto.user_email,
         user_password: hashedPassword,
         status: true, // 根据业务逻辑设置默认状态
-        isAdmin: createUserDto.isadmin, // 使用传入的值
+        isadmin: createUserDto.isadmin, // 使用传入的值
         isDeleted: createUserDto.isDelete,
       },
       select: {
@@ -45,7 +45,7 @@ export class UsersService {
         user_name: true,
         user_email: true,
         status: true,
-        isAdmin: true,
+        isadmin: true,
         isDeleted: true,
         user_password: false,
         // 注意：不返回 user_password 字段
@@ -54,7 +54,7 @@ export class UsersService {
 
     return {
       ...user,
-      isadmin: user.isAdmin,
+      isadmin: user.isadmin,
       isDelete: user.isDeleted,
     };
   }
@@ -119,7 +119,7 @@ export class UsersService {
         user_name: true,
         user_email: true,
         status: true,
-        isAdmin: true,
+        isadmin: true,
         isDeleted: true,
       },
     });
@@ -135,7 +135,7 @@ export class UsersService {
         user_name: true,
         user_email: true,
         status: true,
-        isAdmin: true,
+        isadmin: true,
         isDeleted: true,
       },
     });
@@ -166,7 +166,7 @@ export class UsersService {
           user_name: adminName,
           user_email: adminEmail,
           user_password: hashedPassword,
-          isAdmin: true,
+          isadmin: true,
           status: false,
         },
       });
