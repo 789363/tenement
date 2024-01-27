@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   Request,
   ParseIntPipe,
+  ForbiddenException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -45,7 +46,7 @@ export class UsersController {
     if (userisAdmin === true) {
       return this.usersService.createUser(createUserDto);
     } else {
-      throw new Error('Access Denied');
+      throw new ForbiddenException('Access Denied');
     }
   }
 
@@ -60,7 +61,7 @@ export class UsersController {
       loginDto.user_password,
     );
     if (!user) {
-      throw new Error('Invalid credentials');
+      throw new ForbiddenException('Access Denied');
     }
     return this.authService.login(user);
   }
@@ -79,7 +80,7 @@ export class UsersController {
     if (userisAdmin === true) {
       return this.usersService.deleteUser(userId);
     } else {
-      throw new Error('Access Denied');
+      throw new ForbiddenException('Access Denied');
     }
   }
 
@@ -99,7 +100,7 @@ export class UsersController {
     if (userisAdmin === true) {
       return this.usersService.updateUser(userId, updateData);
     } else {
-      throw new Error('Access Denied');
+      throw new ForbiddenException('Access Denied');
     }
   }
 
@@ -113,7 +114,7 @@ export class UsersController {
     if (userisAdmin === true) {
       return this.usersService.getUsers();
     } else {
-      throw new Error('Access Denied');
+      throw new ForbiddenException('Access Denied');
     }
   }
 
@@ -135,7 +136,7 @@ export class UsersController {
     if (userisAdmin === true) {
       return this.usersService.getUserById(userId);
     } else {
-      throw new Error('Access Denied');
+      throw new ForbiddenException('Access Denied');
     }
   }
 }
