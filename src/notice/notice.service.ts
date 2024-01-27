@@ -112,7 +112,6 @@ export class NoticeService {
 
       return { message: 'notices deleted' };
     } catch (error) {
-      // 捕獲 Prisma 抛出的特定錯誤，例如試圖刪除不存在的資源
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2025'
@@ -120,7 +119,6 @@ export class NoticeService {
         throw new NotFoundException(`Notice with ID ${id} not found`);
       }
 
-      // 如果有其他未知錯誤，可以重新抛出或處理
       throw error;
     }
   }

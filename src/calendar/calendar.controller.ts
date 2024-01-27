@@ -1,5 +1,10 @@
 import { Controller, Get, Param, UseGuards, Request } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CalendarService } from './calendar.service';
 import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard';
@@ -9,6 +14,7 @@ export class CalendarController {
   constructor(private calendarService: CalendarService) {}
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
   @Get(':year/:month')
   @ApiOperation({ summary: 'Get calendar events' })
   @ApiResponse({
@@ -35,6 +41,7 @@ export class CalendarController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Get('collection/:year/:month')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get collection notices' })
   @ApiResponse({
     status: 200,
