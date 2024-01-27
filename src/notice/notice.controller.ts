@@ -16,7 +16,13 @@ import {
   CreateTenementNoticeDto,
   UpdateTenementNoticeDto,
 } from './dto/notice.dto';
-import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard';
 
@@ -25,6 +31,7 @@ import { AdminGuard } from '../auth/admin.guard';
 export class NoticeController {
   constructor(private noticeService: NoticeService) {}
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
   @Get(':id/:type')
   @ApiOperation({ summary: 'Get notice by ID and type' })
   @ApiParam({ name: 'id', description: 'Notice ID' })
@@ -39,6 +46,7 @@ export class NoticeController {
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
   @Post('/:type')
   @ApiOperation({ summary: 'Create new notices' })
   @ApiParam({
@@ -56,6 +64,7 @@ export class NoticeController {
     return this.noticeService.createNotices(type, noticeDataArray, userId);
   }
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
   @Put('/:type')
   @ApiOperation({ summary: 'Update multiple notices' })
   @ApiParam({
@@ -72,6 +81,7 @@ export class NoticeController {
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
   @Delete(':id/:type')
   @ApiOperation({ summary: 'Delete a notice' })
   @ApiParam({ name: 'id', description: 'Notice ID' })
