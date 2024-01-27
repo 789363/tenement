@@ -104,7 +104,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
-  @Get()
+  @Get('users')
   @ApiOperation({ summary: 'Get user list' })
   @ApiResponse({ status: 200, description: 'Successfully retrieved user data' })
   async getUsers(@Request() req) {

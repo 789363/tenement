@@ -15,7 +15,7 @@ async function bootstrap() {
   }
 
   const app = await NestFactory.create(AppModule);
-
+  app.setGlobalPrefix('api');
   const config = new DocumentBuilder()
     .setTitle('Example API')
     .setDescription('The example API description')
@@ -29,7 +29,6 @@ async function bootstrap() {
   // 配置静态文件服务指向新的 public 目录
   app.use('/public', express.static(publicDir));
 
-  app.setGlobalPrefix('api/');
   await app.listen(3000);
 }
 
