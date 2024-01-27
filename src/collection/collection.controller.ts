@@ -11,7 +11,12 @@ import {
   ParseIntPipe,
   Request,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiParam,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard';
 import { CollectionService } from './collection.service';
@@ -23,6 +28,7 @@ export class CollectionController {
   constructor(private collectionService: CollectionService) {}
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
   @Get(':id')
   @ApiOperation({ summary: 'Get collection by ID' })
   @ApiParam({ name: 'id', description: 'Collection ID' })
@@ -43,6 +49,7 @@ export class CollectionController {
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
   @Get()
   @ApiOperation({ summary: 'Get all collections' })
   async getAllCollections(@Request() req) {
@@ -56,6 +63,7 @@ export class CollectionController {
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
   @Post()
   @ApiOperation({ summary: 'Create a collection' })
   async createCollection(@Body() collectionData: CreateCollectionDto) {
@@ -63,6 +71,7 @@ export class CollectionController {
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
   @Put(':id')
   @ApiOperation({ summary: 'Update a collection' })
   @ApiParam({ name: 'id', description: 'Collection ID' })
@@ -74,6 +83,7 @@ export class CollectionController {
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a collection' })
   @ApiParam({ name: 'id', description: 'Collection ID' })
