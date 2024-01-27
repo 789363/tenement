@@ -9,7 +9,7 @@ import { ApiConsumes, ApiBody, ApiTags, ApiResponse } from '@nestjs/swagger';
 import { LocalStorageService } from './LocalStorageService';
 
 @ApiTags('files')
-@Controller('api/files')
+@Controller('files')
 export class FileUploadController {
   constructor(private readonly localStorageService: LocalStorageService) {}
 

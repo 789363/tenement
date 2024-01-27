@@ -24,12 +24,12 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api-docs', app, document);
 
   // 配置静态文件服务指向新的 public 目录
   app.use('/public', express.static(publicDir));
 
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api/');
   await app.listen(3000);
 }
 

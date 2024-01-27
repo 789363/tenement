@@ -23,7 +23,7 @@ import { UpdateTenementRentDto } from './dto/update-rent.dtp';
 import { UpdateTenementDevelopDto } from './dto/update-develop.dto';
 import { UpdateTenementMarketDto } from './dto/update-market.dto';
 @ApiTags('tenements')
-@Controller('api/tenements')
+@Controller('tenements')
 export class TenementController {
   constructor(
     private tenementService: TenementService,

@@ -4,7 +4,7 @@ import { CalendarService } from './calendar.service';
 import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard';
 @ApiTags('calendar')
-@Controller('api/calendar')
+@Controller('calendar')
 export class CalendarController {
   constructor(private calendarService: CalendarService) {}
 

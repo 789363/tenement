@@ -21,7 +21,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard';
 
 @ApiTags('notices')
-@Controller('api/notices')
+@Controller('notices')
 export class NoticeController {
   constructor(private noticeService: NoticeService) {}
   @UseGuards(AuthGuard('jwt'), AdminGuard)

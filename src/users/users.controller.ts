@@ -27,7 +27,7 @@ import { LoginDto } from './dto/login.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ResponseInterceptor } from './response.interceptor';
 @ApiTags('user')
-@Controller('api/user')
+@Controller('user')
 @UseInterceptors(ResponseInterceptor)
 export class UsersController {
   constructor(
