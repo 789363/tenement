@@ -18,6 +18,7 @@ import {
   ApiResponse,
   ApiBody,
   ApiParam,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { AuthService } from '../auth/auth.service';
@@ -36,7 +37,9 @@ export class UsersController {
     private authService: AuthService,
   ) {}
 
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Post('user')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Register a new user' })
   @ApiBody({ description: 'User Registration Data', type: CreateUserDto })
   @ApiResponse({ status: 201, description: 'User successfully registered.' })
@@ -50,6 +53,7 @@ export class UsersController {
     }
   }
 
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Post('login')
   @ApiOperation({ summary: 'User login' })
   @ApiBody({ description: 'User Login Data', type: LoginDto })
@@ -67,6 +71,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
   @Delete(':user_id')
   @ApiOperation({ summary: 'Delete a user' })
   @ApiParam({ name: 'user_id', description: 'User ID' })
@@ -85,6 +90,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
   @Put(':user_id')
   @ApiOperation({ summary: 'Update a user' })
   @ApiParam({ name: 'user_id', description: 'User ID' })
@@ -105,6 +111,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
   @Get('users')
   @ApiOperation({ summary: 'Get user list' })
   @ApiResponse({ status: 200, description: 'Successfully retrieved user data' })
@@ -119,6 +126,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
   @Get(':user_id')
   @ApiOperation({ summary: 'Get user details' })
   @ApiParam({ name: 'user_id', description: 'User ID' })
