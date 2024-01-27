@@ -88,6 +88,20 @@ export class UsersController {
       throw new ForbiddenException('Access Denied');
     }
   }
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
+  @Get('admin')
+  @ApiOperation({ summary: 'Get user list' })
+  @ApiResponse({ status: 200, description: 'Successfully retrieved user data' })
+  async getadmin(@Request() req) {
+    const userisAdmin = req.user.isadmin;
+
+    if (userisAdmin === true) {
+      return { isadmin: req.user.isadmin };
+    } else {
+      throw new ForbiddenException('Access Denied');
+    }
+  }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
@@ -139,9 +153,9 @@ export class UsersController {
     @Param('user_id', ParseIntPipe) userId: number,
     @Request() req,
   ) {
-    const userisAdmin = req.user.isadmin;
-
-    if (userisAdmin === true) {
+    const userisadmin = req.user.isadmin;
+    console.log(userisadmin);
+    if (userisadmin === true) {
       return this.usersService.getUserById(userId);
     } else {
       throw new ForbiddenException('Access Denied');

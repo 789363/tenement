@@ -5,15 +5,15 @@ export class AdminGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-
+    console.log(user);
     if (user) {
-      if (user.isAdmin) {
+      if (user.isadmin) {
         // 设置用户角色为管理员
-        request.user.isAdmin = true;
+        request.user.isadmin = true;
         return true;
       } else if (user.isregular) {
         // 设置用户角色为普通用户
-        request.user.isAdmin = false;
+        request.user.isadmin = false;
         return true;
       }
     }
