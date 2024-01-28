@@ -154,7 +154,6 @@ export class UsersController {
     @Request() req,
   ) {
     const userisadmin = req.user.isadmin;
-    console.log(userisadmin);
     if (userisadmin === true) {
       return this.usersService.getUserById(userId);
     } else {
