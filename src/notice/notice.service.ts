@@ -19,16 +19,18 @@ export class NoticeService {
 
   async getNoticeByIdAndType(id: number, type: string) {
     let notices;
+    const numericId = parseInt(id.toString(), 10); // 将字符串转换为数字，并进行类型断言
+
     if (type === 'collection') {
       notices = await this.prisma.collection_Notice.findMany({
         where: {
-          collection_id: id,
+          collection_id: numericId,
         },
       });
     } else {
       notices = await this.prisma.tenement_Notice.findMany({
         where: {
-          tenement_id: id,
+          tenement_id: numericId,
         },
       });
     }
@@ -40,47 +42,25 @@ export class NoticeService {
 
   async createNotices(
     type: string,
-    noticeDataArray: Array<CreateCollectionNoticeDto | CreateTenementNoticeDto>,
+    noticeDataArray: CreateCollectionNoticeDto[] | CreateTenementNoticeDto[],
     userId: number,
   ) {
-    // 检查 noticeDataArray 是否为数组
-    if (!Array.isArray(noticeDataArray)) {
-      throw new BadRequestException('noticeDataArray must be an array');
+    if (type === 'collection') {
+      // 处理创建 Collection_Notice
+      return this.createCollectionNotices(
+        noticeDataArray as CreateCollectionNoticeDto[],
+      );
+    } else if (type === 'tenement') {
+      // 处理创建 Tenement_Notice
+      return this.createTenementNotices(
+        noticeDataArray as CreateTenementNoticeDto[],
+        userId,
+      );
+    } else {
+      throw new BadRequestException('Unsupported notice type');
     }
-
-    const createdNotices = await Promise.all(
-      noticeDataArray.map(async (noticeData) => {
-        if (type === 'collection') {
-          if (!(noticeData instanceof CreateCollectionNoticeDto)) {
-            throw new BadRequestException(
-              'Invalid data type for collection notice',
-            );
-          }
-          return await this.prisma.collection_Notice.create({
-            data: {
-              ...noticeData,
-            },
-          });
-        } else if (type === 'tenement') {
-          if (!(noticeData instanceof CreateTenementNoticeDto)) {
-            throw new BadRequestException(
-              'Invalid data type for tenement notice',
-            );
-          }
-          return await this.prisma.tenement_Notice.create({
-            data: {
-              ...noticeData,
-              owner: userId,
-            },
-          });
-        } else {
-          throw new BadRequestException('Unsupported notice type');
-        }
-      }),
-    );
-
-    return { message: 'notices saved', data: createdNotices };
   }
+
   async updateNotices(
     type: string,
     noticeDataArray:
@@ -142,5 +122,36 @@ export class NoticeService {
 
       throw error;
     }
+  }
+
+  private async createCollectionNotices(
+    noticeDataArray: CreateCollectionNoticeDto[],
+  ) {
+    return Promise.all(
+      noticeDataArray.map(async (noticeData) => {
+        return await this.prisma.collection_Notice.create({
+          data: {
+            ...noticeData,
+            collection_id: noticeData.collection_id, // 直接使用 collection_id，无需转换
+          },
+        });
+      }),
+    );
+  }
+
+  private async createTenementNotices(
+    noticeDataArray: CreateTenementNoticeDto[],
+    userId: number,
+  ) {
+    return Promise.all(
+      noticeDataArray.map(async (noticeData) => {
+        return await this.prisma.tenement_Notice.create({
+          data: {
+            ...noticeData,
+            owner: userId, // 设置通知的所有者
+          },
+        });
+      }),
+    );
   }
 }

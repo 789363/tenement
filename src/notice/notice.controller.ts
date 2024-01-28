@@ -25,11 +25,13 @@ import {
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard';
+import { ParseIntPipe } from '@nestjs/common';
 
 @ApiTags('notices')
 @Controller('notices')
 export class NoticeController {
   constructor(private noticeService: NoticeService) {}
+
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
   @Get(':id/:type')
@@ -41,7 +43,10 @@ export class NoticeController {
   })
   @ApiResponse({ status: 200, description: 'Notice retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Notice not found' })
-  getNoticeByIdAndType(@Param('id') id: number, @Param('type') type: string) {
+  getNoticeByIdAndType(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('type') type: string,
+  ) {
     return this.noticeService.getNoticeByIdAndType(id, type);
   }
 
@@ -51,18 +56,16 @@ export class NoticeController {
   @ApiOperation({ summary: 'Create new notices' })
   @ApiParam({
     name: 'type',
-    description: 'Notice type (collection or other)',
+    description: 'Notice type (collection or tenement)',
   })
   @ApiResponse({ status: 200, description: 'Notices created successfully' })
   createNotices(
     @Param('type') type: string,
     @Body()
-    noticeDataArray: (CreateCollectionNoticeDto | CreateTenementNoticeDto)[],
+    noticeDataArray: CreateCollectionNoticeDto[] | CreateTenementNoticeDto[],
     @Request() req,
   ) {
-    console.log(req.user);
-    const userId = req.user.sub; // 提取用户 ID
-    console.log(userId);
+    const userId = req.user.userId; // 提取用户 ID
     return this.noticeService.createNotices(type, noticeDataArray, userId);
   }
 
