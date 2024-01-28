@@ -11,7 +11,7 @@ import { UsersModule } from '../users/users.module';
     forwardRef(() => UsersModule),
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET || '789363',
+      secret: process.env.JWT_SECRET || '123456',
       signOptions: { expiresIn: '600s' },
     }),
   ],
