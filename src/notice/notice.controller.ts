@@ -36,10 +36,11 @@ export class NoticeController {
   @ApiBearerAuth()
   @Get(':id/:type')
   @ApiOperation({ summary: 'Get notice by ID and type' })
-  @ApiParam({ name: 'id', description: 'Notice ID' })
+  @ApiParam({ name: 'id', description: 'Tenement ID or Colletion ID' })
   @ApiParam({
     name: 'type',
-    description: 'Notice type (collection or tenement)',
+    description:
+      'Notice type (collection or sell or rent or develop or market)',
   })
   @ApiResponse({ status: 200, description: 'Notice retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Notice not found' })
@@ -56,7 +57,8 @@ export class NoticeController {
   @ApiOperation({ summary: 'Create new notices' })
   @ApiParam({
     name: 'type',
-    description: 'Notice type (collection or tenement)',
+    description:
+      'Notice type (collection or sell or rent or develop or market)',
   })
   @ApiResponse({ status: 200, description: 'Notices created successfully' })
   createNotices(

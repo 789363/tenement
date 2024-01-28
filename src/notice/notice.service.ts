@@ -19,7 +19,7 @@ export class NoticeService {
 
   async getNoticeByIdAndType(id: number, type: string) {
     let notices;
-    const numericId = parseInt(id.toString(), 10); // 将字符串转换为数字，并进行类型断言
+    const numericId = parseInt(id.toString(), 10);
 
     if (type === 'collection') {
       notices = await this.prisma.collection_Notice.findMany({
