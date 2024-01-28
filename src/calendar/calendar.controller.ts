@@ -53,8 +53,9 @@ export class CalendarController {
     @Param('month') month: number,
     @Request() req,
   ) {
+    console.log(year, month);
     const userisadmin = req.user.isadmin; // 假设角色存储在 req.user.isadmin
-
+    console.log(456);
     if (userisadmin === true) {
       // 如果用户是管理员，返回所有通知
       return this.calendarService.getCollectionNotices(year, month);
