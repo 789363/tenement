@@ -61,6 +61,7 @@ export class NoticeController {
     @Request() req,
   ) {
     const userId = req.user.sub; // 提取用户 ID
+    console.log(userId);
     return this.noticeService.createNotices(type, noticeDataArray, userId);
   }
   @UseGuards(AuthGuard('jwt'), AdminGuard)

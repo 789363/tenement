@@ -46,7 +46,8 @@ export class CollectionService {
       const collection = await this.prisma.collection.findFirst({
         where: {
           id,
-          owner: userId, // 假设收藏信息中有一个字段是 owner，表示收藏的拥有者
+          owner: userId,
+          is_deleted: false, // 假设收藏信息中有一个字段是 owner，表示收藏的拥有者
         },
         include: {
           Collection_Notice: true, // 包括关联的通知信息
@@ -73,7 +74,6 @@ export class CollectionService {
       collection_type: collection.collection_type,
       price: collection.price,
       collection_id: collection.id,
-      // ... 其他字段
       notices: collection.Collection_Notice.map((notice) => ({
         id: notice.id,
         visitDate: notice.visitDate,
@@ -96,7 +96,6 @@ export class CollectionService {
         collection_type: collection.collection_type,
         price: collection.price,
         collection_id: collection.id,
-        // 可以根据需要添加其他字段
       }));
       return { message: 'Successfully get the media', data };
     } catch (error) {
@@ -113,7 +112,7 @@ export class CollectionService {
       const collections = await this.prisma.collection.findMany({
         where: {
           owner: userId,
-          is_deleted: false, // 仅返回未被删除的记录
+          is_deleted: false,
         },
       });
       const data = collections.map((collection) => ({
@@ -122,7 +121,6 @@ export class CollectionService {
         collection_type: collection.collection_type,
         price: collection.price,
         collection_id: collection.id,
-        // 可以根据需要添加其他字段
       }));
       return { message: 'Successfully get the media', data };
     } catch (error) {
