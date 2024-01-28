@@ -27,35 +27,35 @@ export class CreateTenementSellDto {
   owner: number;
 
   // Tenement_Create 的字段
-  @ApiProperty({ example: '5 stars', description: 'Total rating' })
-  total_rating: string;
+  @ApiProperty({ example: 5, description: 'Total rating' })
+  total_rating: number;
 
-  @ApiProperty({ example: 'Yes', description: 'Main building' })
-  main_building: string;
+  @ApiProperty({ example: 5, description: 'Main building' })
+  main_building: number;
 
-  @ApiProperty({ example: '4 stars', description: 'Inside rating' })
-  inside_rating: string;
+  @ApiProperty({ example: 4, description: 'Inside rating' })
+  inside_rating: number;
 
-  @ApiProperty({ example: 'No', description: 'Affiliated building' })
-  affiliated_building: string;
+  @ApiProperty({ example: 5, description: 'Affiliated building' })
+  affiliated_building: number;
 
-  @ApiProperty({ example: 'Yes', description: 'Public building' })
-  public_building: string;
+  @ApiProperty({ example: 6, description: 'Public building' })
+  public_building: number;
 
-  @ApiProperty({ example: '50 sqm', description: 'Unregistered area' })
-  unregistered_area: string;
+  @ApiProperty({ example: 50, description: 'Unregistered area' })
+  unregistered_area: number;
 
-  @ApiProperty({ example: '1.5', description: 'Management magnification' })
-  management_magnification: string;
+  @ApiProperty({ example: 50, description: 'Management magnification' })
+  management_magnification: number;
 
-  @ApiProperty({ example: '100 USD', description: 'Management fee' })
-  management_fee: string;
+  @ApiProperty({ example: 1100, description: 'Management fee' })
+  management_fee:number;
 
-  @ApiProperty({ example: '200000 USD', description: 'Selling price' })
-  selling_price: string;
+  @ApiProperty({ example: 2000, description: 'Selling price' })
+  selling_price: number;
 
-  @ApiProperty({ example: '10th floor', description: 'Tenement floor' })
-  tenement_floor: string;
+  @ApiProperty({ example:10, description: 'Tenement floor' })
+  tenement_floor: number;
 
   @ApiProperty({ example: 'John Doe', description: 'Tenement host name' })
   tenement_host_name: string;
@@ -109,9 +109,11 @@ export class CreateTenementSellDto {
   @ApiProperty({ example: 'Additional remarks about the buyer', description: 'Buyer remark' })
   buyer_remark: string;
 
-  @ApiProperty({ example: '800 USD', description: 'Rent price' })
-  rent_price: any;
+  deposit_price?: number;
+  
+  rent_price?: number;
 
-  @ApiProperty({ example: '1000 USD', description: 'Deposit price' })
-  deposit_price: any;
+
+
+
 }

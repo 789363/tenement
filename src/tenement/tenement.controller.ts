@@ -73,14 +73,24 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Get('/sell')
+  @Get('/sell:')
   @ApiOperation({ summary: 'Get all tenement sells' })
-  async getAllTenementSells(@Request() req) {
+  async getAllTenementSells(@Request() req, @Query() query: TenementQueryDto) {
     const userisadmin = req.user.isadmin;
-    return this.tenementService.getAllTenementSells(
-      userisadmin === true,
-      req.user.userId,
-    );
+    const hasQueryParams = Object.keys(query).length > 0;
+
+    if (hasQueryParams) {
+      return this.tenementService.getFilteredTenementSells(
+        userisadmin === true,
+        req.user.userId,
+        query,
+      );
+    } else {
+      return this.tenementService.getAllTenementSells(
+        userisadmin === true,
+        req.user.userId,
+      );
+    }
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)

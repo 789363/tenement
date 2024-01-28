@@ -146,7 +146,6 @@ export class UsersService {
 
     return user;
   }
-
   async ensureAdminUser() {
     const adminName = 'admin';
     const adminEmail = this.configService.get<string>('ADMIN_EMAIL');

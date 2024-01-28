@@ -62,6 +62,7 @@ export class AppModule implements OnModuleInit {
   constructor(private usersService: UsersService) {} // 注入 UsersService
 
   async onModuleInit() {
-    await this.usersService.ensureAdminUser(); // 在模块初始化时确保管理员账户存在
+    await new Promise((resolve) => setTimeout(resolve, 5000)); // 等待一段时间，以确保数据库表创建完毕
+    await this.usersService.ensureAdminUser(); // 创建管理员账户
   }
 }

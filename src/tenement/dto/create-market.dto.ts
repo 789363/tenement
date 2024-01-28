@@ -57,23 +57,23 @@ export class CreateTenementMarketDto {
   @ApiProperty({ example: 'Additional remarks about the host', description: 'Tenement host remark' })
   tenement_host_remark: string;
 
-  @ApiProperty({ example: '200 sqm', description: 'Tenement area maximum' })
-  tenement_area_max: string;
+  @ApiProperty({ example: 500, description: 'Tenement area maximum' })
+  tenement_area_max: number;
 
-  @ApiProperty({ example: '100 sqm', description: 'Tenement area minimum' })
-  tenement_area_min: string;
+  @ApiProperty({ example: 100, description: 'Tenement area minimum' })
+  tenement_area_min: number;
 
-  @ApiProperty({ example: '2000 USD', description: 'Budget rent maximum' })
-  burget_rent_max: string;
+  @ApiProperty({ example: 2000, description: 'Budget rent maximum' })
+  burget_rent_max: number;
 
-  @ApiProperty({ example: '1000 USD', description: 'Budget rent minimum' })
-  burget_rent_min: string;
+  @ApiProperty({ example: 1000, description: 'Budget rent minimum' })
+  burget_rent_min:number;
 
-  @ApiProperty({ example: '15th floor', description: 'Hope floor maximum' })
-  hopefloor_max: string;
+  @ApiProperty({ example: 15, description: 'Hope floor maximum' })
+  hopefloor_max: number;
 
-  @ApiProperty({ example: '5th floor', description: 'Hope floor minimum' })
-  hopefloor_min: string;
+  @ApiProperty({ example:5, description: 'Hope floor minimum' })
+  hopefloor_min: number;
 
   @ApiProperty({ example: 'Active', description: 'Market state' })
   market_state: string;
