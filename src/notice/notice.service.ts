@@ -46,7 +46,6 @@ export class NoticeService {
     userId: number,
   ) {
     if (type === 'collection') {
-      // 处理创建 Collection_Notice
       return this.createCollectionNotices(
         noticeDataArray as CreateCollectionNoticeDto[],
       );
@@ -56,8 +55,6 @@ export class NoticeService {
       type === 'sell' ||
       type === 'rent'
     ) {
-      // 处理创建 Tenement_Notice
-      console.log(noticeDataArray);
       return this.createTenementNotices(
         noticeDataArray as CreateTenementNoticeDto[],
         userId,
@@ -80,7 +77,7 @@ export class NoticeService {
         noticeDataArray.map(async (noticeData) => {
           if (type === 'collection') {
             if (noticeData.isNew) {
-              delete noticeData.isNew; // 移除 isNew 字段
+              delete noticeData.isNew;
               await this.prisma.collection_Notice.create({
                 data: noticeData as CreateCollectionNoticeDto,
               });
@@ -102,8 +99,7 @@ export class NoticeService {
             type === 'rent'
           ) {
             if (noticeData.isNew) {
-              console.log(130);
-              delete noticeData.isNew; // 移除 isNew 字段
+              delete noticeData.isNew;
               await this.prisma.tenement_Notice.create({
                 data: noticeData as CreateTenementNoticeDto,
               });
@@ -123,7 +119,6 @@ export class NoticeService {
       );
       return { message: 'notices updated' };
     } catch (error) {
-      console.log(error);
       throw new InternalServerErrorException(
         'An error occurred while updating the notices.',
       );
@@ -167,7 +162,7 @@ export class NoticeService {
         return await this.prisma.collection_Notice.create({
           data: {
             ...noticeData,
-            collection_id: noticeData.collection_id, // 直接使用 collection_id，无需转换
+            collection_id: noticeData.collection_id,
           },
         });
       }),
@@ -188,8 +183,8 @@ export class NoticeService {
         return await this.prisma.tenement_Notice.create({
           data: {
             ...noticeData,
-            owner: userId, // 设置通知的所有者
-            type: type, // 设置通知的类型
+            owner: userId,
+            type: type,
           },
         });
       }),

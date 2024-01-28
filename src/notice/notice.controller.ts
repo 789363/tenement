@@ -67,7 +67,7 @@ export class NoticeController {
     noticeDataArray: CreateCollectionNoticeDto[] | CreateTenementNoticeDto[],
     @Request() req,
   ) {
-    const userId = req.user.userId; // 提取用户 ID
+    const userId = req.user.userId;
     return this.noticeService.createNotices(type, noticeDataArray, userId);
   }
 

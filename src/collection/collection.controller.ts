@@ -40,7 +40,6 @@ export class CollectionController {
     if (userisadmin === true) {
       return this.collectionService.getCollectionById(id);
     } else {
-      // 如果用户是普通用户，只能获取与其相关的收藏信息
       return this.collectionService.getCollectionByIdAndUserId(
         id,
         req.user.userId,
@@ -57,7 +56,6 @@ export class CollectionController {
     if (userisadmin === true) {
       return this.collectionService.getAllCollections();
     } else {
-      // 如果用户是普通用户，只能获取与其相关的收藏信息
       return this.collectionService.getCollectionsByUserId(req.user.userId);
     }
   }

@@ -99,7 +99,6 @@ export class CalendarService {
       });
     });
 
-    // 將映射對象轉換為數組
     return Object.values(eventsByDay);
   }
 
@@ -117,7 +116,7 @@ export class CalendarService {
       groupedByDay[day].events.push({
         content: notice.record,
         id: notice.id.toString(),
-        class: notice.class, // 確保這裡根據您的業務邏輯設置正確
+        class: notice.class,
       });
     });
 

@@ -47,10 +47,10 @@ export class CollectionService {
         where: {
           id,
           owner: userId,
-          is_deleted: false, // 假设收藏信息中有一个字段是 owner，表示收藏的拥有者
+          is_deleted: false,
         },
         include: {
-          Collection_Notice: true, // 包括关联的通知信息
+          Collection_Notice: true,
         },
       });
 

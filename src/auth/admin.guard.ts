@@ -14,8 +14,6 @@ export class AdminGuard implements CanActivate {
         return true;
       }
     }
-
-    // 用户既不是管理员也不是普通用户
     return false;
   }
 }
