@@ -37,7 +37,7 @@ export class TenementService {
     userId: number,
   ): Promise<{ message: string; data: any[] }> {
     const tenements = await this.prisma.tenement.findMany({
-      where: { owner: userId },
+      where: { owner: userId, is_deleted: false },
     });
     if (!tenements || tenements.length === 0) {
       throw new NotFoundException('Tenements not found.');
@@ -161,7 +161,7 @@ export class TenementService {
     isAdmin: boolean,
   ): Promise<{ message: string; data: any }> {
     const tenementSell = await this.prisma.tenement_Sell.findUnique({
-      where: { tenement_id: tenementId },
+      where: { tenement_id: tenementId, is_deleted: false },
       include: { Tenement_Create: { include: { Tenement: true } } },
     });
 

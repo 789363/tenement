@@ -45,8 +45,8 @@ export class TenementController {
   })
   @ApiResponse({ status: 404, description: 'Tenement not found' })
   async getAllTenements(@Request() req) {
-    const userisAdmin = req.user.isAdmin;
-    if (userisAdmin === 'admin') {
+    const userisadmin = req.user.isadmin;
+    if (userisadmin === 'admin') {
       return this.tenementService.getAllTenements();
     } else {
       return this.tenementService.getTenementsByUserId(req.user.userId);
@@ -58,9 +58,9 @@ export class TenementController {
   @Get('/sell')
   @ApiOperation({ summary: 'Get all tenement sells' })
   async getAllTenementSells(@Request() req) {
-    const userisAdmin = req.user.isAdmin;
+    const userisadmin = req.user.isadmin;
     return this.tenementService.getAllTenementSells(
-      userisAdmin === true,
+      userisadmin === true,
       req.user.userId,
     );
   }
@@ -70,9 +70,9 @@ export class TenementController {
   @Get('/rent')
   @ApiOperation({ summary: 'Get all tenement rents' })
   async getAllTenementRents(@Request() req) {
-    const userisAdmin = req.user.isAdmin;
+    const userisadmin = req.user.isadmin;
     return this.tenementService.getAllTenementRents(
-      userisAdmin === true,
+      userisadmin === true,
       req.user.userId,
     );
   }
@@ -85,11 +85,11 @@ export class TenementController {
     @Param('id', ParseIntPipe) tenementId: number,
     @Request() req,
   ) {
-    const userisAdmin = req.user.isAdmin;
+    const userisadmin = req.user.isadmin;
     return this.tenementService.getTenementSellById(
       tenementId,
       req.user.userId,
-      userisAdmin,
+      userisadmin,
     );
   }
 
@@ -103,11 +103,11 @@ export class TenementController {
     @Param('id', ParseIntPipe) tenementId: number,
     @Request() req,
   ) {
-    const userisAdmin = req.user.isAdmin;
+    const userisadmin = req.user.isadmin;
     return this.tenementService.getTenementRentById(
       tenementId,
       req.user.userId,
-      userisAdmin,
+      userisadmin,
     );
   }
 
@@ -121,11 +121,11 @@ export class TenementController {
     @Param('id', ParseIntPipe) tenementId: number,
     @Request() req,
   ) {
-    const userisAdmin = req.user.isAdmin;
+    const userisadmin = req.user.isadmin;
     return this.tenementService.getTenementDevelopById(
       tenementId,
       req.user.userId,
-      userisAdmin,
+      userisadmin,
     );
   }
 
@@ -139,11 +139,11 @@ export class TenementController {
     @Param('id', ParseIntPipe) tenementId: number,
     @Request() req,
   ) {
-    const userisAdmin = req.user.isAdmin;
+    const userisadmin = req.user.isadmin;
     return this.tenementService.getTenementMarketById(
       tenementId,
       req.user.userId,
-      userisAdmin,
+      userisadmin,
     );
   }
 
