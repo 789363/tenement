@@ -27,8 +27,8 @@ export class CalendarController {
     @Param('month') month: number,
     @Request() req,
   ) {
-    const userisAdmin = req.user.isAdmin; // 假设角色存储在 req.user.isAdmin
-    if (userisAdmin === true) {
+    const userisadmin = req.user.isadmin;
+    if (userisadmin === true) {
       return this.calendarService.getCalendarEvents(year, month);
     } else {
       return this.calendarService.getUserCalendarEvents(
@@ -53,9 +53,9 @@ export class CalendarController {
     @Param('month') month: number,
     @Request() req,
   ) {
-    const userisAdmin = req.user.isAdmin; // 假设角色存储在 req.user.isAdmin
+    const userisadmin = req.user.isadmin; // 假设角色存储在 req.user.isadmin
 
-    if (userisAdmin === true) {
+    if (userisadmin === true) {
       // 如果用户是管理员，返回所有通知
       return this.calendarService.getCollectionNotices(year, month);
     } else {
