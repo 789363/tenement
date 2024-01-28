@@ -15,6 +15,7 @@ import { UpdateTenementDevelopDto } from './dto/update-develop.dto';
 import { UpdateTenementMarketDto } from './dto/update-market.dto';
 import { GetTenementsFilterDto } from './dto/get-tenements-filter.dto';
 import { GetTenementSellsFilterDto } from './dto/get-sells-fillter.dto';
+import { TenementRentQueryDto } from './dto/get-rents-fillter.dto';
 import { WhereClause } from './interface/tenement.interface';
 @Injectable()
 export class TenementService {
@@ -109,7 +110,7 @@ export class TenementService {
   }
 
   async getAllTenementRents(
-    isAdmin: boolean,
+    isadmin: boolean,
     userId: number,
   ): Promise<{ message: string; data: any[] }> {
     try {
@@ -123,7 +124,7 @@ export class TenementService {
         },
       };
 
-      if (!isAdmin) {
+      if (!isadmin) {
         queryOptions['where'] = {
           Tenement_Create: {
             Tenement: {
@@ -1240,6 +1241,137 @@ export class TenementService {
       return { message: 'Successfully update the media', data };
     } catch (error) {
       throw new InternalServerErrorException(error);
+    }
+  }
+
+  async getFilteredTenementRents(
+    isadmin: boolean,
+    userId: number,
+    query: TenementRentQueryDto,
+  ) {
+    const whereClause: any = {};
+
+    // 添加基础过滤条件
+    if (query.tenement_address) {
+      whereClause['Tenement_Create'] = {
+        ...whereClause['Tenement_Create'],
+        Tenement: {
+          ...whereClause['Tenement_Create']?.Tenement,
+          tenement_address: { contains: query.tenement_address },
+        },
+      };
+    }
+    if (query.tenement_style) {
+      whereClause['Tenement_Create'] = {
+        ...whereClause['Tenement_Create'],
+        Tenement: {
+          ...whereClause['Tenement_Create']?.Tenement,
+          tenement_style: { equals: query.tenement_style },
+        },
+      };
+    }
+    if (query.tenement_status) {
+      whereClause['Tenement_Create'] = {
+        ...whereClause['Tenement_Create'],
+        Tenement: {
+          ...whereClause['Tenement_Create']?.Tenement,
+          tenement_status: { equals: query.tenement_status },
+        },
+      };
+    }
+    // ... 根据 TenementRentQueryDto 中的其他属性重复此逻辑
+
+    // 范围查询
+    if (
+      query.selling_price_min !== undefined &&
+      query.selling_price_max !== undefined
+    ) {
+      whereClause['Tenement_Create'] = {
+        ...whereClause['Tenement_Create'],
+        selling_price: {
+          gte: query.selling_price_min,
+          lte: query.selling_price_max,
+        },
+      };
+    }
+    if (
+      query.total_rating_min !== undefined &&
+      query.total_rating_max !== undefined
+    ) {
+      whereClause['Tenement_Create'] = {
+        ...whereClause['Tenement_Create'],
+        total_rating: {
+          gte: query.total_rating_min,
+          lte: query.total_rating_max,
+        },
+      };
+    }
+
+    if (
+      query.public_building_min !== undefined &&
+      query.public_building_max !== undefined
+    ) {
+      whereClause['Tenement_Create'] = {
+        ...whereClause['Tenement_Create'],
+        public_building: {
+          gte: query.public_building_min,
+          lte: query.public_building_max,
+        },
+      };
+    }
+    if (query.floor_min !== undefined && query.floor_max !== undefined) {
+      whereClause['Tenement_Create'] = {
+        ...whereClause['Tenement_Create'],
+        tenement_floor: {
+          gte: query.floor_min,
+          lte: query.floor_max,
+        },
+      };
+    }
+    // 如果用户不是管理员，添加用户ID过滤条件
+    if (!isadmin) {
+      whereClause['Tenement_Create'] = {
+        ...whereClause['Tenement_Create'],
+        Tenement: {
+          ...whereClause['Tenement_Create']?.Tenement,
+          owner: userId,
+          is_deleted: false,
+        },
+      };
+    }
+
+    try {
+      const tenementRents = await this.prisma.tenement_Rent.findMany({
+        where: whereClause,
+        include: {
+          Tenement_Create: {
+            include: {
+              Tenement: true,
+            },
+          },
+        },
+      });
+
+      const data = tenementRents.map((rent) => ({
+        tenement_address: rent.Tenement_Create.Tenement.tenement_address,
+        tenement_face: rent.Tenement_Create.Tenement.tenement_face,
+        tenement_status: rent.Tenement_Create.Tenement.tenement_status,
+        tenement_type: rent.Tenement_Create.Tenement.tenement_type,
+        tenement_style: rent.Tenement_Create.Tenement.tenement_style,
+        management_fee_bottom: rent.Tenement_Create.management_fee,
+        management_floor_bottom: rent.Tenement_Create.tenement_floor,
+        rent_price: rent.Tenement_Create.rent_price,
+        Total_rating: rent.Tenement_Create.total_rating,
+        inside_rating: rent.Tenement_Create.inside_rating,
+        public_building: rent.Tenement_Create.public_building,
+        tenement_floor: rent.Tenement_Create.tenement_floor,
+      }));
+
+      return { message: 'Successfully retrieved the tenement rents', data };
+    } catch (error) {
+      throw new Error(
+        'Unable to fetch tenement rents due to an error: ' + error.message,
+      );
     }
   }
 }

@@ -28,8 +28,8 @@ import { UpdateTenementSellDto } from './dto/update-sell.dto';
 import { UpdateTenementRentDto } from './dto/update-rent.dtp';
 import { UpdateTenementDevelopDto } from './dto/update-develop.dto';
 import { UpdateTenementMarketDto } from './dto/update-market.dto';
-import { GetTenementsFilterDto } from './dto/get-tenements-filter.dto';
 import { TenementQueryDto } from './dto/tenement-query.dto';
+import { TenementRentQueryDto } from './dto/get-rents-fillter.dto';
 @ApiTags('tenements')
 @Controller('tenements')
 export class TenementController {
@@ -95,16 +95,26 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Get('/rent')
+  @Get()
   @ApiOperation({ summary: 'Get all tenement rents' })
-  async getAllTenementRents(@Request() req) {
+  async getAllTenementRents(
+    @Request() req,
+    @Query() query: TenementRentQueryDto,
+  ) {
     const userisadmin = req.user.isadmin;
-    return this.tenementService.getAllTenementRents(
-      userisadmin === true,
-      req.user.userId,
-    );
-  }
+    const userId = req.user.userId;
+    const hasQueryParams = Object.keys(query).length > 0;
 
+    if (hasQueryParams) {
+      return this.tenementService.getFilteredTenementRents(
+        userisadmin,
+        userId,
+        query,
+      );
+    } else {
+      return this.tenementService.getAllTenementRents(userisadmin, userId);
+    }
+  }
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
   @Get('/edit/sell/:id')
@@ -296,12 +306,5 @@ export class TenementController {
       tenementId,
       updateTenementMarketDto,
     );
-  }
-
-  @UseGuards(AuthGuard('jwt'), AdminGuard)
-  @ApiBearerAuth()
-  @Get()
-  async getFilteredTenements(@Query() filterDto: GetTenementsFilterDto) {
-    return this.tenementService.getFilteredTenements(filterDto);
   }
 }
