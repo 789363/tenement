@@ -51,7 +51,7 @@ export class NoticeController {
   @ApiOperation({ summary: 'Create new notices' })
   @ApiParam({
     name: 'type',
-    description: 'Notice type (collection or tenement)',
+    description: 'Notice type (collection or other)',
   })
   @ApiResponse({ status: 200, description: 'Notices created successfully' })
   createNotices(
@@ -60,10 +60,12 @@ export class NoticeController {
     noticeDataArray: (CreateCollectionNoticeDto | CreateTenementNoticeDto)[],
     @Request() req,
   ) {
+    console.log(req.user);
     const userId = req.user.sub; // 提取用户 ID
     console.log(userId);
     return this.noticeService.createNotices(type, noticeDataArray, userId);
   }
+
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
   @Put('/:type')

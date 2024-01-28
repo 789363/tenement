@@ -55,6 +55,7 @@ export class UpdateCollectionNoticeDto {
 }
 
 export class CreateTenementNoticeDto {
+  collection_id: number; // 确保类型与模型中的字段匹配
   @IsInt()
   @ApiProperty({ example: 1, description: 'Tenement ID' })
   readonly tenement_id: number;
