@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { createReadStream, createWriteStream } from 'fs';
 import { join } from 'path';
-
+import { promises as fs } from 'fs';
 @Injectable()
 export class LocalStorageService {
   constructor() {}
@@ -22,5 +22,16 @@ export class LocalStorageService {
 
       rs.pipe(ws);
     });
+  }
+
+  public async deleteFile(filename: string): Promise<boolean> {
+    const filePath = join(__dirname, '../../public', filename);
+    try {
+      await fs.unlink(filePath);
+      return true;
+    } catch (err) {
+      // 文件不存在或无法删除
+      return false;
+    }
   }
 }

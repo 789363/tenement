@@ -3,6 +3,11 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
+  Delete,
+  Param,
+  HttpException,
+  HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -11,10 +16,15 @@ import {
   ApiTags,
   ApiResponse,
   ApiOperation,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { LocalStorageService } from './LocalStorageService';
+import { AuthGuard } from '@nestjs/passport';
+import { AdminGuard } from 'src/auth/admin.guard';
 
 @ApiTags('files')
+@UseGuards(AuthGuard('jwt'), AdminGuard)
+@ApiBearerAuth()
 @Controller('files')
 export class FileUploadController {
   constructor(private readonly localStorageService: LocalStorageService) {}
@@ -50,5 +60,21 @@ export class FileUploadController {
       message: 'File uploaded successfully',
       url: fileUrl,
     };
+  }
+
+  @Delete('delete/:filename')
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete a file' })
+  @ApiResponse({ status: 200, description: 'File deleted successfully' })
+  @ApiResponse({ status: 404, description: 'File not found' })
+  async deleteFile(
+    @Param('filename') filename: string,
+  ): Promise<{ message: string }> {
+    const isDeleted = await this.localStorageService.deleteFile(filename);
+    if (!isDeleted) {
+      throw new HttpException('File not found', HttpStatus.NOT_FOUND);
+    }
+    return { message: 'File deleted successfully' };
   }
 }
