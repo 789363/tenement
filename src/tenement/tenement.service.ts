@@ -13,6 +13,8 @@ import { UpdateTenementSellDto } from './dto/update-sell.dto';
 import { UpdateTenementRentDto } from './dto/update-rent.dtp';
 import { UpdateTenementDevelopDto } from './dto/update-develop.dto';
 import { UpdateTenementMarketDto } from './dto/update-market.dto';
+import { GetTenementsFilterDto } from './dto/get-tenements-filter.dto';
+import { WhereClause } from './interface/tenement.interface';
 @Injectable()
 export class TenementService {
   constructor(private prisma: PrismaService) {}
@@ -73,6 +75,7 @@ export class TenementService {
           Tenement_Create: {
             Tenement: {
               owner: userId,
+              is_deleted: false,
             },
           },
         };
@@ -124,6 +127,7 @@ export class TenementService {
           Tenement_Create: {
             Tenement: {
               owner: userId,
+              is_deleted: false,
             },
           },
         };
@@ -743,7 +747,7 @@ export class TenementService {
       updateTenementSellDto.buyer_id_images.join(',');
     const tenementIdImagesAsString =
       updateTenementSellDto.tenement_images.join(',');
-    // 更新 Tenement 记录
+
     await this.prisma.tenement.update({
       where: { id: tenement_id },
       data: {
@@ -808,7 +812,7 @@ export class TenementService {
       updateTenementRentDto.tenement_images.join(',');
     const rentIdImagesAsString =
       updateTenementRentDto.renter_id_images.join(',');
-    // 更新 Tenement 记录
+
     await this.prisma.tenement.update({
       where: { id: tenement_id },
       data: {
@@ -971,5 +975,124 @@ export class TenementService {
     });
 
     return { message: 'Tenement market successfully updated' };
+  }
+
+  async getFilteredTenements(query): Promise<GetTenementsFilterDto[]> {
+    const {
+      tenement_address,
+      tenement_product_type,
+      tenement_status,
+      tenement_face,
+      tenement_type,
+      rent_price_min,
+      rent_price_max,
+      selling_price_min,
+      selling_price_max,
+      floor_min,
+      floor_max,
+    } = query;
+
+    const whereClause: any = {};
+
+    if (tenement_address) {
+      whereClause.tenement_address = { contains: tenement_address };
+    }
+    if (tenement_product_type) {
+      whereClause.tenement_product_type = { equals: tenement_product_type };
+    }
+    if (tenement_status) {
+      whereClause.tenement_status = { equals: tenement_status };
+    }
+    if (tenement_face) {
+      whereClause.tenement_face = { equals: tenement_face };
+    }
+    if (tenement_type) {
+      whereClause.tenement_type = { equals: tenement_type };
+    }
+    if (selling_price_min && selling_price_max) {
+      whereClause.selling_price = {
+        gte: parseInt(selling_price_min),
+        lte: parseInt(selling_price_max),
+      };
+    }
+    if (rent_price_min && rent_price_max) {
+      whereClause.rent_price = {
+        gte: parseInt(rent_price_min),
+        lte: parseInt(rent_price_max),
+      };
+    }
+    if (floor_min && floor_max) {
+      whereClause.tenement_floor = {
+        gte: parseInt(floor_min),
+        lte: parseInt(floor_max),
+      };
+    }
+
+    return this.prisma.tenement.findMany({
+      where: whereClause,
+      include: { Tenement_Create: true },
+    });
+  }
+
+  async getFilteredTenementsForUser(
+    query,
+    userId: number,
+  ): Promise<GetTenementsFilterDto[]> {
+    const {
+      tenement_address,
+      tenement_product_type,
+      tenement_status,
+      tenement_face,
+      tenement_type,
+      rent_price_min,
+      rent_price_max,
+      selling_price_min,
+      selling_price_max,
+      floor_min,
+      floor_max,
+    } = query;
+
+    const whereClause: WhereClause = {};
+    if (userId) {
+      whereClause.userId = { equals: userId };
+    }
+    if (tenement_address) {
+      whereClause.tenement_address = { contains: tenement_address };
+    }
+    if (tenement_product_type) {
+      whereClause.tenement_product_type = { equals: tenement_product_type };
+    }
+    if (tenement_status) {
+      whereClause.tenement_status = { equals: tenement_status };
+    }
+    if (tenement_face) {
+      whereClause.tenement_face = { equals: tenement_face };
+    }
+    if (tenement_type) {
+      whereClause.tenement_type = { equals: tenement_type };
+    }
+    if (selling_price_min && selling_price_max) {
+      whereClause.selling_price = {
+        gte: parseInt(selling_price_min),
+        lte: parseInt(selling_price_max),
+      };
+    }
+    if (rent_price_min && rent_price_max) {
+      whereClause.rent_price = {
+        gte: parseInt(rent_price_min),
+        lte: parseInt(rent_price_max),
+      };
+    }
+    if (floor_min && floor_max) {
+      whereClause.tenement_floor = {
+        gte: parseInt(floor_min),
+        lte: parseInt(floor_max),
+      };
+    }
+
+    return this.prisma.tenement.findMany({
+      where: whereClause,
+      include: { Tenement_Create: true },
+    });
   }
 }

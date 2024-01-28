@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -27,6 +28,8 @@ import { UpdateTenementSellDto } from './dto/update-sell.dto';
 import { UpdateTenementRentDto } from './dto/update-rent.dtp';
 import { UpdateTenementDevelopDto } from './dto/update-develop.dto';
 import { UpdateTenementMarketDto } from './dto/update-market.dto';
+import { GetTenementsFilterDto } from './dto/get-tenements-filter.dto';
+import { TenementQueryDto } from './dto/tenement-query.dto';
 @ApiTags('tenements')
 @Controller('tenements')
 export class TenementController {
@@ -37,19 +40,34 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Get()
-  @ApiOperation({ summary: 'Get all tenements' })
+  @Get(':')
+  @ApiOperation({ summary: 'Get all or filtered tenements' })
   @ApiResponse({
     status: 200,
-    description: 'Successfully retrieved all tenements.',
+    description: 'Successfully retrieved tenements.',
   })
   @ApiResponse({ status: 404, description: 'Tenement not found' })
-  async getAllTenements(@Request() req) {
+
+  // ... 其他查询参数
+  async getAllTenements(@Request() req, @Query() query: TenementQueryDto) {
     const userisadmin = req.user.isadmin;
-    if (userisadmin === true) {
-      return this.tenementService.getAllTenements();
+    const hasQueryParams = Object.keys(query).length > 0;
+
+    if (hasQueryParams) {
+      if (userisadmin === true) {
+        return this.tenementService.getFilteredTenements(query);
+      } else {
+        return this.tenementService.getFilteredTenementsForUser(
+          query,
+          req.user.sub,
+        );
+      }
     } else {
-      return this.tenementService.getTenementsByUserId(req.user.userId);
+      if (userisadmin === true) {
+        return this.tenementService.getAllTenements();
+      } else {
+        return this.tenementService.getTenementsByUserId(req.user.sub);
+      }
     }
   }
 
@@ -268,5 +286,12 @@ export class TenementController {
       tenementId,
       updateTenementMarketDto,
     );
+  }
+
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
+  @Get()
+  async getFilteredTenements(@Query() filterDto: GetTenementsFilterDto) {
+    return this.tenementService.getFilteredTenements(filterDto);
   }
 }
