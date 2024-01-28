@@ -46,7 +46,7 @@ export class TenementController {
   @ApiResponse({ status: 404, description: 'Tenement not found' })
   async getAllTenements(@Request() req) {
     const userisadmin = req.user.isadmin;
-    if (userisadmin === 'admin') {
+    if (userisadmin === true) {
       return this.tenementService.getAllTenements();
     } else {
       return this.tenementService.getTenementsByUserId(req.user.userId);
