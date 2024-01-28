@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { createWriteStream } from 'fs';
+import { createReadStream, createWriteStream } from 'fs';
 import { join } from 'path';
 
 @Injectable()
@@ -7,11 +7,20 @@ export class LocalStorageService {
   constructor() {}
 
   public async saveFile(file: Express.Multer.File): Promise<string> {
-    const filePath = join(__dirname, '../../public', file.originalname);
-    const ws = createWriteStream(filePath);
-    ws.write(file.buffer);
-    ws.close();
+    const targetPath = join(__dirname, '../../public', file.originalname);
+    const tempPath = file.path;
 
-    return `${process.env.BACKEND_URL}/public/${file.originalname}`;
+    return new Promise((resolve, reject) => {
+      const rs = createReadStream(tempPath);
+      const ws = createWriteStream(targetPath);
+
+      rs.on('error', (error) => reject(error));
+      ws.on('error', (error) => reject(error));
+      ws.on('close', () =>
+        resolve(`${process.env.BACKEND_URL}/public/${file.originalname}`),
+      );
+
+      rs.pipe(ws);
+    });
   }
 }

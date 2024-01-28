@@ -1,6 +1,8 @@
-# compiled output
-/dist
+# Dependencies
 /node_modules
+
+# Compiled output
+/dist
 
 # Logs
 logs
@@ -16,6 +18,8 @@ lerna-debug.log*
 
 # Database files
 *.sqlite
+*.db
+
 # Tests
 /coverage
 /.nyc_output
@@ -35,3 +39,9 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Public folder
+/public
+
+# Ignore specific folders and files
+/public
