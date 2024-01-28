@@ -22,15 +22,11 @@ export class CreateCollectionNoticeDto {
   @IsString()
   @ApiProperty({ example: 'Reminder message', description: 'Remind' })
   readonly remind: string;
-}
 
+  isNew?: boolean;
+}
 // UpdateCollectionNoticeDto
 export class UpdateCollectionNoticeDto {
-  @IsOptional()
-  @IsInt()
-  @ApiProperty({ example: 1, description: 'Collection ID' })
-  readonly collection_id?: number;
-
   @IsOptional()
   @IsString()
   @ApiProperty({ example: '2024-01-28', description: 'Visit Date' })
@@ -55,7 +51,6 @@ export class UpdateCollectionNoticeDto {
 }
 
 export class CreateTenementNoticeDto {
-  collection_id: number; // 确保类型与模型中的字段匹配
   @IsInt()
   @ApiProperty({ example: 1, description: 'Tenement ID' })
   readonly tenement_id: number;
@@ -83,15 +78,12 @@ export class CreateTenementNoticeDto {
   @IsInt()
   @ApiProperty({ example: 1, description: 'Owner ID' })
   readonly owner: number;
+
+  isNew?: boolean;
 }
 
 // UpdateTenementNoticeDto
 export class UpdateTenementNoticeDto {
-  @IsOptional()
-  @IsInt()
-  @ApiProperty({ example: 1, description: 'Tenement ID' })
-  readonly tenement_id?: number;
-
   @IsOptional()
   @IsString()
   @ApiProperty({ example: '2024-01-28', description: 'Visit Date' })
@@ -112,17 +104,7 @@ export class UpdateTenementNoticeDto {
   @ApiProperty({ example: 'Reminder message', description: 'Remind' })
   readonly remind?: string;
 
-  @IsOptional()
-  @IsString()
-  @ApiProperty({ example: 'Type', description: 'Type' })
-  readonly type?: string;
-
-  @IsOptional()
-  @IsInt()
-  @ApiProperty({ example: 1, description: 'Owner ID' })
-  readonly owner?: number;
-
-  isNew?: boolean;
+  readonly isNew?: boolean;
 }
 
 export class NoticeDto {

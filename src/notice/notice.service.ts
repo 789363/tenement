@@ -50,11 +50,18 @@ export class NoticeService {
       return this.createCollectionNotices(
         noticeDataArray as CreateCollectionNoticeDto[],
       );
-    } else if (type === 'tenement') {
+    } else if (
+      type === 'market' ||
+      type === 'develop' ||
+      type === 'sell' ||
+      type === 'rent'
+    ) {
       // 处理创建 Tenement_Notice
+      console.log(noticeDataArray);
       return this.createTenementNotices(
         noticeDataArray as CreateTenementNoticeDto[],
         userId,
+        type,
       );
     } else {
       throw new BadRequestException('Unsupported notice type');
@@ -80,19 +87,43 @@ export class NoticeService {
             } else {
               await this.prisma.collection_Notice.update({
                 where: { id: parseInt(noticeData.id) },
-                data: noticeData as UpdateCollectionNoticeDto,
+                data: {
+                  visitDate: noticeData.visitDate,
+                  record: noticeData.record,
+                  remindDate: noticeData.remindDate,
+                  remind: noticeData.remind,
+                },
               });
             }
-          } else if (type === 'tenement') {
-            await this.prisma.tenement_Notice.update({
-              where: { id: parseInt(noticeData.id) },
-              data: noticeData as UpdateTenementNoticeDto,
-            });
+          } else if (
+            type === 'market' ||
+            type === 'develop' ||
+            type === 'sell' ||
+            type === 'rent'
+          ) {
+            if (noticeData.isNew) {
+              console.log(130);
+              delete noticeData.isNew; // 移除 isNew 字段
+              await this.prisma.tenement_Notice.create({
+                data: noticeData as CreateTenementNoticeDto,
+              });
+            } else {
+              await this.prisma.tenement_Notice.update({
+                where: { id: parseInt(noticeData.id) },
+                data: {
+                  visitDate: noticeData.visitDate,
+                  record: noticeData.record,
+                  remindDate: noticeData.remindDate,
+                  remind: noticeData.remind,
+                },
+              });
+            }
           }
         }),
       );
       return { message: 'notices updated' };
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException(
         'An error occurred while updating the notices.',
       );
@@ -100,14 +131,15 @@ export class NoticeService {
   }
 
   async deleteNotice(id: number, type: string) {
+    const noticeId = parseInt(id.toString(), 10);
     try {
       if (type === 'collection') {
         await this.prisma.collection_Notice.delete({
-          where: { id },
+          where: { id: noticeId },
         });
       } else {
         await this.prisma.tenement_Notice.delete({
-          where: { id },
+          where: { id: noticeId },
         });
       }
 
@@ -129,6 +161,9 @@ export class NoticeService {
   ) {
     return Promise.all(
       noticeDataArray.map(async (noticeData) => {
+        if ('isNew' in noticeData) {
+          delete noticeData.isNew;
+        }
         return await this.prisma.collection_Notice.create({
           data: {
             ...noticeData,
@@ -142,13 +177,19 @@ export class NoticeService {
   private async createTenementNotices(
     noticeDataArray: CreateTenementNoticeDto[],
     userId: number,
+    type: string,
   ) {
     return Promise.all(
       noticeDataArray.map(async (noticeData) => {
+        if ('isNew' in noticeData) {
+          delete noticeData.isNew;
+        }
+
         return await this.prisma.tenement_Notice.create({
           data: {
             ...noticeData,
             owner: userId, // 设置通知的所有者
+            type: type, // 设置通知的类型
           },
         });
       }),
