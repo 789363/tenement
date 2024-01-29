@@ -99,7 +99,10 @@ export class NoticeController {
   })
   @ApiResponse({ status: 200, description: 'Notice deleted successfully' })
   @ApiResponse({ status: 404, description: 'Notice not found' })
-  deleteNotice(@Param('id') id: number, @Param('type') type: string) {
+  deleteNotice(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('type') type: string,
+  ) {
     return this.noticeService.deleteNotice(id, type);
   }
 }

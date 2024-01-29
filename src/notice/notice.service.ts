@@ -132,22 +132,23 @@ export class NoticeService {
         await this.prisma.collection_Notice.delete({
           where: { id: noticeId },
         });
-      } else {
+      } else if (type === 'tenement') {
         await this.prisma.tenement_Notice.delete({
           where: { id: noticeId },
         });
+      } else {
+        throw new BadRequestException('Unsupported notice type');
       }
 
       return { message: 'notices deleted' };
     } catch (error) {
+      console.error(error);
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2025'
       ) {
         throw new NotFoundException(`Notice with ID ${id} not found`);
       }
-
-      throw error;
     }
   }
 
