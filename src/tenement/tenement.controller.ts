@@ -95,7 +95,7 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Get()
+  @Get('rent')
   @ApiOperation({ summary: 'Get all tenement rents' })
   async getAllTenementRents(
     @Request() req,
