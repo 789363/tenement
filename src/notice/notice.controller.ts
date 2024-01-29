@@ -44,11 +44,16 @@ export class NoticeController {
   })
   @ApiResponse({ status: 200, description: 'Notice retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Notice not found' })
-  getNoticeByIdAndType(
+  async getNoticeByIdAndType(
     @Param('id', ParseIntPipe) id: number,
     @Param('type') type: string,
   ) {
-    return this.noticeService.getNoticeByIdAndType(id, type);
+    const notices = await this.noticeService.getNoticeByIdAndType(id, type);
+
+    return {
+      message: 'Notice retrieved successfully',
+      data: notices,
+    };
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)

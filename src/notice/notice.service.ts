@@ -35,9 +35,7 @@ export class NoticeService {
       });
     }
 
-    return notices.length > 0
-      ? { message: 'success', data: notices }
-      : { message: 'Notice not found' };
+    return notices;
   }
 
   async createNotices(

@@ -289,7 +289,7 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Post('/edit/sell/:tenementId')
+  @Post('/edit/rent/:tenementId')
   @ApiOperation({ summary: 'Update tenement sell' })
   async updateTenementRent(
     @Param('tenementId', ParseIntPipe) tenementId: number,

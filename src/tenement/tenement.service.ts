@@ -23,13 +23,52 @@ export class TenementService {
 
   async getAllTenements(): Promise<{ message: string; data: any[] }> {
     const tenements = await this.prisma.tenement.findMany();
+
+    type TenementWithFeeAndFloor = {
+      tenement_id: number;
+      tenement_address: string;
+      tenement_face: string;
+      tenement_product_type: string;
+      tenement_type: string;
+      management_fee: number;
+      tenement_floor: number;
+    };
+
+    const tenementWithFeeAndFloor = (
+      await Promise.all(
+        tenements.map(async (cur) => {
+          const tenementCreate = await this.prisma.tenement_Create.findUnique({
+            where: { tenement_id: cur.id },
+          });
+
+          if (!tenementCreate) return null;
+
+          return {
+            tenement_id: cur.id,
+            tenement_address: cur.tenement_address,
+            tenement_face: cur.tenement_face,
+            tenement_product_type: cur.tenement_product_type,
+            tenement_type: cur.tenement_type,
+            management_fee: tenementCreate.management_fee,
+            tenement_floor: tenementCreate.tenement_floor,
+          };
+        }),
+      )
+    )
+      // filter out null values
+      .filter(Boolean) as TenementWithFeeAndFloor[];
+
     return {
       message: 'Successfully get the tenements',
-      data: tenements.map((t) => ({
+      data: tenementWithFeeAndFloor.map((t) => ({
+        tenement_id: t.tenement_id,
         tenement_address: t.tenement_address,
         tenement_face: t.tenement_face,
         tenement_status: t.tenement_product_type,
         tenement_type: t.tenement_type,
+        tenement_product_type: t.tenement_product_type,
+        management_fee_bottom: t.management_fee,
+        management_floor_bottom: t.tenement_floor,
       })),
     };
   }
@@ -260,6 +299,7 @@ export class TenementService {
       tenementRent.Tenement_Create.Tenement.tenement_images.split(',');
     const renterIdImagesArray = tenementRent.renter_id_images.split(',');
     const data = {
+      tenement_id: tenementRent.Tenement_Create.Tenement.id,
       tenement_address: tenementRent.Tenement_Create.Tenement.tenement_address,
       tenement_product_type:
         tenementRent.Tenement_Create.Tenement.tenement_product_type,
