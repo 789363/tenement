@@ -15,7 +15,7 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class NoticeService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async getNoticeByIdAndType(id: number, type: string) {
     let notices;
@@ -35,7 +35,10 @@ export class NoticeService {
       });
     }
 
-    return notices;
+    return {
+      message: 'success',
+      data: notices,
+    };
   }
 
   async createNotices(
@@ -43,8 +46,10 @@ export class NoticeService {
     noticeDataArray: CreateCollectionNoticeDto[] | CreateTenementNoticeDto[],
     userId: number,
   ) {
+    let createdNotices;
+
     if (type === 'collection') {
-      return this.createCollectionNotices(
+      createdNotices = await this.createCollectionNotices(
         noticeDataArray as CreateCollectionNoticeDto[],
       );
     } else if (
@@ -53,7 +58,7 @@ export class NoticeService {
       type === 'sell' ||
       type === 'rent'
     ) {
-      return this.createTenementNotices(
+      createdNotices = await this.createTenementNotices(
         noticeDataArray as CreateTenementNoticeDto[],
         userId,
         type,
@@ -61,6 +66,11 @@ export class NoticeService {
     } else {
       throw new BadRequestException('Unsupported notice type');
     }
+
+    return {
+      message: 'notices saved',
+      data: createdNotices,
+    };
   }
 
   async updateNotices(
