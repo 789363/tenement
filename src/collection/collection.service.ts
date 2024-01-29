@@ -63,13 +63,24 @@ export class CollectionService {
     }
   }
 
-  private formatCollectionData(collection: any): any {
+  private formatCollectionData(
+    collection: Prisma.CollectionGetPayload<{
+      include: { Collection_Notice: true };
+    }>,
+  ): any {
     return {
       tenement_address: collection.tenement_no,
       collection_name: collection.collection_name,
       collection_type: collection.collection_type,
       price: collection.price,
-      collection_id: collection.id,
+      payment: collection.payment,
+      collection_remark: collection.collection_remark,
+      collection_date: collection.collection_date,
+      remittance_bank: collection.remittance_bank,
+      remittance_account: collection.remittance_account,
+      cus_remittance_bank: collection.cus_remittance_bank,
+      cus_remittance_account: collection.cus_remittance_account,
+      collection_complete: collection.collection_complete,
       notices: collection.Collection_Notice.map((notice) => ({
         id: notice.id,
         visitDate: notice.visitDate,
