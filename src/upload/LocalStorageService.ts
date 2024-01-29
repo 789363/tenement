@@ -39,7 +39,7 @@ export class LocalStorageService {
   }
 
   public async deleteFile(filename: string): Promise<boolean> {
-    const filePath = join(__dirname, '../../publics', filename);
+    const filePath = join(__dirname, '../../public', filename);
     try {
       await fs.unlink(filePath);
       console.log(filePath);
