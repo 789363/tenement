@@ -10,6 +10,7 @@ import {
   UseGuards,
   ParseIntPipe,
   Request,
+  Req,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -64,8 +65,25 @@ export class CollectionController {
   @ApiBearerAuth()
   @Post()
   @ApiOperation({ summary: 'Create a collection' })
-  async createCollection(@Body() collectionData: CreateCollectionDto) {
-    return this.collectionService.createCollection(collectionData);
+  async createCollection(
+    @Req() req,
+    @Body() collectionData: CreateCollectionDto,
+  ) {
+    const newCollection = await this.collectionService.createCollection({
+      ...collectionData,
+      User: {
+        connect: {
+          user_id: req.user.userId,
+        },
+      },
+    });
+
+    return {
+      message: 'Successfully create a collection',
+      data: {
+        collection_id: newCollection.id,
+      },
+    };
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)

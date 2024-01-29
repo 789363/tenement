@@ -154,19 +154,23 @@ export class NoticeService {
   private async createCollectionNotices(
     noticeDataArray: CreateCollectionNoticeDto[],
   ) {
-    return Promise.all(
-      noticeDataArray.map(async (noticeData) => {
-        if ('isNew' in noticeData) {
-          delete noticeData.isNew;
-        }
-        return await this.prisma.collection_Notice.create({
-          data: {
-            ...noticeData,
-            collection_id: noticeData.collection_id,
-          },
-        });
-      }),
-    );
+    try {
+      return Promise.all(
+        noticeDataArray.map(async (noticeData) => {
+          if ('isNew' in noticeData) {
+            delete noticeData.isNew;
+          }
+          return await this.prisma.collection_Notice.create({
+            data: {
+              ...noticeData,
+              collection_id: noticeData.collection_id,
+            },
+          });
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   private async createTenementNotices(

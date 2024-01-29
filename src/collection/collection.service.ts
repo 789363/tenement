@@ -6,11 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
-import {
-  CreateCollectionDto,
-  UpdateCollectionDto,
-  CollectionDto,
-} from './dto/collection.dto';
+import { UpdateCollectionDto, CollectionDto } from './dto/collection.dto';
 
 @Injectable()
 export class CollectionService {
@@ -130,18 +126,17 @@ export class CollectionService {
     }
   }
 
-  async createCollection(
-    collectionData: CreateCollectionDto,
-  ): Promise<{ message: string }> {
+  async createCollection(collectionData: Prisma.CollectionCreateInput) {
     try {
-      await this.prisma.collection.create({
+      const newCollection = await this.prisma.collection.create({
         data: {
           ...collectionData,
           is_deleted: false,
         },
       });
-      return { message: 'Successfully add the media' };
+      return newCollection;
     } catch (error) {
+      console.error(error);
       throw new InternalServerErrorException(
         'An error occurred while creating the collection.',
       );
