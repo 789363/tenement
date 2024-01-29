@@ -430,6 +430,7 @@ export class TenementService {
 
   async createTenementRent(
     createTenementRentDto: CreateTenementRentDto,
+    userId: number,
   ): Promise<{ message: string }> {
     const renterIdImagesAsString =
       createTenementRentDto.renter_id_images.join(',');
@@ -443,7 +444,7 @@ export class TenementService {
         tenement_status: createTenementRentDto.tenement_status,
         tenement_face: createTenementRentDto.tenement_face,
         tenement_images: tenementIdImagesAsString,
-        owner: createTenementRentDto.owner, // 假设 owner 字段是从 DTO 中传入的
+        owner: userId,
         is_deleted: false,
       },
     });
@@ -454,7 +455,9 @@ export class TenementService {
         tenement_id: tenement.id,
         total_rating: createTenementRentDto.total_rating,
         main_building: createTenementRentDto.main_building,
-        inside_rating: createTenementRentDto.inside_rating,
+        inside_rating:
+          createTenementRentDto.main_building +
+          createTenementRentDto.affiliated_building,
         affiliated_building: createTenementRentDto.affiliated_building,
         public_building: createTenementRentDto.public_building,
         unregistered_area: createTenementRentDto.unregistered_area,
@@ -503,6 +506,7 @@ export class TenementService {
 
   async createTenementSell(
     createTenementSellDto: CreateTenementSellDto,
+    userId: number,
   ): Promise<{ message: string }> {
     const sellIdImagesAsString =
       createTenementSellDto.buyer_id_images.join(',');
@@ -516,7 +520,7 @@ export class TenementService {
         tenement_status: createTenementSellDto.tenement_status,
         tenement_face: createTenementSellDto.tenement_face,
         tenement_images: tenementIdImagesAsString,
-        owner: createTenementSellDto.owner, // 假设 owner 字段是从 DTO 中传入的
+        owner: userId,
         is_deleted: false,
       },
     });
@@ -526,7 +530,9 @@ export class TenementService {
         tenement_id: tenement.id,
         total_rating: createTenementSellDto.total_rating,
         main_building: createTenementSellDto.main_building,
-        inside_rating: createTenementSellDto.inside_rating,
+        inside_rating:
+          createTenementSellDto.main_building +
+          createTenementSellDto.affiliated_building,
         affiliated_building: createTenementSellDto.affiliated_building,
         public_building: createTenementSellDto.public_building,
         unregistered_area: createTenementSellDto.unregistered_area,
@@ -570,6 +576,7 @@ export class TenementService {
 
   async createTenementDevelop(
     createTenementDevelopDto: CreateTenementDevelopDto,
+    userId: number,
   ): Promise<{ message: string }> {
     const tenementIdImagesAsString =
       createTenementDevelopDto.tenement_images.join(',');
@@ -580,7 +587,7 @@ export class TenementService {
         tenement_type: createTenementDevelopDto.tenement_type,
         tenement_face: createTenementDevelopDto.tenement_face,
         tenement_images: tenementIdImagesAsString,
-        owner: createTenementDevelopDto.owner,
+        owner: userId,
         tenement_status: createTenementDevelopDto.tenement_status,
         is_deleted: false,
       },
@@ -592,7 +599,9 @@ export class TenementService {
         tenement_id: tenement.id,
         total_rating: createTenementDevelopDto.total_rating,
         main_building: createTenementDevelopDto.main_building,
-        inside_rating: createTenementDevelopDto.inside_rating,
+        inside_rating:
+          createTenementDevelopDto.main_building +
+          createTenementDevelopDto.affiliated_building,
         affiliated_building: createTenementDevelopDto.affiliated_building,
         public_building: createTenementDevelopDto.public_building,
         unregistered_area: createTenementDevelopDto.unregistered_area,
@@ -631,6 +640,7 @@ export class TenementService {
 
   async createTenementMarket(
     createTenementMarketDto: CreateTenementMarketDto,
+    userId: number,
   ): Promise<{ message: string }> {
     const tenementIdImagesAsString =
       createTenementMarketDto.tenement_images.join(',');
@@ -641,7 +651,7 @@ export class TenementService {
         tenement_type: createTenementMarketDto.tenement_type,
         tenement_face: createTenementMarketDto.tenement_face,
         tenement_images: tenementIdImagesAsString,
-        owner: createTenementMarketDto.owner,
+        owner: userId,
         tenement_status: createTenementMarketDto.tenement_status,
         is_deleted: false,
       },
@@ -827,7 +837,8 @@ export class TenementService {
       data: {
         total_rating: updateData.total_rating,
         main_building: updateData.main_building,
-        inside_rating: updateData.inside_rating,
+        inside_rating:
+          updateData.main_building + updateData.affiliated_building,
         affiliated_building: updateData.affiliated_building,
         public_building: updateData.public_building,
         unregistered_area: updateData.unregistered_area,
@@ -898,7 +909,8 @@ export class TenementService {
       data: {
         total_rating: updateData.total_rating,
         main_building: updateData.main_building,
-        inside_rating: updateData.inside_rating,
+        inside_rating:
+          updateData.main_building + updateData.affiliated_building,
         affiliated_building: updateData.affiliated_building,
         public_building: updateData.public_building,
         unregistered_area: updateData.unregistered_area,

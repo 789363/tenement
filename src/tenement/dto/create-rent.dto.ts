@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 export class CreateTenementRentDto {
   @ApiProperty({ example: '123 Main St', description: 'Tenement address' })
   tenement_address: string;
@@ -19,33 +20,43 @@ export class CreateTenementRentDto {
   @ApiProperty({ example: 'Occupied', description: 'Tenement status' })
   tenement_status: string;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 50, description: 'Total rating' })
   total_rating: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 30, description: 'Main building' })
   main_building: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 10, description: 'Affiliated building' })
   affiliated_building: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 50, description: 'Public building' })
   public_building: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 50, description: 'Unregistered area' })
   unregistered_area: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 15, description: 'Management magnification' })
   management_magnification: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 100, description: 'Management fee' })
   management_fee:number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 800, description: 'Rent price' })
   rent_price: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 1000, description: 'Deposit price' })
   deposit_price: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 10, description: 'Tenement floor' })
   tenement_floor: number;
 
@@ -106,6 +117,7 @@ export class CreateTenementRentDto {
   @ApiProperty({ example: ['id_image1.jpg', 'id_image2.jpg'], description: 'Renter ID images' })
   renter_id_images: string[];
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 1, description: 'Owner ID' })
   owner: number;
 

@@ -190,9 +190,13 @@ export class TenementController {
   @Post('/add/rent')
   @ApiOperation({ summary: 'Add new tenement rent' })
   async createTenementRent(
+    @Request() req,
     @Body() createTenementRentDto: CreateTenementRentDto,
   ) {
-    return this.tenementService.createTenementRent(createTenementRentDto);
+    return this.tenementService.createTenementRent(
+      createTenementRentDto,
+      req.user.userId,
+    );
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
@@ -200,9 +204,13 @@ export class TenementController {
   @Post('/add/sell')
   @ApiOperation({ summary: 'Add new tenement sell' })
   async createTenementSell(
+    @Request() req,
     @Body() createTenementSellDto: CreateTenementSellDto,
   ) {
-    return this.tenementService.createTenementSell(createTenementSellDto);
+    return this.tenementService.createTenementSell(
+      createTenementSellDto,
+      req.user.userId,
+    );
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
@@ -210,18 +218,26 @@ export class TenementController {
   @Post('/add/develop')
   @ApiOperation({ summary: 'Add new tenement development' })
   async createTenementDevelop(
+    @Request() req,
     @Body() createTenementDevelopDto: CreateTenementDevelopDto,
   ) {
-    return this.tenementService.createTenementDevelop(createTenementDevelopDto);
+    return this.tenementService.createTenementDevelop(
+      createTenementDevelopDto,
+      req.user.userId,
+    );
   }
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
   @Post('/add/market')
   @ApiOperation({ summary: 'Add new tenement development' })
   async createTenementMarket(
+    @Request() req,
     @Body() createTenementMarketDto: CreateTenementMarketDto,
   ) {
-    return this.tenementService.createTenementMarket(createTenementMarketDto);
+    return this.tenementService.createTenementMarket(
+      createTenementMarketDto,
+      req.user.userId,
+    );
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
