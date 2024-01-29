@@ -30,8 +30,8 @@ import { UpdateTenementDevelopDto } from './dto/update-develop.dto';
 import { UpdateTenementMarketDto } from './dto/update-market.dto';
 import { TenementQueryDto } from './dto/tenement-query.dto';
 import { TenementRentQueryDto } from './dto/get-rents-fillter.dto';
-@ApiTags('tenements')
-@Controller('tenements')
+@ApiTags('tenement')
+@Controller('tenement')
 export class TenementController {
   constructor(
     private tenementService: TenementService,
@@ -187,7 +187,7 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Post('/tenement/add/rent')
+  @Post('/add/rent')
   @ApiOperation({ summary: 'Add new tenement rent' })
   async createTenementRent(
     @Body() createTenementRentDto: CreateTenementRentDto,
@@ -197,7 +197,7 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Post('/tenement/add/sell')
+  @Post('/add/sell')
   @ApiOperation({ summary: 'Add new tenement sell' })
   async createTenementSell(
     @Body() createTenementSellDto: CreateTenementSellDto,
@@ -207,7 +207,7 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Post('/tenement/add/develop')
+  @Post('/add/develop')
   @ApiOperation({ summary: 'Add new tenement development' })
   async createTenementDevelop(
     @Body() createTenementDevelopDto: CreateTenementDevelopDto,
@@ -216,7 +216,7 @@ export class TenementController {
   }
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Post('/tenement/add/market')
+  @Post('/add/market')
   @ApiOperation({ summary: 'Add new tenement development' })
   async createTenementMarket(
     @Body() createTenementMarketDto: CreateTenementMarketDto,
@@ -226,7 +226,7 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Delete('/delete/tenement/sell/:tenementId')
+  @Delete('/delete/sell/:tenementId')
   @ApiOperation({ summary: 'Delete tenement sell' })
   async deleteTenementSell(
     @Param('tenementId', ParseIntPipe) tenementId: number,
@@ -236,7 +236,7 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Delete('/delete/tenement/market/:tenementId')
+  @Delete('/delete/market/:tenementId')
   async deleteTenementMarket(
     @Param('tenementId', ParseIntPipe) tenementId: number,
   ) {
@@ -245,7 +245,7 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Delete('/delete/tenement/develop/:tenementId')
+  @Delete('/delete/develop/:tenementId')
   async deleteTenementDevelop(
     @Param('tenementId', ParseIntPipe) tenementId: number,
   ) {
@@ -254,7 +254,7 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Delete('/delete/tenement/rent/:tenementId')
+  @Delete('/delete/rent/:tenementId')
   async deleteTenementRent(
     @Param('tenementId', ParseIntPipe) tenementId: number,
   ) {
@@ -262,7 +262,7 @@ export class TenementController {
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
-  @Post('/tenement/edit/sell/:tenementId')
+  @Post('/edit/sell/:tenementId')
   @ApiOperation({ summary: 'Update tenement sell' })
   async updateTenementSell(
     @Param('tenementId', ParseIntPipe) tenementId: number,
@@ -273,7 +273,7 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Post('/tenement/edit/sell/:tenementId')
+  @Post('/edit/sell/:tenementId')
   @ApiOperation({ summary: 'Update tenement sell' })
   async updateTenementRent(
     @Param('tenementId', ParseIntPipe) tenementId: number,
@@ -284,7 +284,7 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Post('/tenement/edit/develop/:tenementId')
+  @Post('/edit/develop/:tenementId')
   async updateTenementDevelop(
     @Param('tenementId', ParseIntPipe) tenementId: number,
     @Body() updateTenementDevelopDto: UpdateTenementDevelopDto,
@@ -297,7 +297,7 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Post('/tenement/edit/market/:tenementId')
+  @Post('/edit/market/:tenementId')
   async updateTenementMarket(
     @Param('tenementId', ParseIntPipe) tenementId: number,
     @Body() updateTenementMarketDto: UpdateTenementMarketDto,
