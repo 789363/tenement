@@ -21,9 +21,6 @@ export class CreateTenementDevelopDto {
   })
   tenement_images: string[];
 
-  @ApiProperty({ example: 'Modern', description: 'Tenement style' })
-  tenement_style: string;
-
   @ApiProperty({ example: 5, description: 'Total rating', type: Number })
   total_rating: number;
 

@@ -17,9 +17,6 @@ export class CreateTenementMarketDto {
   @ApiProperty({ example: ['image1.jpg', 'image2.jpg'], description: 'Tenement images' })
   tenement_images: string[];
 
-  @ApiProperty({ example: 'Modern', description: 'Tenement style' })
-  tenement_style: string;
-
   @ApiProperty({ example: 'Occupied', description: 'Tenement status' })
   tenement_status: string;
 

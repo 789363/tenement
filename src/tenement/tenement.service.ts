@@ -88,7 +88,8 @@ export class TenementService {
         tenement_face: sell.Tenement_Create.Tenement.tenement_face,
         tenement_status: sell.Tenement_Create.Tenement.tenement_type,
         tenement_type: sell.Tenement_Create.Tenement.tenement_product_type,
-        tenement_style: sell.Tenement_Create.Tenement.tenement_style,
+        tenement_product_type:
+          sell.Tenement_Create.Tenement.tenement_product_type,
         management_fee_bottom: sell.Tenement_Create.management_fee,
         management_floor_bottom: sell.Tenement_Create.tenement_floor,
         selling_price: sell.Tenement_Create.selling_price,
@@ -140,7 +141,6 @@ export class TenementService {
         tenement_face: rent.Tenement_Create.Tenement.tenement_face,
         tenement_status: rent.Tenement_Create.Tenement.tenement_type, // 假设 tenement_status 存在于 Tenement 表中
         tenement_type: rent.Tenement_Create.Tenement.tenement_product_type, // 假设 tenement_type 存在于 Tenement 表中
-        tenement_style: rent.Tenement_Create.Tenement.tenement_style,
         management_fee_bottom: rent.Tenement_Create.management_fee,
         management_floor_bottom: rent.Tenement_Create.tenement_floor,
         rent: rent.Tenement_Create.rent_price,
@@ -442,7 +442,6 @@ export class TenementService {
         tenement_type: createTenementRentDto.tenement_type,
         tenement_status: createTenementRentDto.tenement_status,
         tenement_face: createTenementRentDto.tenement_face,
-        tenement_style: createTenementRentDto.tenement_style,
         tenement_images: tenementIdImagesAsString,
         owner: createTenementRentDto.owner, // 假设 owner 字段是从 DTO 中传入的
         is_deleted: false,
@@ -516,7 +515,6 @@ export class TenementService {
         tenement_type: createTenementSellDto.tenement_type,
         tenement_status: createTenementSellDto.tenement_status,
         tenement_face: createTenementSellDto.tenement_face,
-        tenement_style: createTenementSellDto.tenement_style,
         tenement_images: tenementIdImagesAsString,
         owner: createTenementSellDto.owner, // 假设 owner 字段是从 DTO 中传入的
         is_deleted: false,
@@ -582,7 +580,6 @@ export class TenementService {
         tenement_type: createTenementDevelopDto.tenement_type,
         tenement_face: createTenementDevelopDto.tenement_face,
         tenement_images: tenementIdImagesAsString,
-        tenement_style: createTenementDevelopDto.tenement_style,
         owner: createTenementDevelopDto.owner,
         tenement_status: createTenementDevelopDto.tenement_status,
         is_deleted: false,
@@ -644,7 +641,6 @@ export class TenementService {
         tenement_type: createTenementMarketDto.tenement_type,
         tenement_face: createTenementMarketDto.tenement_face,
         tenement_images: tenementIdImagesAsString,
-        tenement_style: createTenementMarketDto.tenement_style,
         owner: createTenementMarketDto.owner,
         tenement_status: createTenementMarketDto.tenement_status,
         is_deleted: false,
@@ -1225,7 +1221,8 @@ export class TenementService {
         tenement_face: sell.Tenement_Create.Tenement.tenement_face,
         tenement_status: sell.Tenement_Create.Tenement.tenement_status,
         tenement_type: sell.Tenement_Create.Tenement.tenement_type,
-        tenement_style: sell.Tenement_Create.Tenement.tenement_style,
+        tenement_product_type:
+          sell.Tenement_Create.Tenement.tenement_product_type,
         management_fee_bottom: sell.Tenement_Create.management_fee,
         management_floor_bottom: sell.Tenement_Create.tenement_floor,
         selling_price: sell.Tenement_Create.selling_price,
@@ -1258,12 +1255,12 @@ export class TenementService {
         },
       };
     }
-    if (query.tenement_style) {
+    if (query.tenement_product_type) {
       whereClause['Tenement_Create'] = {
         ...whereClause['Tenement_Create'],
         Tenement: {
           ...whereClause['Tenement_Create']?.Tenement,
-          tenement_style: { equals: query.tenement_style },
+          tenement_product_type: { equals: query.tenement_product_type },
         },
       };
     }
@@ -1354,7 +1351,8 @@ export class TenementService {
         tenement_face: rent.Tenement_Create.Tenement.tenement_face,
         tenement_status: rent.Tenement_Create.Tenement.tenement_status,
         tenement_type: rent.Tenement_Create.Tenement.tenement_type,
-        tenement_style: rent.Tenement_Create.Tenement.tenement_style,
+        tenement_product_type:
+          rent.Tenement_Create.Tenement.tenement_product_type,
         management_fee_bottom: rent.Tenement_Create.management_fee,
         management_floor_bottom: rent.Tenement_Create.tenement_floor,
         rent_price: rent.Tenement_Create.rent_price,

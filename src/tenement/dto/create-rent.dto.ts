@@ -106,9 +106,6 @@ export class CreateTenementRentDto {
   @ApiProperty({ example: ['id_image1.jpg', 'id_image2.jpg'], description: 'Renter ID images' })
   renter_id_images: string[];
 
-  @ApiProperty({ example: 'Modern', description: 'Tenement style' })
-  tenement_style: string;
-
   @ApiProperty({ example: 1, description: 'Owner ID' })
   owner: number;
 

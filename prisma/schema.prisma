@@ -14,7 +14,6 @@ model Tenement {
   tenement_type         String
   tenement_status       String
   tenement_face         String
-  tenement_style        String
   tenement_images       String
   createdAt             DateTime          @default(now())
   updatedAt             DateTime          @updatedAt
@@ -45,7 +44,7 @@ model Tenement_Market {
   hopefloor_max                    Int
   hopefloor_min                    Int
   market_state                     String
-  is_deleted             Boolean         @default(false)
+  is_deleted                       Boolean  @default(false)
   createdAt                        DateTime @default(now())
   updatedAt                        DateTime @updatedAt
   Tenement                         Tenement @relation(fields: [tenement_id], references: [id])
@@ -79,7 +78,7 @@ model Tenement_Develop {
 
 model Tenement_Sell {
   tenement_id        Int             @id
-  is_deleted             Boolean         @default(false)
+  is_deleted         Boolean         @default(false)
   buyer_order_date   String
   buyer_handout_date String
   buyer_name         String
@@ -174,7 +173,7 @@ model Tenement_Notice {
 }
 
 model User {
-  user_id          Int               @id @default(autoincrement())
+  user_id          Int               @id @unique @default(autoincrement())
   user_name        String
   user_email       String            @unique
   user_password    String

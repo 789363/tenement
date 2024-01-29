@@ -20,9 +20,6 @@ export class CreateTenementSellDto {
   @ApiProperty({ example: 'Occupied', description: 'Tenement status' })
   tenement_status: string;
 
-  @ApiProperty({ example: 'Modern', description: 'Tenement style' })
-  tenement_style: string;
-
   @ApiProperty({ example: 1, description: 'Owner ID' })
   owner: number;
 

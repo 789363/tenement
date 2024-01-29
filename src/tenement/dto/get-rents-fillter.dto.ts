@@ -8,7 +8,7 @@ export class TenementRentQueryDto {
   tenement_address?: string;
 
   @ApiPropertyOptional({ description: 'Style of the tenement', enum: ['辦公室', '店面', '套房', '其他'] })
-  tenement_style?: '辦公室' | '店面' | '套房' | '其他';
+  tenement_product_type?: '辦公室' | '店面' | '套房' | '其他';
 
   @ApiPropertyOptional({ description: 'Status of the tenement', enum: ['已成交', '未成交', '已退租下架', '過戶完成下架'] })
   tenement_status?: '已成交' | '未成交' | '已退租下架' | '過戶完成下架';
