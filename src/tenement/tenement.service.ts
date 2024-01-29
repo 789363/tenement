@@ -23,9 +23,6 @@ export class TenementService {
 
   async getAllTenements(): Promise<{ message: string; data: any[] }> {
     const tenements = await this.prisma.tenement.findMany();
-    if (!tenements || tenements.length === 0) {
-      throw new NotFoundException('Tenements not found.');
-    }
     return {
       message: 'Successfully get the tenements',
       data: tenements.map((t) => ({

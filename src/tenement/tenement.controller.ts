@@ -40,7 +40,7 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Get(':')
+  @Get('')
   @ApiOperation({ summary: 'Get all or filtered tenements' })
   @ApiResponse({
     status: 200,
@@ -73,7 +73,7 @@ export class TenementController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Get('/sell:')
+  @Get('/sell')
   @ApiOperation({ summary: 'Get all tenement sells' })
   async getAllTenementSells(@Request() req, @Query() query: TenementQueryDto) {
     const userisadmin = req.user.isadmin;
