@@ -55,9 +55,19 @@ export class FileUploadController {
   })
   @ApiResponse({ status: 200, description: 'File uploaded successfully' })
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    const fileUrl = await this.localStorageService.saveFile(file);
+    // 生成唯一文件名（此处使用当前时间戳和随机数来生成，您可以选择其他方式）
+    // 首先获取文件原始名的扩展名
+    const fileExtension = file.originalname.split('.').pop();
+    // 使用当前时间戳和随机数生成新文件名
+    const newFileName = `${Date.now()}-${Math.round(
+      Math.random() * 1e9,
+    )}.${fileExtension}`;
+    console.log(fileExtension);
+    // 使用新的文件名保存文件
+    // 假设 localStorageService.saveFile 方法可以接受一个新的文件名作为参数
+    const fileUrl = await this.localStorageService.saveFile(file, newFileName);
     return {
-      message: 'File uploaded successfully',
+      message: '文件上传成功',
       url: fileUrl,
     };
   }
