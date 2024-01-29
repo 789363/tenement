@@ -164,7 +164,7 @@ export class NoticeService {
     noticeDataArray: CreateCollectionNoticeDto[],
   ) {
     try {
-      return Promise.all(
+      const createdNotices = await Promise.all(
         noticeDataArray.map(async (noticeData) => {
           if ('isNew' in noticeData) {
             delete noticeData.isNew;
@@ -177,8 +177,14 @@ export class NoticeService {
           });
         }),
       );
+
+      return {
+        message: 'notices saved',
+        data: createdNotices,
+      };
     } catch (error) {
       console.error(error);
+      throw new InternalServerErrorException('An error occurred while creating the collection notices.');
     }
   }
 
@@ -187,20 +193,29 @@ export class NoticeService {
     userId: number,
     type: string,
   ) {
-    return Promise.all(
-      noticeDataArray.map(async (noticeData) => {
-        if ('isNew' in noticeData) {
-          delete noticeData.isNew;
-        }
+    try {
+      const createdNotices = await Promise.all(
+        noticeDataArray.map(async (noticeData) => {
+          if ('isNew' in noticeData) {
+            delete noticeData.isNew;
+          }
+          return await this.prisma.tenement_Notice.create({
+            data: {
+              ...noticeData,
+              owner: userId,
+              type: type,
+            },
+          });
+        }),
+      );
 
-        return await this.prisma.tenement_Notice.create({
-          data: {
-            ...noticeData,
-            owner: userId,
-            type: type,
-          },
-        });
-      }),
-    );
+      return {
+        message: 'notices saved',
+        data: createdNotices,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException('An error occurred while creating the tenement notices.');
+    }
   }
 }
