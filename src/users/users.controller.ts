@@ -38,6 +38,19 @@ export class UsersController {
   ) {}
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @ApiBearerAuth()
+  @Get('auth')
+  @ApiOperation({ summary: 'Get a user auth' })
+  @ApiResponse({ status: 200, description: 'Successfully get user auth.' })
+  async getAuthUser(@Request() req) {
+    const userisAdmin = req.user.isadmin;
+
+    return {
+      isadmin: userisAdmin,
+    };
+  }
+
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Post('user')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Register a new user' })
