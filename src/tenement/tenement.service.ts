@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   ForbiddenException,
   Injectable,
@@ -216,14 +217,13 @@ export class TenementService {
         'Access to this tenement sell is forbidden.',
       );
     }
-    const buyerIdImagesArray = tenementSell.buyer_id_images
-      ? tenementSell.buyer_id_images.split(',')
-      : [];
-
-    const tenementImagesArray = tenementSell.Tenement_Create.Tenement
-      .tenement_images
-      ? tenementSell.Tenement_Create.Tenement.tenement_images.split(',')
-      : [];
+    const buyerIdImagesArray = tenementSell.buyer_id_images && tenementSell.buyer_id_images.trim() !== ''
+    ? tenementSell.buyer_id_images.split(',')
+    : [];
+  
+  const tenementImagesArray = tenementSell.Tenement_Create.Tenement.tenement_images && tenementSell.Tenement_Create.Tenement.tenement_images.trim() !== ''
+    ? tenementSell.Tenement_Create.Tenement.tenement_images.split(',')
+    : [];
     const data = {
       tenement_address: tenementSell.Tenement_Create.Tenement.tenement_address,
       tenement_product_type:
@@ -295,9 +295,13 @@ export class TenementService {
       );
     }
     // 进行字符串到数组的转换
-    const tenementImagesArray =
-      tenementRent.Tenement_Create.Tenement.tenement_images.split(',');
-    const renterIdImagesArray = tenementRent.renter_id_images.split(',');
+    const tenementImagesArray = tenementRent.Tenement_Create.Tenement.tenement_images
+    ? tenementRent.Tenement_Create.Tenement.tenement_images.split(',').filter(img => img.trim() !== '')
+    : [];
+  
+  const renterIdImagesArray = tenementRent.renter_id_images
+    ? tenementRent.renter_id_images.split(',').filter(idImg => idImg.trim() !== '')
+    : [];
     const data = {
       tenement_id: tenementRent.Tenement_Create.Tenement.id,
       tenement_address: tenementRent.Tenement_Create.Tenement.tenement_address,
@@ -371,8 +375,10 @@ export class TenementService {
         'Access to this tenement develop is forbidden.',
       );
     }
-    const tenementImagesArray =
-      tenementDevelop.Tenement_Create.Tenement.tenement_images.split(',');
+    const tenementImagesArray = tenementDevelop.Tenement_Create.Tenement.tenement_images
+    ? tenementDevelop.Tenement_Create.Tenement.tenement_images.split(',').filter(img => img.trim() !== '')
+    : [];
+      
     const data = {
       tenement_address:
         tenementDevelop.Tenement_Create.Tenement.tenement_address,
@@ -436,8 +442,8 @@ export class TenementService {
       );
     }
     const tenementImagesArray = tenementMarket.Tenement.tenement_images
-      ? tenementMarket.Tenement.tenement_images.split(',')
-      : [];
+    ? tenementMarket.Tenement.tenement_images.split(',').filter(img => img)
+    : [];
     const data = {
       tenement_address: tenementMarket.Tenement.tenement_address,
       tenement_product_type: tenementMarket.Tenement.tenement_product_type,
