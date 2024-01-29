@@ -7,8 +7,9 @@ import * as path from 'path';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
+  // 配置静态文件服务指向新的 public 目录
+  const publicDir = path.join(__dirname, '../../src/public');
   // 更改路径指向 src/public
-  const publicDir = path.join(__dirname, '..', 'public');
 
   // 检查目录是否存在，如果不存在则创建
   if (!fs.existsSync(publicDir)) {
@@ -33,7 +34,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);
 
-  // 配置静态文件服务指向新的 public 目录
   app.use('/public', express.static(publicDir));
 
   await app.listen(3000);

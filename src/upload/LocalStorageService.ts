@@ -10,7 +10,8 @@ export class LocalStorageService {
     file: Express.Multer.File,
     newFileName: string,
   ): Promise<string> {
-    const targetPath = join(__dirname, '../../public', newFileName);
+    const targetPath = join(__dirname, '../../../src/public', newFileName);
+
     const tempPath = file.path;
     console.log(tempPath, 1);
     console.log(targetPath, 2);
@@ -39,7 +40,7 @@ export class LocalStorageService {
   }
 
   public async deleteFile(filename: string): Promise<boolean> {
-    const filePath = join(__dirname, '../../public', filename);
+    const filePath = join(__dirname, '../../../src/public', filename);
     try {
       await fs.unlink(filePath);
       console.log(filePath);
