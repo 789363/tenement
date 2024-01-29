@@ -61,14 +61,24 @@ export class NoticeController {
       'Notice type (collection or sell or rent or develop or market)',
   })
   @ApiResponse({ status: 200, description: 'Notices created successfully' })
-  createNotices(
+  async createNotices(
     @Param('type') type: string,
     @Body()
     noticeDataArray: CreateCollectionNoticeDto[] | CreateTenementNoticeDto[],
     @Request() req,
   ) {
     const userId = req.user.userId;
-    return this.noticeService.createNotices(type, noticeDataArray, userId);
+
+    const newNoticesData = await this.noticeService.createNotices(
+      type,
+      noticeDataArray,
+      userId,
+    );
+
+    return {
+      message: 'Notices created successfully',
+      data: newNoticesData,
+    };
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
