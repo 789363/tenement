@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 export class UpdateTenementSellDto {
   // Tenement 的字段
   @ApiProperty({ example: '123 Main St', description: 'Tenement address' })
@@ -21,30 +22,39 @@ export class UpdateTenementSellDto {
   tenement_status: string;
 
   // Tenement_Create 的字段
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 5, description: 'Total rating' })
   total_rating: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 10, description: 'Main building' })
   main_building:number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 10, description: 'Affiliated building' })
   affiliated_building: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 10, description: 'Public building' })
   public_building: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 50, description: 'Unregistered area' })
   unregistered_area: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 15, description: 'Management magnification' })
   management_magnification: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 100, description: 'Management fee' })
   management_fee: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 20000, description: 'Selling price' })
   selling_price: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 10, description: 'Tenement floor' })
   tenement_floor:number;
 
@@ -101,6 +111,7 @@ export class UpdateTenementSellDto {
   buyer_remark: string;
 
   // 唯一标识字段
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 1, description: 'Tenement ID' })
   tenement_id: number;
 }
