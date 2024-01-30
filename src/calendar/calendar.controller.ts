@@ -28,15 +28,42 @@ export class CalendarController {
     @Request() req,
   ) {
     const userisadmin = req.user.isadmin;
-    if (userisadmin === true) {
-      return this.calendarService.getCalendarEvents(year, month);
-    } else {
-      return this.calendarService.getUserCalendarEvents(
-        year,
-        month,
-        req.user.userId,
+
+    const tenementNotices = userisadmin
+      ? await this.calendarService.getTenementCalendarEvents(year, month)
+      : await this.calendarService.getUserCalendarEvents(
+          year,
+          month,
+          req.user.userId,
+        );
+
+    const collectionNotices = userisadmin
+      ? await this.calendarService.getCollectionNotices(year, month)
+      : await this.calendarService.getUserCollectionNotices(
+          year,
+          month,
+          req.user.userId,
+        );
+
+    const mergedNotices = tenementNotices.map((tenementNotice) => {
+      const collectionNotice = collectionNotices.find(
+        (collectionNotice) => collectionNotice.day === tenementNotice.day,
       );
-    }
+
+      const collectionNoticeEvents = collectionNotice
+        ? collectionNotice.events
+        : [];
+
+      return {
+        day: tenementNotice.day,
+        events: [...tenementNotice.events, ...collectionNoticeEvents],
+      };
+    });
+
+    return {
+      message: 'Successfully retrieved the calendar events',
+      data: mergedNotices,
+    };
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)

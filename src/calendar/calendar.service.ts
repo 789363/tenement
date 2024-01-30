@@ -5,7 +5,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class CalendarService {
   constructor(private prisma: PrismaService) {}
 
-  async getCalendarEvents(year: number, month: number) {
+  async getTenementCalendarEvents(year: number, month: number) {
     const yearStr = year.toString();
     const monthStr = month.toString().padStart(2, '0');
 
@@ -17,10 +17,7 @@ export class CalendarService {
       },
     });
 
-    return {
-      message: 'Successfully retrieved the events',
-      data: this.formatEvents(notices),
-    };
+    return this.formatTenementNoticeEvents(notices);
   }
 
   async getUserCalendarEvents(year: number, month: number, userId: number) {
@@ -36,10 +33,7 @@ export class CalendarService {
       },
     });
 
-    return {
-      message: 'Successfully retrieved user-specific events',
-      data: this.formatEvents(notices),
-    };
+    return this.formatTenementNoticeEvents(notices);
   }
 
   async getCollectionNotices(year: number, month: number) {
@@ -54,10 +48,7 @@ export class CalendarService {
       },
     });
 
-    return {
-      message: 'Successfully retrieved the collection notices',
-      data: this.formatCollectionNotices(collectionNotices),
-    };
+    return this.formatCollectionNotices(collectionNotices);
   }
 
   async getUserCollectionNotices(year: number, month: number, userId: number) {
@@ -75,10 +66,7 @@ export class CalendarService {
       },
     });
 
-    return {
-      message: 'Successfully retrieved user-specific collection notices',
-      data: this.formatCollectionNotices(collectionNotices),
-    };
+    return this.formatCollectionNotices(collectionNotices);
   }
 
   async getCollectionByYearMonth(
@@ -104,7 +92,9 @@ export class CalendarService {
     };
   }
 
-  private formatEvents(notices: any[]): any[] {
+  private formatTenementNoticeEvents(
+    notices: IFormatTenementNotice[],
+  ): IDayjsResponseItem[] {
     const eventsByDay = {};
 
     notices.forEach((notice) => {
@@ -117,7 +107,7 @@ export class CalendarService {
 
       eventsByDay[day].events.push({
         content: notice.record,
-        id: notice.id.toString(),
+        id: notice.tenement_id.toString(),
         class: notice.type,
       });
     });
@@ -125,7 +115,9 @@ export class CalendarService {
     return Object.values(eventsByDay);
   }
 
-  private formatCollectionNotices(notices: any[]): any[] {
+  private formatCollectionNotices(
+    notices: IFormatCollectionNotice[],
+  ): IDayjsResponseItem[] {
     const groupedByDay = {};
 
     notices.forEach((notice) => {
@@ -139,10 +131,43 @@ export class CalendarService {
       groupedByDay[day].events.push({
         content: notice.record,
         id: notice.id.toString(),
-        class: notice.class,
+        class: 'collection',
       });
     });
 
     return Object.values(groupedByDay);
   }
 }
+
+type IFormatTenementNotice = {
+  id: number;
+  tenement_id: number;
+  visitDate: string;
+  record: string;
+  remindDate: string;
+  remind: string;
+  type: string;
+  createdAt: Date;
+  updatedAt: Date;
+  owner: number;
+};
+
+type IFormatCollectionNotice = {
+  id: number;
+  collection_id: number;
+  visitDate: string;
+  record: string;
+  remindDate: string;
+  remind: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type IDayjsResponseItem = {
+  day: number;
+  events: {
+    content: string;
+    id: string;
+    class: string;
+  }[];
+};
