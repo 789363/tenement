@@ -498,7 +498,7 @@ export class TenementService {
   async createTenementRent(
     createTenementRentDto: CreateTenementRentDto,
     userId: number,
-  ): Promise<{ message: string }> {
+  ) {
     const renterIdImagesAsString =
       createTenementRentDto.renter_id_images.join(',');
     const tenementIdImagesAsString =
@@ -568,13 +568,16 @@ export class TenementService {
       },
     });
 
-    return { message: 'Successfully add the media' };
+    return {
+      message: 'Successfully add the media',
+      data: { tenement_id: tenement.id }
+    };
   }
 
   async createTenementSell(
     createTenementSellDto: CreateTenementSellDto,
     userId: number,
-  ): Promise<{ message: string }> {
+  ) {
     const sellIdImagesAsString =
       createTenementSellDto.buyer_id_images.join(',');
     const tenementIdImagesAsString =
@@ -638,13 +641,13 @@ export class TenementService {
       },
     });
 
-    return { message: 'Successfully add the media' };
+    return { message: 'Successfully add the media', data: { tenement_id: tenement.id } };
   }
 
   async createTenementDevelop(
     createTenementDevelopDto: CreateTenementDevelopDto,
     userId: number,
-  ): Promise<{ message: string }> {
+  ) {
     const tenementIdImagesAsString =
       createTenementDevelopDto.tenement_images.join(',');
     const tenement = await this.prisma.tenement.create({
@@ -702,13 +705,13 @@ export class TenementService {
       },
     });
 
-    return { message: 'Successfully add the media' };
+    return { message: 'Successfully add the media', data: { tenement_id: tenement.id } };
   }
 
   async createTenementMarket(
     createTenementMarketDto: CreateTenementMarketDto,
     userId: number,
-  ): Promise<{ message: string }> {
+  ) {
     const tenementIdImagesAsString =
       createTenementMarketDto.tenement_images.join(',');
     const tenement = await this.prisma.tenement.create({
@@ -750,7 +753,7 @@ export class TenementService {
       },
     });
 
-    return { message: 'Successfully add the media' };
+    return { message: 'Successfully add the media', data: { tenement_id: tenement.id } };
   }
 
   async deleteTenementRent(tenementId: number): Promise<{ message: string }> {
