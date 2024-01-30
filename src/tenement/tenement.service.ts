@@ -1356,9 +1356,6 @@ export class TenementService {
         },
       };
     }
-    // ... 根据 TenementRentQueryDto 中的其他属性重复此逻辑
-
-    // 范围查询
     if (
       query.selling_price_min !== undefined &&
       query.selling_price_max !== undefined
@@ -1436,10 +1433,10 @@ export class TenementService {
         tenement_status: rent.Tenement_Create.Tenement.tenement_status,
         tenement_type: rent.Tenement_Create.Tenement.tenement_type,
         tenement_product_type:
-          rent.Tenement_Create.Tenement.tenement_product_type,
+        rent.Tenement_Create.Tenement.tenement_product_type,
         management_fee_bottom: rent.Tenement_Create.management_fee,
         management_floor_bottom: rent.Tenement_Create.tenement_floor,
-        rent_price: rent.Tenement_Create.rent_price,
+        rent: rent.Tenement_Create.rent_price,
         Total_rating: rent.Tenement_Create.total_rating,
         inside_rating: rent.Tenement_Create.inside_rating,
         public_building: rent.Tenement_Create.public_building,
