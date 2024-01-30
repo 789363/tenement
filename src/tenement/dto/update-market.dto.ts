@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 export class UpdateTenementMarketDto {
   @ApiProperty({ example: '123 Main St', description: 'Tenement address' })
   tenement_address: string;
@@ -19,6 +20,7 @@ export class UpdateTenementMarketDto {
   @ApiProperty({ example: 'Occupied', description: 'Tenement status' })
   tenement_status: string;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 1, description: 'Owner ID' })
   owner: number;
 
@@ -52,27 +54,34 @@ export class UpdateTenementMarketDto {
   @ApiProperty({ example: 'Additional remarks about the host', description: 'Tenement host remark' })
   tenement_host_remark: string;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 20, description: 'Tenement area maximum' })
   tenement_area_max: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 10, description: 'Tenement area minimum' })
   tenement_area_min: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 2000, description: 'Budget rent maximum' })
   burget_rent_max: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 1000, description: 'Budget rent minimum' })
   burget_rent_min: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 15, description: 'Hope floor maximum' })
   hopefloor_max: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 5, description: 'Hope floor minimum' })
   hopefloor_min: number;
 
   @ApiProperty({ example: 'Active', description: 'Market state' })
   market_state: string;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 1, description: 'Tenement ID' })
   tenement_id: number;
 }
