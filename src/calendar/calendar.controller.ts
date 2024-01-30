@@ -8,6 +8,7 @@ import {
 import { CalendarService } from './calendar.service';
 import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard';
+import { log } from 'console';
 @ApiTags('calendar')
 @Controller('calendar')
 export class CalendarController {
@@ -45,20 +46,35 @@ export class CalendarController {
           req.user.userId,
         );
 
-    const mergedNotices = tenementNotices.map((tenementNotice) => {
-      const collectionNotice = collectionNotices.find(
-        (collectionNotice) => collectionNotice.day === tenementNotice.day,
-      );
+    const thisMonthDays = new Date(year, month, 0).getDate() + 1;
 
-      const collectionNoticeEvents = collectionNotice
-        ? collectionNotice.events
-        : [];
+    type IOrganizedDayjsData = {
+      day: number;
+      events: {
+        content: string;
+        id: string;
+        class: string;
+      }[];
+    };
 
+    const mergedNotices: IOrganizedDayjsData[] = Array.from({ length: thisMonthDays }).map((_, thisDay) => {
+      const tenementNotice = tenementNotices.find((tenementNotice) => tenementNotice.day === thisDay);
+      const collectionNotice = collectionNotices.find((collectionNotice) => collectionNotice.day === thisDay);
+
+      const tenementNoticeEvents = tenementNotice ? tenementNotice.events : [];
+      const collectionNoticeEvents = collectionNotice ? collectionNotice.events : [];
+
+      const thisDayEvents = [...tenementNoticeEvents, ...collectionNoticeEvents];
+
+      if (thisDayEvents.length === 0) {
+        return null
+      }
+      
       return {
-        day: tenementNotice.day,
-        events: [...tenementNotice.events, ...collectionNoticeEvents],
-      };
-    });
+        day: thisDay,
+        events: thisDayEvents
+      }
+    }).filter((item) => item !== null);
 
     return {
       message: 'Successfully retrieved the calendar events',
