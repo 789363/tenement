@@ -384,6 +384,7 @@ export class TenementService {
     : [];
       
     const data = {
+      tenement_id: tenementDevelop.Tenement_Create.Tenement.id,
       tenement_address:
         tenementDevelop.Tenement_Create.Tenement.tenement_address,
       tenement_product_type:

@@ -302,6 +302,7 @@ export class TenementController {
   @ApiBearerAuth()
   @Post('/edit/develop/:tenementId')
   async updateTenementDevelop(
+    @Request() req,
     @Param('tenementId', ParseIntPipe) tenementId: number,
     @Body() updateTenementDevelopDto: UpdateTenementDevelopDto,
   ) {

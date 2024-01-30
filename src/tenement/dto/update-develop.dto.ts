@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
 export class UpdateTenementDevelopDto {
   // Tenement 的字段
@@ -22,33 +23,43 @@ export class UpdateTenementDevelopDto {
   tenement_status: string;
 
   // Tenement_Create 的字段
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 5, description: 'Total rating' })
   total_rating: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example:50, description: 'Main building' })
   main_building: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 50, description: 'Inside rating' })
   inside_rating: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 50, description: 'Affiliated building' })
   affiliated_building: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example:50, description: 'Public building' })
   public_building: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 50, description: 'Unregistered area' })
   unregistered_area:number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 50, description: 'Management magnification' })
   management_magnification: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 1000, description: 'Management fee' })
   management_fee:number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 100, description: 'Deposit price' })
   deposit_price: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 5, description: 'Tenement floor' })
   tenement_floor: number;
 
@@ -86,6 +97,11 @@ export class UpdateTenementDevelopDto {
   tenement_id: number;
 
 
+  @Transform(({ value }) => Number(value))
+  @ApiProperty({ example: 100, description: 'Selling price' })
   selling_price: number;
+
+  @Transform(({ value }) => Number(value))
+  @ApiProperty({ example: 100, description: 'Rent price' })
   rent_price: number;
 }
