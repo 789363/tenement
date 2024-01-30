@@ -15,7 +15,7 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class NoticeService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async getNoticeByIdAndType(id: number, type: string) {
     let notices;
@@ -35,10 +35,7 @@ export class NoticeService {
       });
     }
 
-    return {
-      message: 'success',
-      data: notices,
-    };
+    return notices;
   }
 
   async createNotices(
@@ -184,7 +181,9 @@ export class NoticeService {
       };
     } catch (error) {
       console.error(error);
-      throw new InternalServerErrorException('An error occurred while creating the collection notices.');
+      throw new InternalServerErrorException(
+        'An error occurred while creating the collection notices.',
+      );
     }
   }
 
@@ -215,7 +214,9 @@ export class NoticeService {
       };
     } catch (error) {
       console.error(error);
-      throw new InternalServerErrorException('An error occurred while creating the tenement notices.');
+      throw new InternalServerErrorException(
+        'An error occurred while creating the tenement notices.',
+      );
     }
   }
 }

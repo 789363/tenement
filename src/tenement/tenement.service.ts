@@ -124,6 +124,7 @@ export class TenementService {
         await this.prisma.tenement_Sell.findMany(queryOptions);
 
       const data = tenementSells.map((sell) => ({
+        tenement_id: sell.tenement_id,
         tenement_address: sell.Tenement_Create.Tenement.tenement_address,
         tenement_face: sell.Tenement_Create.Tenement.tenement_face,
         tenement_status: sell.Tenement_Create.Tenement.tenement_type,
@@ -177,6 +178,8 @@ export class TenementService {
         await this.prisma.tenement_Rent.findMany(queryOptions);
 
       const data = tenementRents.map((rent) => ({
+        tenement_id: rent.tenement_id,
+        tenement_product_type: rent.Tenement_Create.Tenement.tenement_product_type,
         tenement_address: rent.Tenement_Create.Tenement.tenement_address,
         tenement_face: rent.Tenement_Create.Tenement.tenement_face,
         tenement_status: rent.Tenement_Create.Tenement.tenement_type, // 假设 tenement_status 存在于 Tenement 表中
@@ -225,6 +228,7 @@ export class TenementService {
     ? tenementSell.Tenement_Create.Tenement.tenement_images.split(',')
     : [];
     const data = {
+      tenement_id: tenementSell.tenement_id,
       tenement_address: tenementSell.Tenement_Create.Tenement.tenement_address,
       tenement_product_type:
         tenementSell.Tenement_Create.Tenement.tenement_product_type,
@@ -1275,6 +1279,7 @@ export class TenementService {
       });
 
       const data = tenementSells.map((sell) => ({
+        tenement_id: sell.tenement_id,
         tenement_address: sell.Tenement_Create.Tenement.tenement_address,
         tenement_face: sell.Tenement_Create.Tenement.tenement_face,
         tenement_status: sell.Tenement_Create.Tenement.tenement_status,
@@ -1405,6 +1410,7 @@ export class TenementService {
       });
 
       const data = tenementRents.map((rent) => ({
+        tenement_id: rent.tenement_id,
         tenement_address: rent.Tenement_Create.Tenement.tenement_address,
         tenement_face: rent.Tenement_Create.Tenement.tenement_face,
         tenement_status: rent.Tenement_Create.Tenement.tenement_status,
