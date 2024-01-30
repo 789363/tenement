@@ -64,10 +64,7 @@ export class NoticeService {
       throw new BadRequestException('Unsupported notice type');
     }
 
-    return {
-      message: 'notices saved',
-      data: createdNotices,
-    };
+    return createdNotices;
   }
 
   async updateNotices(
@@ -175,10 +172,7 @@ export class NoticeService {
         }),
       );
 
-      return {
-        message: 'notices saved',
-        data: createdNotices,
-      };
+      return createdNotices;
     } catch (error) {
       console.error(error);
       throw new InternalServerErrorException(
@@ -208,10 +202,7 @@ export class NoticeService {
         }),
       );
 
-      return {
-        message: 'notices saved',
-        data: createdNotices,
-      };
+      return createdNotices;
     } catch (error) {
       console.error(error);
       throw new InternalServerErrorException(
