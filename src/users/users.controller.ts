@@ -51,7 +51,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
-  @Post('user')
+  @Post()
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Register a new user' })
   @ApiBody({ description: 'User Registration Data', type: CreateUserDto })
@@ -101,20 +101,6 @@ export class UsersController {
       throw new ForbiddenException('Access Denied');
     }
   }
-  @UseGuards(AuthGuard('jwt'), AdminGuard)
-  @ApiBearerAuth()
-  @Get('admin')
-  @ApiOperation({ summary: 'Get user list' })
-  @ApiResponse({ status: 200, description: 'Successfully retrieved user data' })
-  async getadmin(@Request() req) {
-    const userisAdmin = req.user.isadmin;
-
-    if (userisAdmin === true) {
-      return { isadmin: req.user.isadmin };
-    } else {
-      throw new ForbiddenException('Access Denied');
-    }
-  }
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
@@ -139,7 +125,7 @@ export class UsersController {
 
   @UseGuards(AuthGuard('jwt'), AdminGuard)
   @ApiBearerAuth()
-  @Get('users')
+  @Get('list')
   @ApiOperation({ summary: 'Get user list' })
   @ApiResponse({ status: 200, description: 'Successfully retrieved user data' })
   async getUsers(@Request() req) {

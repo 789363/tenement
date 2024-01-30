@@ -5,6 +5,7 @@ import { GetUserListDto } from './dto/get-userlist.dto';
 import { User } from '@prisma/client';
 import { UserData } from './interface/user.interface';
 import { ConfigService } from '@nestjs/config'; // 引入 ConfigService
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -73,7 +74,7 @@ export class UsersService {
     return user;
   }
 
-  async updateUser(userId: number, updateData: any): Promise<User> {
+  async updateUser(userId: number, updateData: UpdateUserDto): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: {
         user_id: userId,
@@ -83,18 +84,24 @@ export class UsersService {
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    if (updateData.user_password) {
-      updateData.user_password = await bcrypt.hash(
-        updateData.user_password,
-        10,
-      );
+
+    async function getUserPasswordLogic(userInputPassword: string) {
+      if (userInputPassword === '') {
+        return user.user_password;
+      } else {
+        return await bcrypt.hash(userInputPassword, 10);
+      }
     }
+    const updateDataWithPassword = {
+      ...updateData,
+      user_password: await getUserPasswordLogic(updateData.user_password),
+    };
 
     return this.prisma.user.update({
       where: {
         user_id: userId,
       },
-      data: updateData,
+      data: updateDataWithPassword,
     });
   }
 
@@ -111,9 +118,6 @@ export class UsersService {
 
   async getUsers(): Promise<GetUserListDto[]> {
     return this.prisma.user.findMany({
-      where: {
-        isDeleted: false,
-      },
       select: {
         user_id: true,
         user_name: true,
