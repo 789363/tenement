@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
 export class CreateTenementDevelopDto {
   @ApiProperty({ example: '123 Main St', description: 'Tenement address' })
@@ -21,15 +22,19 @@ export class CreateTenementDevelopDto {
   })
   tenement_images: string[];
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 5, description: 'Total rating', type: Number })
   total_rating: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 100, description: 'Main building', type: Number })
   main_building: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 50, description: 'Inside rating', type: Number })
   inside_rating: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({
     example: 30,
     description: 'Affiliated building',
@@ -37,12 +42,15 @@ export class CreateTenementDevelopDto {
   })
   affiliated_building: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 20, description: 'Public building', type: Number })
   public_building: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 10, description: 'Unregistered area', type: Number })
   unregistered_area: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({
     example: 1.5,
     description: 'Management magnification',
@@ -50,18 +58,23 @@ export class CreateTenementDevelopDto {
   })
   management_magnification: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 3000, description: 'Management fee', type: Number })
   management_fee: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 500000, description: 'Selling price', type: Number })
   selling_price: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 20000, description: 'Rent price', type: Number })
   rent_price: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 40000, description: 'Deposit price', type: Number })
   deposit_price: number;
 
+  @Transform(({ value }) => Number(value))
   @ApiProperty({ example: 7, description: 'Tenement floor', type: Number })
   tenement_floor: number;
 
