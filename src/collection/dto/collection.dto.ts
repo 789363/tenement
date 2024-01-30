@@ -62,10 +62,6 @@ export class CreateCollectionDto {
   })
   collection_complete: string;
 
-  @IsInt()
-  @ApiProperty({ example: 1, description: 'Owner ID' })
-  owner: number;
-
   is_deleted: boolean;
 }
 
