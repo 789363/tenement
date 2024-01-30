@@ -54,14 +54,47 @@ export class CalendarController {
     @Request() req,
   ) {
     const userisadmin = req.user.isadmin;
-    if (userisadmin === true) {
-      return this.calendarService.getCollectionNotices(year, month);
-    } else {
-      return this.calendarService.getUserCollectionNotices(
-        year,
-        month,
-        req.user.userId,
-      );
-    }
+
+    const collectionData = await this.calendarService.getCollectionByYearMonth(
+      year,
+      month,
+      userisadmin,
+    );
+
+    type IOrganizedDayjsData = {
+      day: number;
+      events: {
+        content: string;
+        id: string;
+        class: string;
+      }[];
+    };
+    const organizedDayjsData: IOrganizedDayjsData[] =
+      collectionData.data.reduce((acc, cur) => {
+        const date = new Date(cur.collection_date);
+        const day = date.getDate();
+
+        const thisDateEntity = acc.find((item) => item.day === day);
+        const thisDateEventInfo = {
+          content: cur.collection_name,
+          id: cur.id.toString(),
+          class: cur.collection_type === '代收' ? 'prepay' : 'pay',
+        };
+
+        if (thisDateEntity) {
+          thisDateEntity.events.push(thisDateEventInfo);
+        } else {
+          acc.push({
+            day,
+            events: [thisDateEventInfo],
+          });
+        }
+        return acc;
+      }, [] as IOrganizedDayjsData[]);
+
+    return {
+      message: 'Successfully retrieved the collection notices',
+      data: organizedDayjsData,
+    };
   }
 }

@@ -81,6 +81,29 @@ export class CalendarService {
     };
   }
 
+  async getCollectionByYearMonth(
+    yaer: number,
+    month: number,
+    isAdmin: boolean,
+  ) {
+    const yearStr = yaer.toString();
+    const monthStr = month.toString().padStart(2, '0');
+
+    const collections = await this.prisma.collection.findMany({
+      where: {
+        collection_date: {
+          startsWith: `${yearStr}-${monthStr}`,
+        },
+        is_deleted: isAdmin ? undefined : false,
+      },
+    });
+
+    return {
+      message: 'Successfully retrieved the collection',
+      data: collections,
+    };
+  }
+
   private formatEvents(notices: any[]): any[] {
     const eventsByDay = {};
 
