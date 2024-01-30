@@ -33,6 +33,7 @@ export class TenementService {
       tenement_type: string;
       management_fee: number;
       tenement_floor: number;
+      tenement_status: string,
     };
 
     const tenementWithFeeAndFloor = (
@@ -57,6 +58,7 @@ export class TenementService {
               tenement_type: cur.tenement_type,
               management_fee: marketTenement.burget_rent_min,
               tenement_floor: marketTenement.hopefloor_min,
+              tenement_status: cur.tenement_status,
             }
           }
 
@@ -68,6 +70,7 @@ export class TenementService {
             tenement_type: cur.tenement_type,
             management_fee: tenementCreate.management_fee,
             tenement_floor: tenementCreate.tenement_floor,
+            tenement_status: cur.tenement_status,
           };
         }),
       )
@@ -81,7 +84,7 @@ export class TenementService {
         tenement_id: t.tenement_id,
         tenement_address: t.tenement_address,
         tenement_face: t.tenement_face,
-        tenement_status: t.tenement_product_type,
+        tenement_status: t.tenement_status,
         tenement_type: t.tenement_type,
         tenement_product_type: t.tenement_product_type,
         management_fee_bottom: t.management_fee,
@@ -104,7 +107,7 @@ export class TenementService {
       data: tenements.map((t) => ({
         tenement_address: t.tenement_address,
         tenement_face: t.tenement_face,
-        tenement_status: t.tenement_product_type,
+        tenement_status: t.tenement_status,
         tenement_type: t.tenement_type,
       })),
     };
