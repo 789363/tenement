@@ -703,7 +703,7 @@ export class TenementService {
         tenement_face: createTenementMarketDto.tenement_face,
         tenement_images: tenementIdImagesAsString,
         owner: userId,
-        tenement_status: createTenementMarketDto.tenement_status,
+        tenement_status: createTenementMarketDto.tenement_status || "未成交",
         is_deleted: false,
       },
     });
