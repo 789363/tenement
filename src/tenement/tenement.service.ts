@@ -42,7 +42,23 @@ export class TenementService {
             where: { tenement_id: cur.id },
           });
 
-          if (!tenementCreate) return null;
+          if (!tenementCreate) {
+            const marketTenement = await this.prisma.tenement_Market.findUnique({
+              where: { tenement_id: cur.id },
+            });
+
+            if (!marketTenement) return
+
+            return {
+              tenement_id: cur.id,
+              tenement_address: cur.tenement_address,
+              tenement_face: cur.tenement_face,
+              tenement_product_type: cur.tenement_product_type,
+              tenement_type: cur.tenement_type,
+              management_fee: marketTenement.burget_rent_min,
+              tenement_floor: marketTenement.hopefloor_min,
+            }
+          }
 
           return {
             tenement_id: cur.id,
