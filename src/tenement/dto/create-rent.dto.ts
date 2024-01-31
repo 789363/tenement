@@ -121,6 +121,11 @@ export class CreateTenementRentDto {
   @ApiProperty({ example: 1, description: 'Owner ID' })
   owner: number;
 
+  
+  @Transform(({ value }) => Number(value))
+  @ApiProperty({ example: 1, description: 'Tenement ID' })
+  tenement_id: number;
+
   @ApiProperty({ example: 5, description: 'Inside rating', type: Number })
   inside_rating: number;
   selling_price: number;

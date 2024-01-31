@@ -22,12 +22,15 @@ import { NoticeController } from './notice/notice.controller';
 import { CalendarController } from './calendar/calendar.controller';
 import { CalendarService } from './calendar/calendar.service';
 import { LocalStorageService } from './upload/LocalStorageService';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule } from '@nestjs/config';
+import { BackupService } from './backup/backup.service';
 @Module({
   imports: [
     UsersModule,
     AuthModule,
     CollectionModule,
+    ScheduleModule.forRoot(),
     NoticesModule,
     MulterModule.register({
       dest: './src/public',
@@ -48,6 +51,7 @@ import { ConfigModule } from '@nestjs/config';
     CalendarController,
   ],
   providers: [
+    BackupService,
     AppService,
     CollectionService,
     PrismaService,
