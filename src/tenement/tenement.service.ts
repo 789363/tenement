@@ -495,81 +495,160 @@ export class TenementService {
     return { message: 'Successfully update the media', data };
   }
 
-  async createTenementRent(
-    createTenementRentDto: CreateTenementRentDto,
-    userId: number,
-  ) {
-    const renterIdImagesAsString =
-      createTenementRentDto.renter_id_images.join(',');
-    const tenementIdImagesAsString =
-      createTenementRentDto.tenement_images.join(',');
-    const tenement = await this.prisma.tenement.create({
-      data: {
-        tenement_address: createTenementRentDto.tenement_address,
-        tenement_product_type: createTenementRentDto.tenement_product_type,
-        tenement_type: createTenementRentDto.tenement_type,
-        tenement_status: createTenementRentDto.tenement_status,
-        tenement_face: createTenementRentDto.tenement_face,
-        tenement_images: tenementIdImagesAsString,
-        owner: userId,
-        is_deleted: false,
-      },
+  async createTenementRent(createTenementRentDto: CreateTenementRentDto, userId: number) {
+    let tenement;
+    const { tenement_id, renter_id_images, tenement_images, ...rest } = createTenementRentDto;
+    const renterIdImagesAsString = renter_id_images.join(',');
+    const tenementIdImagesAsString = tenement_images.join(',');
+  
+    // 检查 Tenement 是否存在
+    if (tenement_id) {
+      tenement = await this.prisma.tenement.findUnique({
+        where: { id: tenement_id },
+      });
+  
+      // 如果 Tenement 存在，则更新
+      if (tenement) {
+        tenement = await this.prisma.tenement.update({
+          where: { id: tenement_id },
+          data: {
+            tenement_address: rest.tenement_address,
+            tenement_product_type: rest.tenement_product_type,
+            tenement_type: rest.tenement_type,
+            tenement_status: rest.tenement_status,
+            tenement_face: rest.tenement_face,
+            tenement_images: tenementIdImagesAsString,
+            owner: userId,
+            is_deleted: false,
+          },
+        });
+      }
+    }
+  
+    // 如果 Tenement 不存在，则创建新的 Tenement
+    if (!tenement) {
+      tenement = await this.prisma.tenement.create({
+        data: {
+          tenement_address: rest.tenement_address,
+          tenement_product_type: rest.tenement_product_type,
+          tenement_type: rest.tenement_type,
+          tenement_status: rest.tenement_status,
+          tenement_face: rest.tenement_face,
+          tenement_images: tenementIdImagesAsString,
+          owner: userId,
+          is_deleted: false,
+        },
+      });
+    }
+  
+    // 检查 TenementCreate 是否存在
+    let tenementCreate = await this.prisma.tenement_Create.findUnique({
+      where: { tenement_id: tenement.id },
     });
-
-    // 接着创建 Tenement_Create 记录
-    const tenementCreate = await this.prisma.tenement_Create.create({
-      data: {
-        tenement_id: tenement.id,
-        total_rating: createTenementRentDto.total_rating,
-        main_building: createTenementRentDto.main_building,
-        inside_rating:
-          createTenementRentDto.main_building +
-          createTenementRentDto.affiliated_building,
-        affiliated_building: createTenementRentDto.affiliated_building,
-        public_building: createTenementRentDto.public_building,
-        unregistered_area: createTenementRentDto.unregistered_area,
-        management_magnification:
-          createTenementRentDto.management_magnification,
-        management_fee: createTenementRentDto.management_fee,
-        tenement_floor: createTenementRentDto.tenement_floor,
-        tenement_host_name: createTenementRentDto.tenement_host_name,
-        tenement_host_telphone: createTenementRentDto.tenement_host_telphone,
-        tenement_host_phone: createTenementRentDto.tenement_host_phone,
-        tenement_host_line: createTenementRentDto.tenement_host_line,
-        tenement_host_remittance_bank:
-          createTenementRentDto.tenement_host_remittance_bank,
-        tenement_host_remittance_account:
-          createTenementRentDto.tenement_host_remittance_account,
-        tenement_host_address: createTenementRentDto.tenement_host_address,
-        tenement_host_birthday: createTenementRentDto.tenement_host_birthday,
-        tenement_host_hobby: createTenementRentDto.tenement_host_hobby,
-        tenement_host_remark: createTenementRentDto.tenement_host_remark,
-        selling_price: 0,
-        rent_price: createTenementRentDto.rent_price,
-        deposit_price: 0,
-      },
+  
+    // 如果 TenementCreate 存在，则更新；否则，创建新的
+    if (tenementCreate) {
+      tenementCreate = await this.prisma.tenement_Create.update({
+        where: { tenement_id: tenement.id },
+        data: {
+          // 更新的字段
+          total_rating: rest.total_rating,
+          main_building: rest.main_building,
+          inside_rating: rest.main_building + rest.affiliated_building,
+          affiliated_building: rest.affiliated_building,
+          public_building: rest.public_building,
+          unregistered_area: rest.unregistered_area,
+          management_magnification: rest.management_magnification,
+          management_fee: rest.management_fee,
+          tenement_floor: rest.tenement_floor,
+          tenement_host_name: rest.tenement_host_name,
+          tenement_host_telphone: rest.tenement_host_telphone,
+          tenement_host_phone: rest.tenement_host_phone,
+          tenement_host_line: rest.tenement_host_line,
+          tenement_host_remittance_bank: rest.tenement_host_remittance_bank,
+          tenement_host_remittance_account: rest.tenement_host_remittance_account,
+          tenement_host_address: rest.tenement_host_address,
+          tenement_host_birthday: rest.tenement_host_birthday,
+          tenement_host_hobby: rest.tenement_host_hobby,
+          tenement_host_remark: rest.tenement_host_remark,
+          rent_price: rest.rent_price,
+        },
+      });
+    } else {
+      tenementCreate = await this.prisma.tenement_Create.create({
+        data: {
+          tenement_id: tenement.id,
+          // 创建的字段
+          total_rating: rest.total_rating,
+          main_building: rest.main_building,
+          inside_rating: rest.main_building + rest.affiliated_building,
+          affiliated_building: rest.affiliated_building,
+          public_building: rest.public_building,
+          unregistered_area: rest.unregistered_area,
+          management_magnification: rest.management_magnification,
+          management_fee: rest.management_fee,
+          tenement_floor: rest.tenement_floor,
+          tenement_host_name: rest.tenement_host_name,
+          tenement_host_telphone: rest.tenement_host_telphone,
+          tenement_host_phone: rest.tenement_host_phone,
+          tenement_host_line: rest.tenement_host_line,
+          tenement_host_remittance_bank: rest.tenement_host_remittance_bank,
+          tenement_host_remittance_account: rest.tenement_host_remittance_account,
+          tenement_host_address: rest.tenement_host_address,
+          tenement_host_birthday: rest.tenement_host_birthday,
+          tenement_host_hobby: rest.tenement_host_hobby,
+          tenement_host_remark: rest.tenement_host_remark,
+          rent_price: rest.rent_price,
+        },
+      });
+    }
+  
+    // 检查 TenementRent 是否存在
+    let tenementRent = await this.prisma.tenement_Rent.findUnique({
+      where: { tenement_id: tenement.id },
     });
-
-    // 最后创建 Tenement_Rent 记录
-    await this.prisma.tenement_Rent.create({
-      data: {
-        tenement_id: tenementCreate.tenement_id, // 来自 Tenement_Create 的 ID
-        tenement_status: createTenementRentDto.tenement_status,
-        renter_start_date: createTenementRentDto.renter_start_date,
-        renter_end_date: createTenementRentDto.renter_end_date,
-        renter_name: createTenementRentDto.renter_name,
-        renter_id_images: renterIdImagesAsString,
-        renter_phone: createTenementRentDto.renter_phone,
-        renter_jobtitle: createTenementRentDto.renter_jobtitle,
-        renter_guarantor_name: createTenementRentDto.renter_guarantor_name,
-        renter_guarantor_phone: createTenementRentDto.renter_guarantor_phone,
-        renter_remark: createTenementRentDto.renter_remark,
-        is_deleted: false, // 默认值，表示记录未被删除
-      },
-    });
-
+  
+    // 如果 TenementRent 存在，则更新；否则，创建新的
+    if (tenementRent) {
+      tenementRent = await this.prisma.tenement_Rent.update({
+        where: { tenement_id: tenement.id },
+        data: {
+          // 更新的字段
+          tenement_status: rest.tenement_status,
+          renter_start_date: rest.renter_start_date,
+          renter_end_date: rest.renter_end_date,
+          renter_name: rest.renter_name,
+          renter_id_images: renterIdImagesAsString,
+          renter_phone: rest.renter_phone,
+          renter_jobtitle: rest.renter_jobtitle,
+          renter_guarantor_name: rest.renter_guarantor_name,
+          renter_guarantor_phone: rest.renter_guarantor_phone,
+          renter_remark: rest.renter_remark,
+          is_deleted: false,
+        },
+      });
+    } else {
+      tenementRent = await this.prisma.tenement_Rent.create({
+        data: {
+          tenement_id: tenement.id,
+          // 创建的字段
+          tenement_status: rest.tenement_status,
+          renter_start_date: rest.renter_start_date,
+          renter_end_date: rest.renter_end_date,
+          renter_name: rest.renter_name,
+          renter_id_images: renterIdImagesAsString,
+          renter_phone: rest.renter_phone,
+          renter_jobtitle: rest.renter_jobtitle,
+          renter_guarantor_name: rest.renter_guarantor_name,
+          renter_guarantor_phone: rest.renter_guarantor_phone,
+          renter_remark: rest.renter_remark,
+          is_deleted: false,
+        },
+      });
+    }
+  
     return {
-      message: 'Successfully add the media',
+      message: 'Successfully processed the tenement rent',
       data: { tenement_id: tenement.id }
     };
   }
