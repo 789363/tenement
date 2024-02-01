@@ -1544,8 +1544,14 @@ export class TenementService {
       tenement_type,
       selling_price_min,
       selling_price_max,
-      rent_price_min,
-      rent_price_max,
+      inside_rating_max,
+      inside_rating_min,
+      total_rating_max,
+      total_rating_min,
+      public_building_max,
+      public_building_min,
+      management_fee_max,
+      management_fee_min,
       floor_min,
       floor_max,
     } = query;
@@ -1561,7 +1567,6 @@ if (selling_price_min !== undefined && selling_price_max === undefined) {
     gte: parseFloat(selling_price_min),
   };
 }
-
 // 如果只提供了最大值
 if (selling_price_min === undefined && selling_price_max !== undefined) {
   console.log('selling_price_max', selling_price_max)
@@ -1584,12 +1589,29 @@ if (selling_price_min !== undefined && selling_price_max !== undefined) {
         lte: parseInt(floor_max),
       };
     }
-    if (rent_price_min !== undefined && rent_price_max !== undefined) {
-      whereClauseTenementCreate.rent_price = {
-        gte: parseFloat(rent_price_min),
-        lte: parseFloat(rent_price_max),
+    if (inside_rating_min !== undefined && inside_rating_max !== undefined) {
+      whereClauseTenementCreate.inside_rating = {
+        gte: parseFloat(inside_rating_min),
+        lte: parseFloat(inside_rating_max),
       };
     }
+    if (total_rating_min !== undefined && total_rating_max !== undefined) {
+      whereClauseTenementCreate.total_rating = {
+        gte: parseFloat(total_rating_min),
+        lte: parseFloat(total_rating_max),
+      };
+    }
+    if (public_building_min !== undefined && public_building_max !== undefined) {
+      whereClauseTenementCreate.public_building = {
+        gte: parseFloat(public_building_min),
+        lte: parseFloat(public_building_max),
+      };
+    }
+    if (management_fee_min !== undefined && management_fee_max !== undefined) {
+      whereClauseTenementCreate.management_fee = {
+        gte: parseFloat(management_fee_min),
+        lte: parseFloat(management_fee_max),
+      };
   
     // 关联到 Tenement 的条件
     if (tenement_address) {
@@ -1651,134 +1673,163 @@ if (selling_price_min !== undefined && selling_price_max !== undefined) {
       throw new InternalServerErrorException(error.message);
     }
   }
+  }
   
   async getFilteredTenementRents(
     isadmin: boolean,
     userId: number,
-    query: TenementRentQueryDto,
-  ) {
-    const whereClause: any = {};
-
-    // 添加基础过滤条件
-    if (query.tenement_address) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        Tenement: {
-          ...whereClause['Tenement_Create']?.Tenement,
-          tenement_address: { contains: query.tenement_address },
-        },
+    query,
+  ): Promise<{ message: string; data: TenementRentQueryDto[] }> {
+  
+    const {
+      tenement_address,
+      tenement_product_type,
+      tenement_status,
+      tenement_face,
+      tenement_type,
+      rent_price_min,
+      rent_price_max,
+      inside_rating_min,
+      inside_rating_max,
+      floor_min,
+      floor_max,
+      total_rating_min,
+      total_rating_max,
+      public_building_min,
+      public_building_max,
+      management_fee_min,
+      management_fee_max,
+    } = query;
+  
+    const whereClauseTenementCreate: any = {};
+    const whereClauseTenement: any = {};
+  
+    // 构建Tenement_Create筛选条件
+    if (rent_price_min !== undefined && rent_price_max === undefined) {
+      whereClauseTenementCreate.rent_price = {
+        gte: parseFloat(rent_price_min),
       };
     }
-    if (query.tenement_product_type) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        Tenement: {
-          ...whereClause['Tenement_Create']?.Tenement,
-          tenement_product_type: { equals: query.tenement_product_type },
-        },
+    if (rent_price_min === undefined && rent_price_max !== undefined) {
+      whereClauseTenementCreate.rent_price = {
+        lte: parseFloat(rent_price_max),
       };
     }
-    if (query.tenement_status) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        Tenement: {
-          ...whereClause['Tenement_Create']?.Tenement,
-          tenement_status: { equals: query.tenement_status },
-        },
+    if (rent_price_min !== undefined && rent_price_max !== undefined) {
+      whereClauseTenementCreate.rent_price = {
+        gte: parseFloat(rent_price_min),
+        lte: parseFloat(rent_price_max),
       };
     }
-    if (
-      query.selling_price_min !== undefined &&
-      query.selling_price_max !== undefined
-    ) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        selling_price: {
-          gte: query.selling_price_min,
-          lte: query.selling_price_max,
-        },
-      };
-    }
-    if (
-      query.total_rating_min !== undefined &&
-      query.total_rating_max !== undefined
-    ) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        total_rating: {
-          gte: query.total_rating_min,
-          lte: query.total_rating_max,
-        },
-      };
+    if (floor_min !== undefined || floor_max !== undefined) {
+      whereClauseTenementCreate.tenement_floor = {};
+      if (floor_min !== undefined) {
+        whereClauseTenementCreate.tenement_floor.gte = parseInt(floor_min);
+      }
+      if (floor_max !== undefined) {
+        whereClauseTenementCreate.tenement_floor.lte = parseInt(floor_max);
+      }
     }
 
-    if (
-      query.public_building_min !== undefined &&
-      query.public_building_max !== undefined
-    ) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        public_building: {
-          gte: query.public_building_min,
-          lte: query.public_building_max,
-        },
-      };
-    }
-    if (query.floor_min !== undefined && query.floor_max !== undefined) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        tenement_floor: {
-          gte: query.floor_min,
-          lte: query.floor_max,
-        },
-      };
-    }
-    // 如果用户不是管理员，添加用户ID过滤条件
-    if (!isadmin) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        Tenement: {
-          ...whereClause['Tenement_Create']?.Tenement,
-          owner: userId,
-          is_deleted: false,
-        },
-      };
+
+    if (total_rating_min !== undefined || total_rating_max !== undefined) {
+      whereClauseTenementCreate.total_rating = {};
+      if (total_rating_min !== undefined) {
+        whereClauseTenementCreate.total_rating.gte = parseFloat(total_rating_min);
+      }
+      if (total_rating_max !== undefined) {
+        whereClauseTenementCreate.total_rating.lte = parseFloat(total_rating_max);
+      }
     }
 
-    try {
-      const tenementRents = await this.prisma.tenement_Rent.findMany({
-        where: whereClause,
-        include: {
-          Tenement_Create: {
-            include: {
-              Tenement: true,
-            },
-          },
-        },
-      });
-
-      const data = tenementRents.map((rent) => ({
-        tenement_id: rent.tenement_id,
-        tenement_address: rent.Tenement_Create.Tenement.tenement_address,
-        tenement_face: rent.Tenement_Create.Tenement.tenement_face,
-        tenement_status: rent.Tenement_Create.Tenement.tenement_status,
-        tenement_type: rent.Tenement_Create.Tenement.tenement_type,
-        tenement_product_type:
-        rent.Tenement_Create.Tenement.tenement_product_type,
-        management_fee_bottom: rent.Tenement_Create.management_fee,
-        management_floor_bottom: rent.Tenement_Create.tenement_floor,
-        rent: rent.Tenement_Create.rent_price,
-        Total_rating: rent.Tenement_Create.total_rating,
-        inside_rating: rent.Tenement_Create.inside_rating,
-        public_building: rent.Tenement_Create.public_building,
-        tenement_floor: rent.Tenement_Create.tenement_floor,
-      }));
-
-      return { message: 'Successfully retrieved the tenement rents', data };
-    } catch (error) {
-      throw new Error(
-        'Unable to fetch tenement rents due to an error: ' + error.message,
-      );
-    }
+if (public_building_min !== undefined || public_building_max !== undefined) {
+  whereClauseTenementCreate.public_building = {};
+  if (public_building_min !== undefined) {
+    whereClauseTenementCreate.public_building.gte = parseFloat(public_building_min);
   }
+  if (public_building_max !== undefined) {
+    whereClauseTenementCreate.public_building.lte = parseFloat(public_building_max);
+  }
+}
+
+if (inside_rating_min !== undefined || inside_rating_max !== undefined) {
+  whereClauseTenementCreate.inside_rating = {};
+  if (inside_rating_min !== undefined) {
+    whereClauseTenementCreate.inside_rating.gte = parseFloat(inside_rating_min);
+  }
+  if (inside_rating_max !== undefined) {
+    whereClauseTenementCreate.inside_rating.lte = parseFloat(inside_rating_max);
+  }
+}
+
+if (management_fee_min !== undefined || management_fee_max !== undefined) {
+  whereClauseTenementCreate.management_fee = {};
+  if (management_fee_min !== undefined) {
+    whereClauseTenementCreate.management_fee.gte = parseFloat(management_fee_min);
+  }
+  if (management_fee_max !== undefined) {
+    whereClauseTenementCreate.management_fee.lte = parseFloat(management_fee_max);
+}
+
+// 构建Tenement筛选条件
+if (tenement_address) {
+  whereClauseTenement.tenement_address = { contains: tenement_address };
+}
+if (tenement_product_type) {
+  whereClauseTenement.tenement_product_type = { equals: tenement_product_type };
+}
+if (tenement_status) {
+  whereClauseTenement.tenement_status = { equals: tenement_status };
+}
+if (tenement_face) {
+  whereClauseTenement.tenement_face = { equals: tenement_face };
+}
+if (tenement_type) {
+  whereClauseTenement.tenement_type = { equals: tenement_type };
+}
+
+// 非管理员条件
+if (!isadmin) {
+  whereClauseTenement.owner = userId;
+  whereClauseTenement.is_deleted = false;
+}
+
+try {
+  const tenementRents = await this.prisma.tenement_Rent.findMany({
+    where: {
+      AND: [
+        { Tenement_Create: whereClauseTenementCreate },
+        { Tenement_Create: { Tenement: whereClauseTenement } },
+      ],
+    },
+    include: {
+      Tenement_Create: {
+        include: {
+          Tenement: true,
+        },
+      },
+    },
+  });
+
+  const data = tenementRents.map(rent => ({
+    tenement_id: rent.tenement_id,
+    tenement_address: rent.Tenement_Create.Tenement.tenement_address,
+    tenement_face: rent.Tenement_Create.Tenement.tenement_face,
+    tenement_status: rent.Tenement_Create.Tenement.tenement_status,
+    tenement_type: rent.Tenement_Create.Tenement.tenement_type,
+    tenement_product_type: rent.Tenement_Create.Tenement.tenement_product_type,
+    management_fee_bottom: rent.Tenement_Create.management_fee,
+    tenement_floor: rent.Tenement_Create.tenement_floor,
+    rent_price: rent.Tenement_Create.rent_price,
+    total_rating: rent.Tenement_Create.total_rating,
+    inside_rating: rent.Tenement_Create.inside_rating,
+    public_building: rent.Tenement_Create.public_building,
+  }));
+
+  return { message: 'Successfully retrieved tenement rents', data };
+} catch (error) {
+  throw new Error('Unable to fetch tenement rents due to an error: ' + error.message);
+}
+}
+}
 }

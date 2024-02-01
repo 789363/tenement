@@ -48,7 +48,7 @@ export class TenementController {
     description: 'Successfully retrieved tenements.',
   })
   @ApiResponse({ status: 404, description: 'Tenement not found' })
-  async getAllTenements(@Request() req, @Query() query: TenementQueryDto) {
+  async getAllTenements(@Request() req, @Query() query: TenementQueryDto){
     const userisadmin = req.user.isadmin;
     const hasQueryParams = Object.keys(query).length > 0;
     console.log(userisadmin)

@@ -8,10 +8,10 @@ export class TenementRentQueryDto {
   tenement_address?: string;
 
   @ApiPropertyOptional({ description: 'Style of the tenement', enum: ['辦公室', '店面', '套房', '其他'] })
-  tenement_product_type?: '辦公室' | '店面' | '套房' | '其他';
+  tenement_product_type?: string;
 
   @ApiPropertyOptional({ description: 'Status of the tenement', enum: ['已成交', '未成交', '已退租下架', '過戶完成下架'] })
-  tenement_status?: '已成交' | '未成交' | '已退租下架' | '過戶完成下架';
+  tenement_status?: string;
 
   @ApiPropertyOptional({ description: 'Facing of the tenement' }) // 添加具体朝向选项
   tenement_face?: string;
@@ -23,10 +23,10 @@ export class TenementRentQueryDto {
   floor_max?: number;
 
   @ApiPropertyOptional({ description: 'Minimum selling price' })
-  selling_price_min?: number;
+  rent_price_min?: number;
 
   @ApiPropertyOptional({ description: 'Maximum selling price' })
-  selling_price_max?: number;
+  rent_price_max?: number;
 
   @ApiPropertyOptional({ description: 'Minimum management fee' })
   management_fee_min?: number;
