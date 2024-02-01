@@ -24,7 +24,8 @@ export class TenementService {
 
   async getAllTenements(): Promise<{ message: string; data: any[] }> {
     const tenements = await this.prisma.tenement.findMany();
-    console.log(tenements)
+    console.log(tenements);
+  
     type TenementWithFeeAndFloor = {
       tenement_id: number;
       tenement_address: string;
@@ -32,7 +33,7 @@ export class TenementService {
       tenement_product_type: string;
       tenement_type: string;
       management_fee: number | null;
-      tenement_floor: number | null;
+      tenement_floor: number | null; // 添加的字段
       tenement_status: string,
     };
   
@@ -56,13 +57,15 @@ export class TenementService {
             tenement_product_type: cur.tenement_product_type,
             tenement_type: cur.tenement_type,
             management_fee: tenementCreate ? tenementCreate.management_fee : marketTenement ? marketTenement.burget_rent_max : null,
+            tenement_floor: tenementCreate ? tenementCreate.tenement_floor : marketTenement ? marketTenement.burget_rent_max : null, // 获取floor属性
             tenement_status: cur.tenement_status,
           };
         }),
       )
     )
     .filter(tenement => tenement !== null) as TenementWithFeeAndFloor[];
-      console.log(tenementWithFeeAndFloor)
+    console.log(tenementWithFeeAndFloor);
+  
     return {
       message: 'Successfully get the tenements',
       data: tenementWithFeeAndFloor.map((t) => ({
@@ -72,7 +75,8 @@ export class TenementService {
         tenement_status: t.tenement_status,
         tenement_type: t.tenement_type,
         tenement_product_type: t.tenement_product_type,
-        management_fee_bottom: t.management_fee,
+        management_fee: t.management_fee,
+        management_floor_bottom: t.tenement_floor, // 包含在响应中
       })),
     };
   }
@@ -81,10 +85,7 @@ export class TenementService {
     const tenements = await this.prisma.tenement.findMany({
       where: { owner: userId, is_deleted: false },
     });
-    console.log(tenements)
-    if (!tenements || tenements.length === 0) {
-      throw new NotFoundException('Tenements not found.');
-    }
+    console.log(tenements);
   
     type TenementWithFeeAndFloor = {
       tenement_id: number;
@@ -93,7 +94,7 @@ export class TenementService {
       tenement_product_type: string;
       tenement_type: string;
       management_fee: number | null;
-      tenement_floor: number | null;
+      tenement_floor: number | null; // 添加的字段
       tenement_status: string,
     };
   
@@ -109,6 +110,16 @@ export class TenementService {
           });
   
           if (!tenementCreate && !marketTenement) return null;
+  
+          // 假设从tenementCreate或marketTenement获取floor信息
+          // 注意: 根据你的数据库模型调整这里的逻辑
+          let tenement_floor = null;
+          if (tenementCreate && tenementCreate.tenement_floor !== undefined) {
+            tenement_floor = tenementCreate.tenement_floor;
+          } else if (marketTenement && marketTenement.hopefloor_max !== undefined) {
+            tenement_floor = marketTenement.hopefloor_max;
+          }
+  
           return {
             tenement_id: cur.id,
             tenement_address: cur.tenement_address,
@@ -116,12 +127,14 @@ export class TenementService {
             tenement_product_type: cur.tenement_product_type,
             tenement_type: cur.tenement_type,
             management_fee: tenementCreate ? tenementCreate.management_fee : marketTenement ? marketTenement.burget_rent_max : null,
+            tenement_floor: tenement_floor, // 设置floor值
             tenement_status: cur.tenement_status,
           };
         }),
       )
     )
     .filter(tenement => tenement !== null) as TenementWithFeeAndFloor[];
+    console.log(tenementWithFeeAndFloor);
   
     return {
       message: 'Successfully get the tenements',
@@ -132,7 +145,8 @@ export class TenementService {
         tenement_status: t.tenement_status,
         tenement_type: t.tenement_type,
         tenement_product_type: t.tenement_product_type,
-        management_fee_bottom: t.management_fee,
+        management_fee: t.management_fee,
+        management_floor_bottom: t.tenement_floor, // 包含在响应中
       })),
     };
   }
@@ -1522,118 +1536,93 @@ export class TenementService {
     userId: number,
     query,
   ): Promise<{ message: string; data: GetTenementSellsFilterDto[] }> {
-    const whereClause: any = {};
+  
+    const {
+      tenement_address,
+      tenement_product_type,
+      tenement_status,
+      tenement_face,
+      tenement_type,
+      selling_price_min,
+      selling_price_max,
+      rent_price_min,
+      rent_price_max,
+      floor_min,
+      floor_max,
+    } = query;
+  
+    const whereClauseTenementCreate: any = {};
+    const whereClauseTenement: any = {};
+    console.log(selling_price_min, selling_price_max)
+    // 直接关联到 Tenement_Create 的条件
+// 如果只提供了最小值
+if (selling_price_min !== undefined && selling_price_max === undefined) {
+  console.log('selling_price_min', selling_price_min)
+  whereClauseTenementCreate.selling_price = {
+    gte: parseFloat(selling_price_min),
+  };
+}
 
-    // 添加基础过滤条件
-    if (query.tenement_address) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        Tenement: {
-          ...whereClause['Tenement_Create']?.Tenement,
-          tenement_address: { contains: query.tenement_address },
-        },
-      };
-    }
-    if (query.tenement_product_type) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        Tenement: {
-          ...whereClause['Tenement_Create']?.Tenement,
-          tenement_product_type: { equals: query.tenement_product_type },
-        },
-      };
-    }
-    if (query.tenement_status) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        Tenement: {
-          ...whereClause['Tenement_Create']?.Tenement,
-          tenement_status: { equals: query.tenement_status },
-        },
-      };
-    }
-    if (query.tenement_face) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        Tenement: {
-          ...whereClause['Tenement_Create']?.Tenement,
-          tenement_face: { equals: query.tenement_face },
-        },
-      };
-    }
-    if (query.tenement_type) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        Tenement: {
-          ...whereClause['Tenement_Create']?.Tenement,
-          tenement_type: { equals: query.tenement_type },
-        },
-      };
-    }
+// 如果只提供了最大值
+if (selling_price_min === undefined && selling_price_max !== undefined) {
+  console.log('selling_price_max', selling_price_max)
+  whereClauseTenementCreate.selling_price = {
+    lte: parseFloat(selling_price_max),
+  };
+}
 
-    // 范围查询
-    if (
-      query.selling_price_min !== undefined &&
-      query.selling_price_max !== undefined
-    ) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        selling_price: {
-          gte: parseFloat(query.selling_price_min),
-          lte: parseFloat(query.selling_price_max),
-        },
+// 如果同时提供了最小值和最大值
+if (selling_price_min !== undefined && selling_price_max !== undefined) {
+  console.log('selling_price_min123', selling_price_min,selling_price_max)
+  whereClauseTenementCreate.selling_price = {
+    gte: parseFloat(selling_price_min),
+    lte: parseFloat(selling_price_max),
+  };
+}
+    if (floor_min !== undefined && floor_max !== undefined) {
+      whereClauseTenementCreate.tenement_floor = {
+        gte: parseInt(floor_min),
+        lte: parseInt(floor_max),
       };
     }
-    if (
-      query.total_rating_min !== undefined &&
-      query.total_rating_max !== undefined
-    ) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        total_rating: {
-          gte: parseFloat(query.total_rating_min),
-          lte: parseFloat(query.total_rating_max),
-        },
+    if (rent_price_min !== undefined && rent_price_max !== undefined) {
+      whereClauseTenementCreate.rent_price = {
+        gte: parseFloat(rent_price_min),
+        lte: parseFloat(rent_price_max),
       };
     }
-
-    if (
-      query.public_building_min !== undefined &&
-      query.public_building_max !== undefined
-    ) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        public_building: {
-          gte: parseFloat(query.public_building_min),
-          lte: parseFloat(query.public_building_max),
-        },
-      };
+  
+    // 关联到 Tenement 的条件
+    if (tenement_address) {
+      whereClauseTenement.tenement_address = { contains: tenement_address };
     }
-    if (query.floor_min !== undefined && query.floor_max !== undefined) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        tenement_floor: {
-          gte: parseInt(query.floor_min),
-          lte: parseInt(query.floor_max),
-        },
-      };
+    if (tenement_product_type) {
+      whereClauseTenement.tenement_product_type = { equals: tenement_product_type };
     }
-    console.log('Constructed whereClause:', whereClause);
+    if (tenement_status) {
+      whereClauseTenement.tenement_status = { equals: tenement_status };
+    }
+    if (tenement_face) {
+      whereClauseTenement.tenement_face = { equals: tenement_face };
+    }
+    if (tenement_type) {
+      whereClauseTenement.tenement_type = { equals: tenement_type };
+    }
+  
     // 如果用户不是管理员，添加用户ID过滤条件
     if (!isadmin) {
-      whereClause['Tenement_Create'] = {
-        ...whereClause['Tenement_Create'],
-        Tenement: {
-          ...whereClause['Tenement_Create']?.Tenement,
-          owner: userId,
-          is_deleted: false,
-        },
-      };
+      whereClauseTenement.owner = userId;
+      whereClauseTenement.is_deleted = false;
     }
-
+  
     try {
       const tenementSells = await this.prisma.tenement_Sell.findMany({
-        where: whereClause,
+        where: {
+          AND: [
+            { Tenement_Create: whereClauseTenementCreate },
+            { Tenement_Create: { Tenement: whereClauseTenement } }
+          ],
+        },
         include: {
           Tenement_Create: {
             include: {
@@ -1642,29 +1631,28 @@ export class TenementService {
           },
         },
       });
-
-      const data = tenementSells.map((sell) => ({
+  
+      const data = tenementSells.map(sell => ({
         tenement_id: sell.tenement_id,
         tenement_address: sell.Tenement_Create.Tenement.tenement_address,
         tenement_face: sell.Tenement_Create.Tenement.tenement_face,
         tenement_status: sell.Tenement_Create.Tenement.tenement_status,
         tenement_type: sell.Tenement_Create.Tenement.tenement_type,
-        tenement_product_type:
-          sell.Tenement_Create.Tenement.tenement_product_type,
-        management_fee_bottom: sell.Tenement_Create.management_fee,
+        tenement_product_type: sell.Tenement_Create.Tenement.tenement_product_type,
+        management_fee_bottom: sell.Tenement_Create.management_fee, 
         management_floor_bottom: sell.Tenement_Create.tenement_floor,
         selling_price: sell.Tenement_Create.selling_price,
-        Total_rating: sell.Tenement_Create.total_rating,
+        total_rating: sell.Tenement_Create.total_rating,
         inside_rating: sell.Tenement_Create.inside_rating,
         public_building: sell.Tenement_Create.public_building,
-        tenement_floor: sell.Tenement_Create.tenement_floor,
       }));
-
-      return { message: 'Successfully update the media', data };
+  
+      return { message: 'Successfully retrieved tenement sells', data };
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException(error.message);
     }
   }
+  
 
   async getFilteredTenementRents(
     isadmin: boolean,
