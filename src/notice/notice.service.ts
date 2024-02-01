@@ -74,51 +74,64 @@ export class NoticeService {
       | UpdateCollectionNoticeDto[]
       | UpdateTenementNoticeDto[],
   ) {
+
+    type UpdateCollectionNotice = {
+      id: string;
+      visitDate: string;
+      record: string;
+      remindDate: string;
+      remind: string;
+    }
+
     try {
-      await Promise.all(
-        noticeDataArray.map(async (noticeData) => {
-          if (type === 'collection') {
-            if (noticeData.isNew) {
-              delete noticeData.isNew;
-              await this.prisma.collection_Notice.create({
-                data: noticeData as CreateCollectionNoticeDto,
-              });
-            } else {
-              await this.prisma.collection_Notice.update({
-                where: { id: parseInt(noticeData.id) },
-                data: {
-                  visitDate: noticeData.visitDate,
-                  record: noticeData.record,
-                  remindDate: noticeData.remindDate,
-                  remind: noticeData.remind,
-                },
-              });
-            }
-          } else if (
-            type === 'market' ||
-            type === 'develop' ||
-            type === 'sell' ||
-            type === 'rent'
-          ) {
-            if (noticeData.isNew) {
-              delete noticeData.isNew;
-              await this.prisma.tenement_Notice.create({
-                data: noticeData as CreateTenementNoticeDto,
-              });
-            } else {
-              await this.prisma.tenement_Notice.update({
-                where: { id: parseInt(noticeData.id) },
-                data: {
-                  visitDate: noticeData.visitDate,
-                  record: noticeData.record,
-                  remindDate: noticeData.remindDate,
-                  remind: noticeData.remind,
-                },
-              });
-            }
+      for (const noticeData of noticeDataArray) {
+        if (type === 'collection') {
+          if (noticeData.isNew) {
+            const { isNew, ...createNoticeData } = noticeData;
+            await this.prisma.collection_Notice.create({
+              data: createNoticeData as CreateCollectionNoticeDto,
+            });
+          } else {
+
+      
+            const updateNoticeData = noticeData as UpdateCollectionNotice;
+            
+            await this.prisma.collection_Notice.update({
+              where: { id: parseInt(updateNoticeData.id) },
+              data: {
+                visitDate: updateNoticeData.visitDate,
+                record: updateNoticeData.record,
+                remindDate: updateNoticeData.remindDate,
+                remind: updateNoticeData.remind,
+              },
+            });
           }
-        }),
-      );
+        } else if (
+          type === 'market' ||
+          type === 'develop' ||
+          type === 'sell' ||
+          type === 'rent'
+        ) {
+          if (noticeData.isNew) {
+            const { isNew, ...createNoticeData } = noticeData;
+            await this.prisma.tenement_Notice.create({
+              data: createNoticeData as CreateTenementNoticeDto,
+            });
+          } else {
+            const updateNoticeData = noticeData as UpdateCollectionNotice;
+
+            await this.prisma.tenement_Notice.update({
+              where: { id: parseInt(updateNoticeData.id) },
+              data: {
+                visitDate: updateNoticeData.visitDate,
+                record: updateNoticeData.record,
+                remindDate: updateNoticeData.remindDate,
+                remind: updateNoticeData.remind,
+              },
+            });
+          }
+        }
+      }
       return { message: 'notices updated' };
     } catch (error) {
       throw new InternalServerErrorException(
