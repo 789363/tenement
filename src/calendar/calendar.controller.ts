@@ -112,14 +112,13 @@ export class CalendarController {
     @Request() req,
   ) {
     const userisadmin = req.user.isadmin;
-    const UserId = req.user.sub;
+    const UserId = req.user.userId;
     const collectionData = await this.calendarService.getCollectionByYearMonth(
       year,
       month,
       userisadmin,
       UserId
     );
-
     type IOrganizedDayjsData = {
       day: number;
       events: {
