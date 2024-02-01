@@ -75,7 +75,7 @@ export class TenementService {
         tenement_status: t.tenement_status,
         tenement_type: t.tenement_type,
         tenement_product_type: t.tenement_product_type,
-        management_fee: t.management_fee,
+        management_fee_bottom: t.management_fee,
         management_floor_bottom: t.tenement_floor, // 包含在响应中
       })),
     };
@@ -145,7 +145,7 @@ export class TenementService {
         tenement_status: t.tenement_status,
         tenement_type: t.tenement_type,
         tenement_product_type: t.tenement_product_type,
-        management_fee: t.management_fee,
+        management_fee_bottom: t.management_fee,
         management_floor_bottom: t.tenement_floor, // 包含在响应中
       })),
     };
