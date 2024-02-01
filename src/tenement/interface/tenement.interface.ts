@@ -8,5 +8,5 @@ export interface WhereClause {
   selling_price?: { gte: number; lte: number };
   rent_price?: { gte: number; lte: number };
   tenement_floor?: { gte: number; lte: number };
-  userId?: { equals: number };
+  owner?: { equals: number };
 }
