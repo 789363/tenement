@@ -56,8 +56,8 @@ export class TenementService {
             tenement_face: cur.tenement_face,
             tenement_product_type: cur.tenement_product_type,
             tenement_type: cur.tenement_type,
-            management_fee: tenementCreate ? tenementCreate.management_fee : marketTenement ? marketTenement.burget_rent_max : null,
-            tenement_floor: tenementCreate ? tenementCreate.tenement_floor : marketTenement ? marketTenement.burget_rent_max : null, // 获取floor属性
+            management_fee: tenementCreate ? tenementCreate.management_fee : marketTenement ? marketTenement.burget_rent_min : null,
+            tenement_floor: tenementCreate ? tenementCreate.tenement_floor : marketTenement ? marketTenement.burget_rent_min : null, // 获取floor属性
             tenement_status: cur.tenement_status,
           };
         }),
@@ -116,8 +116,8 @@ export class TenementService {
           let tenement_floor = null;
           if (tenementCreate && tenementCreate.tenement_floor !== undefined) {
             tenement_floor = tenementCreate.tenement_floor;
-          } else if (marketTenement && marketTenement.hopefloor_max !== undefined) {
-            tenement_floor = marketTenement.hopefloor_max;
+          } else if (marketTenement && marketTenement.hopefloor_min !== undefined) {
+            tenement_floor = marketTenement.hopefloor_min;
           }
   
           return {
@@ -126,8 +126,8 @@ export class TenementService {
             tenement_face: cur.tenement_face,
             tenement_product_type: cur.tenement_product_type,
             tenement_type: cur.tenement_type,
-            management_fee: tenementCreate ? tenementCreate.management_fee : marketTenement ? marketTenement.burget_rent_max : null,
-            tenement_floor: tenement_floor, // 设置floor值
+            management_fee: tenementCreate ? tenementCreate.management_fee : marketTenement ? marketTenement.burget_rent_min : null,
+            tenement_floor: tenement_floor,
             tenement_status: cur.tenement_status,
           };
         }),
@@ -146,7 +146,7 @@ export class TenementService {
         tenement_type: t.tenement_type,
         tenement_product_type: t.tenement_product_type,
         management_fee_bottom: t.management_fee,
-        management_floor_bottom: t.tenement_floor, // 包含在响应中
+        management_floor_bottom: t.tenement_floor, 
       })),
     };
   }
@@ -1444,7 +1444,6 @@ export class TenementService {
       data
     };
   }
-  
 
   async getFilteredTenementsForUser(
     query,
@@ -1653,7 +1652,6 @@ if (selling_price_min !== undefined && selling_price_max !== undefined) {
     }
   }
   
-
   async getFilteredTenementRents(
     isadmin: boolean,
     userId: number,
