@@ -1639,9 +1639,9 @@ if (selling_price_min !== undefined && selling_price_max !== undefined) {
         tenement_type: sell.Tenement_Create.Tenement.tenement_type,
         tenement_product_type: sell.Tenement_Create.Tenement.tenement_product_type,
         management_fee_bottom: sell.Tenement_Create.management_fee, 
-        management_floor_bottom: sell.Tenement_Create.tenement_floor,
+        tenement_floor: sell.Tenement_Create.tenement_floor,
         selling_price: sell.Tenement_Create.selling_price,
-        total_rating: sell.Tenement_Create.total_rating,
+        Total_rating: sell.Tenement_Create.total_rating,
         inside_rating: sell.Tenement_Create.inside_rating,
         public_building: sell.Tenement_Create.public_building,
       }));
