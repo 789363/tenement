@@ -48,26 +48,24 @@ export class TenementController {
     description: 'Successfully retrieved tenements.',
   })
   @ApiResponse({ status: 404, description: 'Tenement not found' })
-
-  // ... 其他查询参数
   async getAllTenements(@Request() req, @Query() query: TenementQueryDto) {
     const userisadmin = req.user.isadmin;
     const hasQueryParams = Object.keys(query).length > 0;
-
+    console.log(req.user.userId)
     if (hasQueryParams) {
       if (userisadmin === true) {
         return this.tenementService.getFilteredTenements(query);
       } else {
         return this.tenementService.getFilteredTenementsForUser(
           query,
-          req.user.sub,
+          req.user.userId,
         );
       }
     } else {
       if (userisadmin === true) {
         return this.tenementService.getAllTenements();
       } else {
-        return this.tenementService.getTenementsByUserId(req.user.sub);
+        return this.tenementService.getTenementsByUserId(req.user.userId);
       }
     }
   }
