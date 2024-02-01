@@ -1630,7 +1630,7 @@ if (selling_price_min !== undefined && selling_price_max !== undefined) {
           },
         },
       });
-  
+      console.log( tenementSells)
       const data = tenementSells.map(sell => ({
         tenement_id: sell.tenement_id,
         tenement_address: sell.Tenement_Create.Tenement.tenement_address,
