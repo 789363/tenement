@@ -112,7 +112,7 @@ model Tenement_Create {
   tenement_host_birthday           String
   tenement_host_hobby              String
   tenement_host_remark             String
-  deposit_price                    Int
+  deposit_price                    Int?
   selling_price                    Int?
   rent_price                       Int?
   createdAt                        DateTime           @default(now())

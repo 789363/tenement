@@ -265,7 +265,6 @@ export class TenementService {
       management_fee: tenementSell.Tenement_Create.management_fee,
       selling_price: tenementSell.Tenement_Create.selling_price,
       rent_price: tenementSell.Tenement_Create.rent_price,
-      deposit_price: tenementSell.Tenement_Create.deposit_price,
       tenement_floor: tenementSell.Tenement_Create.tenement_floor,
       tenement_host_name: tenementSell.Tenement_Create.tenement_host_name,
       tenement_host_telphone:
@@ -747,7 +746,6 @@ export class TenementService {
           affiliated_building: rest.affiliated_building,
           public_building: rest.public_building,
           unregistered_area: rest.unregistered_area,
-          deposit_price: rest.deposit_price,
           management_magnification: rest.management_magnification,
           management_fee: rest.management_fee,
           tenement_floor: rest.tenement_floor,
