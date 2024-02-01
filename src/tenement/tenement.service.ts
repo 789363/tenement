@@ -587,6 +587,7 @@ export class TenementService {
           inside_rating: rest.main_building + rest.affiliated_building,
           affiliated_building: rest.affiliated_building,
           public_building: rest.public_building,
+          deposit_price: rest.deposit_price,
           unregistered_area: rest.unregistered_area,
           management_magnification: rest.management_magnification,
           management_fee: rest.management_fee,
@@ -746,6 +747,7 @@ export class TenementService {
           affiliated_building: rest.affiliated_building,
           public_building: rest.public_building,
           unregistered_area: rest.unregistered_area,
+          deposit_price: rest.deposit_price,
           management_magnification: rest.management_magnification,
           management_fee: rest.management_fee,
           tenement_floor: rest.tenement_floor,
@@ -1020,7 +1022,6 @@ export class TenementService {
           hopefloor_max: createTenementMarketDto.hopefloor_max,
           hopefloor_min: createTenementMarketDto.hopefloor_min,
           market_state: createTenementMarketDto.market_state,
-          // 其他 Tenement_Market 的相关字段...
         },
       });
     }
