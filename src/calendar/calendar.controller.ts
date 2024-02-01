@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Controller, Get, Param, UseGuards, Request } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -8,7 +9,6 @@ import {
 import { CalendarService } from './calendar.service';
 import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard';
-import { log } from 'console';
 @ApiTags('calendar')
 @Controller('calendar')
 export class CalendarController {
@@ -57,24 +57,39 @@ export class CalendarController {
       }[];
     };
 
-    const mergedNotices: IOrganizedDayjsData[] = Array.from({ length: thisMonthDays }).map((_, thisDay) => {
-      const tenementNotice = tenementNotices.find((tenementNotice) => tenementNotice.day === thisDay);
-      const collectionNotice = collectionNotices.find((collectionNotice) => collectionNotice.day === thisDay);
+    const mergedNotices: IOrganizedDayjsData[] = Array.from({
+      length: thisMonthDays,
+    })
+      .map((_, thisDay) => {
+        const tenementNotice = tenementNotices.find(
+          (tenementNotice) => tenementNotice.day === thisDay,
+        );
+        const collectionNotice = collectionNotices.find(
+          (collectionNotice) => collectionNotice.day === thisDay,
+        );
 
-      const tenementNoticeEvents = tenementNotice ? tenementNotice.events : [];
-      const collectionNoticeEvents = collectionNotice ? collectionNotice.events : [];
+        const tenementNoticeEvents = tenementNotice
+          ? tenementNotice.events
+          : [];
+        const collectionNoticeEvents = collectionNotice
+          ? collectionNotice.events
+          : [];
 
-      const thisDayEvents = [...tenementNoticeEvents, ...collectionNoticeEvents];
+        const thisDayEvents = [
+          ...tenementNoticeEvents,
+          ...collectionNoticeEvents,
+        ];
 
-      if (thisDayEvents.length === 0) {
-        return null
-      }
-      
-      return {
-        day: thisDay,
-        events: thisDayEvents
-      }
-    }).filter((item) => item !== null);
+        if (thisDayEvents.length === 0) {
+          return null;
+        }
+
+        return {
+          day: thisDay,
+          events: thisDayEvents,
+        };
+      })
+      .filter((item) => item !== null);
 
     return {
       message: 'Successfully retrieved the calendar events',
@@ -97,11 +112,12 @@ export class CalendarController {
     @Request() req,
   ) {
     const userisadmin = req.user.isadmin;
-
+    const UserId = req.user.sub;
     const collectionData = await this.calendarService.getCollectionByYearMonth(
       year,
       month,
       userisadmin,
+      UserId
     );
 
     type IOrganizedDayjsData = {

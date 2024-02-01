@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 
@@ -70,22 +71,28 @@ export class CalendarService {
   }
 
   async getCollectionByYearMonth(
-    yaer: number,
+    year: number,
     month: number,
     isAdmin: boolean,
+    UserId: number
   ) {
-    const yearStr = yaer.toString();
+    const yearStr = year.toString();
     const monthStr = month.toString().padStart(2, '0');
-
+  
     const collections = await this.prisma.collection.findMany({
       where: {
-        collection_date: {
-          startsWith: `${yearStr}-${monthStr}`,
-        },
-        is_deleted: isAdmin ? undefined : false,
+        AND: [
+          {
+            collection_date: {
+              startsWith: `${yearStr}-${monthStr}`,
+            },
+          },
+          isAdmin ? {} : { is_deleted: false },
+          isAdmin ? {} : { owner: UserId },
+        ],
       },
     });
-
+  
     return {
       message: 'Successfully retrieved the collection',
       data: collections,
