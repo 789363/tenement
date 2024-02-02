@@ -23,8 +23,6 @@ export class TenementService {
 
   async getAllTenements(): Promise<{ message: string; data: any[] }> {
     const tenements = await this.prisma.tenement.findMany();
-    console.log(tenements);
-  
     type TenementWithFeeAndFloor = {
       tenement_id: number;
       tenement_address: string;
@@ -63,7 +61,6 @@ export class TenementService {
       )
     )
     .filter(tenement => tenement !== null) as TenementWithFeeAndFloor[];
-    console.log(tenementWithFeeAndFloor);
   
     return {
       message: 'Successfully get the tenements',
@@ -84,8 +81,6 @@ export class TenementService {
     const tenements = await this.prisma.tenement.findMany({
       where: { owner: userId, is_deleted: false },
     });
-    console.log(tenements);
-  
     type TenementWithFeeAndFloor = {
       tenement_id: number;
       tenement_address: string;
@@ -133,8 +128,7 @@ export class TenementService {
       )
     )
     .filter(tenement => tenement !== null) as TenementWithFeeAndFloor[];
-    console.log(tenementWithFeeAndFloor);
-  
+
     return {
       message: 'Successfully get the tenements',
       data: tenementWithFeeAndFloor.map((t) => ({
@@ -1756,18 +1750,15 @@ return {
   
     const whereClauseTenementCreate: any = {};
     const whereClauseTenement: any = {};
-    console.log(selling_price_min, selling_price_max)
     // 直接关联到 Tenement_Create 的条件
 // 如果只提供了最小值
 if (selling_price_min !== undefined && selling_price_max === undefined) {
-  console.log('selling_price_min', selling_price_min)
   whereClauseTenementCreate.selling_price = {
     gte: parseFloat(selling_price_min),
   };
 }
 // 如果只提供了最大值
 if (selling_price_min === undefined && selling_price_max !== undefined) {
-  console.log('selling_price_max', selling_price_max)
   whereClauseTenementCreate.selling_price = {
     lte: parseFloat(selling_price_max),
   };
@@ -1775,7 +1766,6 @@ if (selling_price_min === undefined && selling_price_max !== undefined) {
 
 // 如果同时提供了最小值和最大值
 if (selling_price_min !== undefined && selling_price_max !== undefined) {
-  console.log('selling_price_min123', selling_price_min,selling_price_max)
   whereClauseTenementCreate.selling_price = {
     gte: parseFloat(selling_price_min),
     lte: parseFloat(selling_price_max),
@@ -1850,7 +1840,6 @@ if (selling_price_min !== undefined && selling_price_max !== undefined) {
           },
         },
       });
-      console.log( tenementSells)
       const data = tenementSells.map(sell => ({
         tenement_id: sell.tenement_id,
         tenement_address: sell.Tenement_Create.Tenement.tenement_address,

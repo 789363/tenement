@@ -55,7 +55,6 @@ export class TenementController {
       if (userisadmin === true) {
         return this.tenementService.getFilteredTenements(query);
       } else {
-        console.log('user')
         return this.tenementService.getFilteredTenementsForUser(
           query,
           req.user.userId,
