@@ -1867,7 +1867,7 @@ if (selling_price_min !== undefined && selling_price_max !== undefined) {
     userId: number,
     query,
   ): Promise<{ message: string; data: TenementRentQueryDto[] }> {
-  
+    
     const {
       tenement_address,
       tenement_product_type,
@@ -1957,6 +1957,7 @@ if (management_fee_min !== undefined || management_fee_max !== undefined) {
   if (management_fee_max !== undefined) {
     whereClauseTenementCreate.management_fee.lte = parseFloat(management_fee_max);
 }
+}
 
 // 构建Tenement筛选条件
 if (tenement_address) {
@@ -1980,6 +1981,7 @@ if (!isadmin) {
   whereClauseTenement.owner = userId;
   whereClauseTenement.is_deleted = false;
 }
+
 
 try {
   const tenementRents = await this.prisma.tenement_Rent.findMany({
@@ -2006,17 +2008,18 @@ try {
     tenement_type: rent.Tenement_Create.Tenement.tenement_type,
     tenement_product_type: rent.Tenement_Create.Tenement.tenement_product_type,
     management_fee_bottom: rent.Tenement_Create.management_fee,
+    management_floor_bottom: rent.Tenement_Create.tenement_floor,
     tenement_floor: rent.Tenement_Create.tenement_floor,
-    rent_price: rent.Tenement_Create.rent_price,
-    total_rating: rent.Tenement_Create.total_rating,
+    rent: rent.Tenement_Create.rent_price,
+    Total_rating: rent.Tenement_Create.total_rating,
     inside_rating: rent.Tenement_Create.inside_rating,
     public_building: rent.Tenement_Create.public_building,
   }));
-
+ 
   return { message: 'Successfully retrieved tenement rents', data };
 } catch (error) {
   throw new Error('Unable to fetch tenement rents due to an error: ' + error.message);
 }
-}
+
 }
 }
