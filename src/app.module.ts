@@ -1,5 +1,5 @@
 // src/app.module.ts
-import { Module, OnModuleInit } from '@nestjs/common';
+import { MiddlewareConsumer, Module, OnModuleInit } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -25,6 +25,7 @@ import { LocalStorageService } from './upload/LocalStorageService';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule } from '@nestjs/config';
 import { BackupService } from './backup/backup.service';
+import { AppLoggerMiddleware } from './common/AppLogger.middleware';
 @Module({
   imports: [
     UsersModule,
@@ -64,6 +65,11 @@ import { BackupService } from './backup/backup.service';
 })
 export class AppModule implements OnModuleInit {
   constructor(private usersService: UsersService) {} // 注入 UsersService
+
+  // 添加 AppLoggerMiddleware 到所有路由
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(AppLoggerMiddleware).forRoutes('*');
+  }
 
   async onModuleInit() {
     await new Promise((resolve) => setTimeout(resolve, 5000)); // 等待一段时间，以确保数据库表创建完毕
