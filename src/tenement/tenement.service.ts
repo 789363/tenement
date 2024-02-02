@@ -14,7 +14,6 @@ import { UpdateTenementSellDto } from './dto/update-sell.dto';
 import { UpdateTenementRentDto } from './dto/update-rent.dtp';
 import { UpdateTenementDevelopDto } from './dto/update-develop.dto';
 import { UpdateTenementMarketDto } from './dto/update-market.dto';
-import { GetTenementsFilterDto } from './dto/get-tenements-filter.dto';
 import { GetTenementSellsFilterDto } from './dto/get-sells-fillter.dto';
 import { TenementRentQueryDto } from './dto/get-rents-fillter.dto';
 
@@ -1532,7 +1531,7 @@ return {
   async getFilteredTenementsForUser(
     query,
     userId: number,
-  ): Promise<{message: string,data: GetTenementsFilterDto[]}> {
+  ): Promise<{message: string,data:any}> {
     const {
       tenement_address,
       tenement_product_type,
@@ -1546,15 +1545,14 @@ return {
       floor_min,
       floor_max,
     } = query;
-
+  
     const whereClauseTenement: any = {}; // 用于 Tenement 表
     const whereClauseCreate: any = {};   // 用于 Tenement_Create 表
     const whereClauseMarketCreate: any = {};   // 用于 Tenement_Market 表
-  
-    // Tenement 表的条件
     if (userId) {
       whereClauseTenement.owner = { equals: userId };
     }
+    // Tenement 表的條件
     if (tenement_address) {
       whereClauseTenement.tenement_address = { contains: tenement_address };
     }
@@ -1571,89 +1569,132 @@ return {
       whereClauseTenement.tenement_type = { equals: tenement_type };
     }
   
-    if (selling_price_min !== undefined || selling_price_max !== undefined) {
-      whereClauseCreate.selling_price = {};
-      if (selling_price_min !== undefined) {
-        whereClauseCreate.selling_price.gte = parseInt(selling_price_min);
+    // 樓層的條件添加到 Tenement 表的條件
+    if (floor_min !== undefined || floor_max !== undefined) {
+      if (floor_min !== undefined) {
+        whereClauseCreate.tenement_floor = { gte: parseInt(floor_min) };
       }
-      if (selling_price_max !== undefined) {
-        whereClauseCreate.selling_price.lte = parseInt(selling_price_max);
+      if (floor_max !== undefined) {
+        whereClauseCreate.tenement_floor = { ...whereClauseCreate.tenement_floor, lte: parseInt(floor_max) };
       }
     }
-    
+  
+    // Tenement_Create 表的條件
+    if (selling_price_min !== undefined || selling_price_max !== undefined) {
+      if (selling_price_min !== undefined) {
+        whereClauseCreate.selling_price = { gte: parseInt(selling_price_min) };
+      }
+      if (selling_price_max !== undefined) {
+        whereClauseCreate.selling_price = { ...whereClauseCreate.selling_price, lte: parseInt(selling_price_max) };
+      }
+    }
+
     if (rent_price_min !== undefined || rent_price_max !== undefined) {
-      whereClauseMarketCreate.Tenement_Market = {
-        OR: [
-          {
-            burget_rent_min: { lte: parseInt(rent_price_max) }, // 最小預算租金小於等於租金上限
-            burget_rent_max: { gte: parseInt(rent_price_min) }, // 最大預算租金大於等於租金下限
-          },
-          {
-            burget_rent_min: null, // 如果 burget_rent_min 未定義，或者為 null，則不應用該條件
-            burget_rent_max: null, // 如果 burget_rent_max 未定義，或者為 null，則不應用該條件
-          },
-        ],
-      };
+      if(rent_price_min !== undefined) {
+        whereClauseCreate.rent_price = { gte: parseInt(rent_price_min) };
+      }
+      if(rent_price_max !== undefined) {
+        whereClauseCreate.rent_price = { ...whereClauseCreate.rent_price, lte: parseInt(rent_price_max) };
+      }
+    }
+    if(floor_min !== undefined || floor_max !== undefined) {
+      if(floor_min !== undefined) {
+        whereClauseCreate.tenement_floor = { gte: parseInt(floor_min) };
+      }
+      if(floor_max !== undefined) {
+        whereClauseCreate.tenement_floor = { ...whereClauseCreate.tenement_floor, lte: parseInt(floor_max) };
+      }
+    }
+  
+    // Tenement_Market 表的條件
+    if (rent_price_min !== undefined || rent_price_max !== undefined) {
+      whereClauseMarketCreate.AND = whereClauseMarketCreate.AND || []; // 确保 AND 子句存在
+    
+      if (rent_price_min !== undefined) {
+        // 记录的最高租金应该大于等于查询的最低租金
+        whereClauseMarketCreate.AND.push({ burget_rent_max: { gte: parseInt(rent_price_min) } });
+      }
+      if (rent_price_max !== undefined) {
+        // 记录的最低租金应该小于等于查询的最高租金
+        whereClauseMarketCreate.AND.push({ burget_rent_min: { lte: parseInt(rent_price_max) } });
+      }
     }
 
     if (floor_min !== undefined || floor_max !== undefined) {
-      whereClauseCreate.tenement_floor = {};
+      whereClauseMarketCreate.AND = whereClauseMarketCreate.AND || []; // 确保 AND 子句存在
       if (floor_min !== undefined) {
-        whereClauseCreate.tenement_floor.gte = parseInt(floor_min);
+        // 记录的最大楼层应该大于等于查询的最小楼层
+        whereClauseMarketCreate.AND.push({ hopefloor_max: { gte: parseInt(floor_min) } });
       }
       if (floor_max !== undefined) {
-        whereClauseCreate.tenement_floor.lte = parseInt(floor_max);
+        // 记录的最小楼层应该小于等于查询的最大楼层
+        whereClauseMarketCreate.AND.push({ hopefloor_min: { lte: parseInt(floor_max) } });
       }
     }
-
-    if(floor_min !== undefined && floor_max !== undefined){
-      whereClauseMarketCreate.Tenement_Market = {
-        OR: [
-          {
-            hopefloor_min: { lte: parseInt(floor_max) }, // 最小樓層小於等於樓層上限
-            hopefloor_max: { gte: parseInt(floor_min) }, // 最大樓層大於等於樓層下限
-          },
-          {
-            hopefloor_min: null, // 如果 hopefloor_min 未定義，或者為 null，則不應用該條件
-            hopefloor_max: null, // 如果 hopefloor_max 未定義，或者為 null，則不應用該條件
-          },
-        ],
-      };
-
-    if (rent_price_min !== undefined || rent_price_max !== undefined) {
-      whereClauseCreate.Tenement_Market = {
-        burget_rent_max: { lt: parseInt(rent_price_max) },
-        burget_rent_min: { gte: parseInt(rent_price_min) },
-      };
-    }
-    const rawResults = await this.prisma.tenement.findMany({
-      where: whereClauseTenement,
-      include: {
-        Tenement_Create: {
-          where: whereClauseCreate,
-        },
-        Tenement_Market: {
-          where: whereClauseMarketCreate,
-        },
-      },
+    
+    const tenementMarketResults = await this.prisma.tenement_Market.findMany({
+      where: whereClauseMarketCreate, // 使用更新后的条件
     });
-    const data = rawResults.map(tenement => ({
+    
+    const tenementResults = await this.prisma.tenement.findMany({
+      where: whereClauseTenement, // Tenement 表的條件
+    });
+    const tenementCreateResults = await this.prisma.tenement_Create.findMany({
+      where: whereClauseCreate, // Tenement 表的條件
+    });
+// 为 Tenement_Market 和 Tenement_Create 创建映射
+const marketMap = tenementMarketResults.reduce((acc, market) => {
+  acc[market.tenement_id] = market;
+  return acc;
+}, {});
+
+const createMap = tenementCreateResults.reduce((acc, create) => {
+  acc[create.tenement_id] = create;
+  return acc;
+}, {});
+
+ // 整合并筛选数据
+ const filteredMergedData = tenementResults.reduce((acc, tenement) => {
+  const market = marketMap[tenement.id];
+  const create = createMap[tenement.id];
+
+  // 根据 tenement_type 确定需要检查的字段
+  let includeRecord = false; // 默认不包含记录
+  if (tenement.tenement_type === 'market' && market) {
+    // 检查 Market 相关字段是否未定义
+    includeRecord = market.burget_rent_min !== undefined || market.burget_rent_max !== undefined ||
+                     market.hopefloor_min !== undefined || market.hopefloor_max !== undefined;
+  } else if (['sell', 'rent', 'develop'].includes(tenement.tenement_type) && create) {
+    // 检查 Create 相关字段是否未定义
+    includeRecord = create.management_fee !== undefined || create.tenement_floor !== undefined;
+  }
+
+  if (includeRecord) {
+    // 如果记录符合条件，添加到累积器
+    acc.push({
       tenement_id: tenement.id,
       tenement_address: tenement.tenement_address,
       tenement_face: tenement.tenement_face,
       tenement_status: tenement.tenement_status,
       tenement_type: tenement.tenement_type,
       tenement_product_type: tenement.tenement_product_type,
-      management_fee_bottom: tenement.Tenement_Create[0]?.management_fee, // 假设使用第一个 Tenement_Create 记录
-    }));
-  
-    return {
-      message: 'Successfully get the tenements',
-      data
-    };
-
-
+      management_fee: create?.management_fee,
+      tenement_floor: create?.tenement_floor,
+      market_rent_price_min: market?.burget_rent_min,
+      market_rent_price_max: market?.burget_rent_max,
+      market_floor_min: market?.hopefloor_min,
+      market_floor_max: market?.hopefloor_max,
+    });
   }
+
+  return acc;
+}, []);
+
+console.log(filteredMergedData);
+return {
+  message: 'Successfully retrieved and merged data',
+  data: filteredMergedData,
+};
 }
   async getFilteredTenementSells(
     isadmin: boolean,
