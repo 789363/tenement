@@ -178,8 +178,8 @@ export class TenementService {
         tenement_id: sell.tenement_id,
         tenement_address: sell.Tenement_Create.Tenement.tenement_address,
         tenement_face: sell.Tenement_Create.Tenement.tenement_face,
-        tenement_status: sell.Tenement_Create.Tenement.tenement_type,
-        tenement_type: sell.Tenement_Create.Tenement.tenement_product_type,
+        tenement_status: sell.Tenement_Create.Tenement.tenement_status,
+        tenement_type: sell.Tenement_Create.Tenement.tenement_type,
         tenement_product_type:
           sell.Tenement_Create.Tenement.tenement_product_type,
         management_fee_bottom: sell.Tenement_Create.management_fee,
