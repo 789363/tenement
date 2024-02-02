@@ -1772,36 +1772,96 @@ if (selling_price_min !== undefined && selling_price_max !== undefined) {
     lte: parseFloat(selling_price_max),
   };
 }
-    if (floor_min !== undefined && floor_max !== undefined) {
-      whereClauseTenementCreate.tenement_floor = {
-        gte: parseInt(floor_min),
-        lte: parseInt(floor_max),
-      };
-    }
-    if (inside_rating_min !== undefined && inside_rating_max !== undefined) {
-      whereClauseTenementCreate.inside_rating = {
-        gte: parseFloat(inside_rating_min),
-        lte: parseFloat(inside_rating_max),
-      };
-    }
-    if (total_rating_min !== undefined && total_rating_max !== undefined) {
-      whereClauseTenementCreate.total_rating = {
-        gte: parseFloat(total_rating_min),
-        lte: parseFloat(total_rating_max),
-      };
-    }
-    if (public_building_min !== undefined && public_building_max !== undefined) {
-      whereClauseTenementCreate.public_building = {
-        gte: parseFloat(public_building_min),
-        lte: parseFloat(public_building_max),
-      };
-    }
-    if (management_fee_min !== undefined && management_fee_max !== undefined) {
-      whereClauseTenementCreate.management_fee = {
-        gte: parseFloat(management_fee_min),
-        lte: parseFloat(management_fee_max),
-      };
-    }
+   // 處理樓層範圍
+if (floor_min !== undefined && floor_max === undefined) {
+  whereClauseTenementCreate.tenement_floor = {
+    gte: parseInt(floor_min),
+  };
+}
+if (floor_min === undefined && floor_max !== undefined) {
+  whereClauseTenementCreate.tenement_floor = {
+    lte: parseInt(floor_max),
+  };
+}
+if (floor_min !== undefined && floor_max !== undefined) {
+  whereClauseTenementCreate.tenement_floor = {
+    gte: parseInt(floor_min),
+    lte: parseInt(floor_max),
+  };
+}
+
+// 處理內部評級範圍
+if (inside_rating_min !== undefined && inside_rating_max === undefined) {
+  whereClauseTenementCreate.inside_rating = {
+    gte: parseFloat(inside_rating_min),
+  };
+}
+if (inside_rating_min === undefined && inside_rating_max !== undefined) {
+  whereClauseTenementCreate.inside_rating = {
+    lte: parseFloat(inside_rating_max),
+  };
+}
+if (inside_rating_min !== undefined && inside_rating_max !== undefined) {
+  whereClauseTenementCreate.inside_rating = {
+    gte: parseFloat(inside_rating_min),
+    lte: parseFloat(inside_rating_max),
+  };
+}
+
+// 處理總評級範圍
+if (total_rating_min !== undefined && total_rating_max === undefined) {
+  whereClauseTenementCreate.total_rating = {
+    gte: parseFloat(total_rating_min),
+  };
+}
+if (total_rating_min === undefined && total_rating_max !== undefined) {
+  whereClauseTenementCreate.total_rating = {
+    lte: parseFloat(total_rating_max),
+  };
+}
+if (total_rating_min !== undefined && total_rating_max !== undefined) {
+  whereClauseTenementCreate.total_rating = {
+    gte: parseFloat(total_rating_min),
+    lte: parseFloat(total_rating_max),
+  };
+}
+
+// 處理公共建設範圍
+if (public_building_min !== undefined && public_building_max === undefined) {
+  whereClauseTenementCreate.public_building = {
+    gte: parseFloat(public_building_min),
+  };
+}
+if (public_building_min === undefined && public_building_max !== undefined) {
+  whereClauseTenementCreate.public_building = {
+    lte: parseFloat(public_building_max),
+  };
+}
+if (public_building_min !== undefined && public_building_max !== undefined) {
+  whereClauseTenementCreate.public_building = {
+    gte: parseFloat(public_building_min),
+    lte: parseFloat(public_building_max),
+  };
+}
+
+// 處理管理費範圍
+if (management_fee_min !== undefined && management_fee_max === undefined) {
+  whereClauseTenementCreate.management_fee = {
+    gte: parseFloat(management_fee_min),
+  };
+}
+if (management_fee_min === undefined && management_fee_max !== undefined) {
+  whereClauseTenementCreate.management_fee = {
+    lte: parseFloat(management_fee_max),
+  };
+}
+if (management_fee_min !== undefined && management_fee_max !== undefined) {
+  whereClauseTenementCreate.management_fee = {
+    gte: parseFloat(management_fee_min),
+    lte: parseFloat(management_fee_max),
+  };
+}
+
     // 关联到 Tenement 的条件
     if (tenement_address) {
       whereClauseTenement.tenement_address = { contains: tenement_address };
