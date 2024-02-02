@@ -1381,7 +1381,7 @@ export class TenementService {
   
     const whereClauseTenement: any = {}; // 用于 Tenement 表
     const whereClauseCreate: any = {};   // 用于 Tenement_Create 表
-
+    const whereClauseMarketCreate: any = {};   // 用于 Tenement_Market 表
   
     // Tenement 表的條件
     if (tenement_address) {
@@ -1437,6 +1437,35 @@ export class TenementService {
       }
     }
   
+    // Tenement_Market 表的條件
+    if (rent_price_min !== undefined || rent_price_max !== undefined) {
+      whereClauseMarketCreate.AND = whereClauseMarketCreate.AND || []; // 确保 AND 子句存在
+    
+      if (rent_price_min !== undefined) {
+        // 记录的最高租金应该大于等于查询的最低租金
+        whereClauseMarketCreate.AND.push({ burget_rent_max: { gte: parseInt(rent_price_min) } });
+      }
+      if (rent_price_max !== undefined) {
+        // 记录的最低租金应该小于等于查询的最高租金
+        whereClauseMarketCreate.AND.push({ burget_rent_min: { lte: parseInt(rent_price_max) } });
+      }
+    }
+
+    if (floor_min !== undefined || floor_max !== undefined) {
+      whereClauseMarketCreate.AND = whereClauseMarketCreate.AND || []; // 确保 AND 子句存在
+      if (floor_min !== undefined) {
+        // 记录的最大楼层应该大于等于查询的最小楼层
+        whereClauseMarketCreate.AND.push({ hopefloor_max: { gte: parseInt(floor_min) } });
+      }
+      if (floor_max !== undefined) {
+        // 记录的最小楼层应该小于等于查询的最大楼层
+        whereClauseMarketCreate.AND.push({ hopefloor_min: { lte: parseInt(floor_max) } });
+      }
+    }
+    
+    const tenementMarketResults = await this.prisma.tenement_Market.findMany({
+      where: whereClauseMarketCreate, // 使用更新后的条件
+    });
     
     const tenementResults = await this.prisma.tenement.findMany({
       where: whereClauseTenement, // Tenement 表的條件
@@ -1445,6 +1474,7 @@ export class TenementService {
       where: whereClauseCreate, // Tenement 表的條件
     });
 
+    console.log(tenementMarketResults , whereClauseMarketCreate)
 
     // 將結果映射成所需的格式
     const mergedData = tenementCreateResults.map(tenementCreate => {
