@@ -51,10 +51,8 @@ export class TenementController {
   async getAllTenements(@Request() req, @Query() query: TenementQueryDto){
     const userisadmin = req.user.isadmin;
     const hasQueryParams = Object.keys(query).length > 0;
-    console.log(userisadmin)
     if (hasQueryParams) {
       if (userisadmin === true) {
-        console.log('admin')
         return this.tenementService.getFilteredTenements(query);
       } else {
         console.log('user')
@@ -65,11 +63,10 @@ export class TenementController {
       }
     } else {
       if (userisadmin === true) {
-        console.log('admin123')
         return this.tenementService.getAllTenements();
         
       } else {
-        console.log('admin123456')
+       
         return this.tenementService.getTenementsByUserId(req.user.userId);
         
       }
