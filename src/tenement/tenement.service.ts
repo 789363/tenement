@@ -1430,7 +1430,6 @@ export class TenementService {
         whereClauseCreate.tenement_floor = { ...whereClauseCreate.tenement_floor, lte: parseInt(floor_max) };
       }
     }
-  
     // Tenement_Market 表的條件
     if (rent_price_min !== undefined || rent_price_max !== undefined) {
       whereClauseMarketCreate.AND = whereClauseMarketCreate.AND || []; // 确保 AND 子句存在
@@ -1456,7 +1455,7 @@ export class TenementService {
         whereClauseMarketCreate.AND.push({ hopefloor_min: { lte: parseInt(floor_max) } });
       }
     }
-    
+
     const tenementMarketResults = await this.prisma.tenement_Market.findMany({
       where: whereClauseMarketCreate, // 使用更新后的条件
     });
@@ -1488,9 +1487,6 @@ const createMap = tenementCreateResults.reduce((acc, create) => {
   let managementFeeBottom = create?.management_fee;
   let tenementFloor=create?.tenement_floor;
 
-
-
-
   if (tenement.tenement_type === '行銷追蹤' && market) {
     // 检查 Market 相关字段是否未定义
     includeRecord = market.burget_rent_min !== undefined || market.burget_rent_max !== undefined ||
@@ -1507,6 +1503,9 @@ const createMap = tenementCreateResults.reduce((acc, create) => {
       } else if (market.hopefloor_max <= floor_max) {
         // 如果仅 hopefloor_max 在范围内
         tenementFloor = market.hopefloor_max;
+      }
+      else{
+        tenementFloor = market.hopefloor_min;
       }
     }
   } else if (['出售', '出租', '開發追蹤'].includes(tenement.tenement_type) && create) {
@@ -1694,6 +1693,9 @@ const createMap = tenementCreateResults.reduce((acc, create) => {
       } else if (market.hopefloor_max <= floor_max) {
         // 如果仅 hopefloor_max 在范围内
         tenementFloor = market.hopefloor_max;
+      }
+      else{
+        tenementFloor = market.hopefloor_min;
       }
     }
   } else if (['出售', '出租', '開發追蹤'].includes(tenement.tenement_type) && create) {
