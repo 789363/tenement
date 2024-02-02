@@ -1491,7 +1491,7 @@ const createMap = tenementCreateResults.reduce((acc, create) => {
 
 
 
-  if (tenement.tenement_type === 'market' && market) {
+  if (tenement.tenement_type === '行銷追蹤' && market) {
     // 检查 Market 相关字段是否未定义
     includeRecord = market.burget_rent_min !== undefined || market.burget_rent_max !== undefined ||
                      market.hopefloor_min !== undefined || market.hopefloor_max !== undefined;
@@ -1509,7 +1509,7 @@ const createMap = tenementCreateResults.reduce((acc, create) => {
         tenementFloor = market.hopefloor_max;
       }
     }
-  } else if (['sell', 'rent', 'develop'].includes(tenement.tenement_type) && create) {
+  } else if (['出售', '出租', '開發追蹤'].includes(tenement.tenement_type) && create) {
     // 检查 Create 相关字段是否未定义
     includeRecord = create.management_fee !== undefined || create.tenement_floor !== undefined;
   }
@@ -1526,6 +1526,7 @@ const createMap = tenementCreateResults.reduce((acc, create) => {
       tenement_product_type: tenement.tenement_product_type,
       management_fee_bottom: managementFeeBottom,
       tenement_floor:  tenementFloor,
+      management_floor_bottom: tenementFloor,
     });
   }
 
@@ -1677,7 +1678,7 @@ const createMap = tenementCreateResults.reduce((acc, create) => {
 
 
 
-  if (tenement.tenement_type === 'market' && market) {
+  if (tenement.tenement_type === '行銷追蹤' && market) {
     // 检查 Market 相关字段是否未定义
     includeRecord = market.burget_rent_min !== undefined || market.burget_rent_max !== undefined ||
                      market.hopefloor_min !== undefined || market.hopefloor_max !== undefined;
@@ -1695,7 +1696,7 @@ const createMap = tenementCreateResults.reduce((acc, create) => {
         tenementFloor = market.hopefloor_max;
       }
     }
-  } else if (['sell', 'rent', 'develop'].includes(tenement.tenement_type) && create) {
+  } else if (['出售', '出租', '開發追蹤'].includes(tenement.tenement_type) && create) {
     // 检查 Create 相关字段是否未定义
     includeRecord = create.management_fee !== undefined || create.tenement_floor !== undefined;
   }
@@ -1712,6 +1713,7 @@ const createMap = tenementCreateResults.reduce((acc, create) => {
       tenement_product_type: tenement.tenement_product_type,
       management_fee_bottom: managementFeeBottom,
       tenement_floor:  tenementFloor,
+      management_floor_bottom: tenementFloor,
     });
   }
 
