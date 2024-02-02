@@ -1473,32 +1473,59 @@ export class TenementService {
     const tenementCreateResults = await this.prisma.tenement_Create.findMany({
       where: whereClauseCreate, // Tenement 表的條件
     });
+// 为 Tenement_Market 和 Tenement_Create 创建映射
+const marketMap = tenementMarketResults.reduce((acc, market) => {
+  acc[market.tenement_id] = market;
+  return acc;
+}, {});
 
-    console.log(tenementMarketResults , whereClauseMarketCreate)
+const createMap = tenementCreateResults.reduce((acc, create) => {
+  acc[create.tenement_id] = create;
+  return acc;
+}, {});
 
-    // 將結果映射成所需的格式
-    const mergedData = tenementCreateResults.map(tenementCreate => {
-      // 找到与当前 Tenement_Create 记录对应的 Tenement 记录
-      const tenement = tenementResults.find(t => t.id === tenementCreate.tenement_id);
-    
-      // 第3步：构造最终的数据结构
-      return {
-        tenement_id: tenement?.id, // 使用 Tenement 的 id
-        tenement_address: tenement?.tenement_address,
-        tenement_face: tenement?.tenement_face,
-        tenement_status: tenement?.tenement_status,
-        tenement_type: tenement?.tenement_type,
-        tenement_product_type: tenement?.tenement_product_type,
-        management_fee_bottom: tenementCreate.management_fee, // 从 Tenement_Create 获取
-        management_floor_bottom: tenementCreate.tenement_floor, // 从 Tenement_Create 获取
-      };
+ // 整合并筛选数据
+ const filteredMergedData = tenementResults.reduce((acc, tenement) => {
+  const market = marketMap[tenement.id];
+  const create = createMap[tenement.id];
+
+  // 根据 tenement_type 确定需要检查的字段
+  let includeRecord = false; // 默认不包含记录
+  if (tenement.tenement_type === 'market' && market) {
+    // 检查 Market 相关字段是否未定义
+    includeRecord = market.burget_rent_min !== undefined || market.burget_rent_max !== undefined ||
+                     market.hopefloor_min !== undefined || market.hopefloor_max !== undefined;
+  } else if (['sell', 'rent', 'develop'].includes(tenement.tenement_type) && create) {
+    // 检查 Create 相关字段是否未定义
+    includeRecord = create.management_fee !== undefined || create.tenement_floor !== undefined;
+  }
+
+  if (includeRecord) {
+    // 如果记录符合条件，添加到累积器
+    acc.push({
+      tenement_id: tenement.id,
+      tenement_address: tenement.tenement_address,
+      tenement_face: tenement.tenement_face,
+      tenement_status: tenement.tenement_status,
+      tenement_type: tenement.tenement_type,
+      tenement_product_type: tenement.tenement_product_type,
+      management_fee: create?.management_fee,
+      tenement_floor: create?.tenement_floor,
+      market_rent_price_min: market?.burget_rent_min,
+      market_rent_price_max: market?.burget_rent_max,
+      market_floor_min: market?.hopefloor_min,
+      market_floor_max: market?.hopefloor_max,
     });
-    
-    // 最终，mergedData 包含了合并后的数据，现在可以返回给调用者
-    return {
-      message: 'Successfully retrieved and merged data',
-      data: mergedData,
-    };
+  }
+
+  return acc;
+}, []);
+
+console.log(filteredMergedData);
+return {
+  message: 'Successfully retrieved and merged data',
+  data: filteredMergedData,
+};
  
 }
   
