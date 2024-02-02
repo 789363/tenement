@@ -1800,7 +1800,7 @@ if (selling_price_min !== undefined && selling_price_max !== undefined) {
         gte: parseFloat(management_fee_min),
         lte: parseFloat(management_fee_max),
       };
-  
+    }
     // 关联到 Tenement 的条件
     if (tenement_address) {
       whereClauseTenement.tenement_address = { contains: tenement_address };
@@ -1840,6 +1840,7 @@ if (selling_price_min !== undefined && selling_price_max !== undefined) {
           },
         },
       });
+      console.log(tenementSells)
       const data = tenementSells.map(sell => ({
         tenement_id: sell.tenement_id,
         tenement_address: sell.Tenement_Create.Tenement.tenement_address,
@@ -1854,12 +1855,12 @@ if (selling_price_min !== undefined && selling_price_max !== undefined) {
         inside_rating: sell.Tenement_Create.inside_rating,
         public_building: sell.Tenement_Create.public_building,
       }));
-  
+      console.log(data,132)
       return { message: 'Successfully retrieved tenement sells', data };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
-  }
+  
   }
   
   async getFilteredTenementRents(

@@ -81,6 +81,7 @@ export class TenementController {
     const hasQueryParams = Object.keys(query).length > 0;
 
     if (hasQueryParams) {
+      console.log('query', query);
       return this.tenementService.getFilteredTenementSells(
         userisadmin === true,
         req.user.userId,
@@ -107,7 +108,6 @@ export class TenementController {
     const hasQueryParams = Object.keys(query).length > 0;
 
     if (hasQueryParams) {
-      console.log('query', query);
       return this.tenementService.getFilteredTenementRents(
         userisadmin,
         userId,
