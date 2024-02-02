@@ -1660,14 +1660,35 @@ const createMap = tenementCreateResults.reduce((acc, create) => {
 
   // 根据 tenement_type 确定需要检查的字段
   let includeRecord = false; // 默认不包含记录
+  let managementFeeBottom = create?.management_fee;
+  let tenementFloor=create?.tenement_floor;
+
+
+
+
   if (tenement.tenement_type === 'market' && market) {
     // 检查 Market 相关字段是否未定义
     includeRecord = market.burget_rent_min !== undefined || market.burget_rent_max !== undefined ||
                      market.hopefloor_min !== undefined || market.hopefloor_max !== undefined;
+    // 如果 market_rent_price_min 和 market_rent_price_max 都有值，设置 management_fee_bottom 为 0
+    if (market.burget_rent_min !== undefined && market.burget_rent_max !== undefined) {
+      managementFeeBottom = 0;
+      if (market.hopefloor_min >= floor_min && market.hopefloor_max <= floor_max) {
+        // 如果 hopefloor_min 和 hopefloor_max 在范围内，tenement_floor 为 hopefloor_min
+        tenementFloor = market.hopefloor_min;
+      } else if (market.hopefloor_min >= floor_min) {
+        // 如果仅 hopefloor_min 在范围内
+        tenementFloor = market.hopefloor_min;
+      } else if (market.hopefloor_max <= floor_max) {
+        // 如果仅 hopefloor_max 在范围内
+        tenementFloor = market.hopefloor_max;
+      }
+    }
   } else if (['sell', 'rent', 'develop'].includes(tenement.tenement_type) && create) {
     // 检查 Create 相关字段是否未定义
     includeRecord = create.management_fee !== undefined || create.tenement_floor !== undefined;
   }
+
 
   if (includeRecord) {
     // 如果记录符合条件，添加到累积器
@@ -1678,19 +1699,14 @@ const createMap = tenementCreateResults.reduce((acc, create) => {
       tenement_status: tenement.tenement_status,
       tenement_type: tenement.tenement_type,
       tenement_product_type: tenement.tenement_product_type,
-      management_fee: create?.management_fee,
-      tenement_floor: create?.tenement_floor,
-      market_rent_price_min: market?.burget_rent_min,
-      market_rent_price_max: market?.burget_rent_max,
-      market_floor_min: market?.hopefloor_min,
-      market_floor_max: market?.hopefloor_max,
+      management_fee_bottom: managementFeeBottom,
+      tenement_floor:  tenementFloor,
     });
   }
 
   return acc;
 }, []);
 
-console.log(filteredMergedData);
 return {
   message: 'Successfully retrieved and merged data',
   data: filteredMergedData,
