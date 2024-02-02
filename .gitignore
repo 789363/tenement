@@ -36,6 +36,9 @@ lerna-debug.log*
 # Environment variables
 .env
 
+# zip variables
+.zip
+
 # IDE - VSCode
 .vscode/*
 !.vscode/settings.json

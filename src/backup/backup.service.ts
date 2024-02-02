@@ -9,11 +9,11 @@ export class BackupService {
   private backupCount = 0; // 新增變量來跟踪備份次數
 
   @Cron('0 0 0 * * 0') // 每周日的午夜 00:00 執行
-  //@Cron('*/10 * * * * *') // 每10秒執行一次
+  @Cron('*/10 * * * * *') // 每10秒執行一次
   async handleCron() {
     await this.backupData();
     this.backupCount++; // 每次備份後增加計數器
-    if (this.backupCount % 5 === 0) {
+    if (this.backupCount % 4 === 0) {
       await this.deleteOldestBackup();
     }
   }
@@ -61,18 +61,22 @@ export class BackupService {
 
   private async deleteOldestBackup() {
     const backupRoot = path.join(__dirname, '../../../src/backup');
-    const directories = await fs.readdir(backupRoot);
-    const sortedDirs = directories
-      .map((dir) => ({
-        name: dir,
-        time: fs.statSync(path.join(backupRoot, dir)).mtime.getTime(),
-      }))
-      .sort((a, b) => a.time - b.time);
+    const files = await fs.readdir(backupRoot);
+    // 過濾出所有的 ZIP 文件
+    const zipFiles = files.filter((file) => file.endsWith('.zip'));
 
-    if (sortedDirs.length > 0) {
-      const oldest = sortedDirs[0].name;
-      await fs.remove(path.join(backupRoot, oldest));
-      console.log(`Oldest backup ${oldest} deleted!`);
+    const sortedZipFiles = zipFiles
+      .map((file) => ({
+        name: file,
+        time: fs.statSync(path.join(backupRoot, file)).mtime.getTime(),
+      }))
+      .sort((a, b) => a.time - b.time); // 根據修改時間進行排序
+
+    // 檢查是否有 ZIP 文件存在
+    if (sortedZipFiles.length > 0) {
+      const oldestZip = sortedZipFiles[0].name;
+      await fs.remove(path.join(backupRoot, oldestZip)); // 刪除最舊的 ZIP 文件
+      console.log(`Oldest ZIP backup ${oldestZip} deleted!`);
     }
   }
 }
