@@ -9,6 +9,7 @@ export class BackupService {
   private backupCount = 0; // 新增變量來跟踪備份次數
 
   @Cron('0 0 0 * * 0') // 每周日的午夜 00:00 執行
+  //@Cron('*/10 * * * * *') // 每10秒執行一次
   async handleCron() {
     await this.backupData();
     this.backupCount++; // 每次備份後增加計數器
