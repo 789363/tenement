@@ -328,6 +328,7 @@ export class TenementService {
     userId: number,
     isAdmin: boolean,
   ): Promise<{ message: string; data: any }> {
+    console.log(tenementId, userId, isAdmin )
     const tenementRent = await this.prisma.tenement_Rent.findUnique({
       where: { tenement_id: tenementId },
       include: {
